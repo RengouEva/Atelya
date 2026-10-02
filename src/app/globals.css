@@ -1,0 +1,197 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), Georgia, serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-table: var(--table);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.75rem;
+  --background: #f2f0e9;
+  --foreground: #232b45;
+  --card: #fbfaf6;
+  --card-foreground: #232b45;
+  --popover: #fbfaf6;
+  --popover-foreground: #232b45;
+  --primary: #d6336c;
+  --primary-foreground: #ffffff;
+  --secondary: #e8e5da;
+  --secondary-foreground: #232b45;
+  --muted: #eae8df;
+  --muted-foreground: #676d86;
+  --accent: #f7e5ed;
+  --accent-foreground: #232b45;
+  --destructive: #c2413b;
+  --border: #dad7cb;
+  --input: #d6d3c6;
+  --ring: #d6336c;
+  --chart-1: #d6336c;
+  --chart-2: #2a9db5;
+  --chart-3: #d9a441;
+  --chart-4: #4a7c59;
+  --chart-5: #7d4e7e;
+  --sidebar: #fbfaf6;
+  --sidebar-foreground: #232b45;
+  --sidebar-primary: #d6336c;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f7e5ed;
+  --sidebar-accent-foreground: #232b45;
+  --sidebar-border: #dad7cb;
+  --sidebar-ring: #d6336c;
+  --table: #c9ccc4;
+}
+
+.dark {
+  --background: #12162a;
+  --foreground: #eef0f8;
+  --card: #1b2140;
+  --card-foreground: #eef0f8;
+  --popover: #1b2140;
+  --popover-foreground: #eef0f8;
+  --primary: #ff6b9a;
+  --primary-foreground: #33101f;
+  --secondary: #242b52;
+  --secondary-foreground: #eef0f8;
+  --muted: #222850;
+  --muted-foreground: #9aa1c0;
+  --accent: #3c2246;
+  --accent-foreground: #ffd3e2;
+  --destructive: #e5534b;
+  --border: #2f3763;
+  --input: #2f3763;
+  --ring: #ff6b9a;
+  --chart-1: #ff6b9a;
+  --chart-2: #3cb7cf;
+  --chart-3: #e8b45a;
+  --chart-4: #6cae81;
+  --chart-5: #b07fb3;
+  --sidebar: #1b2140;
+  --sidebar-foreground: #eef0f8;
+  --sidebar-primary: #ff6b9a;
+  --sidebar-primary-foreground: #33101f;
+  --sidebar-accent: #3c2246;
+  --sidebar-accent-foreground: #ffd3e2;
+  --sidebar-border: #2f3763;
+  --sidebar-ring: #ff6b9a;
+  --table: #262c52;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss01" on;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--primary) 22%, transparent);
+  }
+}
+
+/* ---------- Plan de coupe : trace animée de la découpe ---------- */
+.cut-trace {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: cutdraw 1s linear forwards;
+  pointer-events: none;
+}
+@keyframes cutdraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Pièces du plan : papier patron qui s’estompe au survol */
+.pc {
+  cursor: pointer;
+  outline: none;
+}
+.pc .pp {
+  transition: opacity 0.25s ease;
+}
+.pc:hover .pp,
+.pc:focus-visible .pp {
+  opacity: 0.55;
+}
+.pc:focus-visible {
+  stroke: var(--ring);
+}
+
+/* ---------- Scrollbars discrètes ---------- */
+.table-wrap {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--foreground) 30%, transparent) transparent;
+}
+.table-wrap::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.table-wrap::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--foreground) 22%, transparent);
+  border-radius: 99px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.table-wrap::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Chips horizontales sur mobile */
+.chips-scroll {
+  scrollbar-width: none;
+}
+.chips-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Grain de papier très subtil pour les cartes premium */
+.card-luxe {
+  box-shadow:
+    0 1px 2px rgb(35 43 69 / 0.05),
+    0 8px 24px -12px rgb(35 43 69 / 0.12);
+}
+.dark .card-luxe {
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.4),
+    0 10px 30px -14px rgb(0 0 0 / 0.55);
+}
