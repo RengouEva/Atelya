@@ -153,3 +153,18 @@ Work Log:
 Stage Summary:
 - Le logo sombre est posé sur une carte au fond clair #F1F4FC (couleur de la page atelier) : contraste maximal, style app native conservé.
 - Fichiers clés : scripts/logo-card.py, public/atelya-logo-card.webp, public/atelya-mark-tile.webp, src/components/landing/landing.tsx, src/components/studio/studio-app.tsx.
+
+---
+Task ID: 9
+Agent: Super Z (main)
+Task: Annulation — supprimer le background (carte claire) ajouté au logo.
+
+Work Log:
+- Splash réécrit : carte claire supprimée, photo d'atelier supprimée du héros — le logo transparent flotte directement sur le fond #F1F4FC (couleur exacte de la page atelier en mode clair), sans encadré.
+- Textes/icônes du splash passés en navy fixe (#0a1b4d) + or profond (gold-deep) pour rester lisibles quel que soit le thème ; ThemeToggle tone par défaut ; anneau de couture or foncé (#D9A416) conservé ; nouveau .splash-halo-light (halo or 15 % + anneau bleu roi 9 %, respiration conservée) remplaçant .splash-halo (sombre).
+- CTA final (carte navy + tuile claire), footer et header studio conservés avec la tuile claire (le logo n'y repose jamais sur du sombre).
+- QA : ESLint 0 erreur ; captures agent-browser 390 px + 1440 px — logo sombre parfaitement contrasté sur le fond clair, halo discret, console 0 erreur.
+
+Stage Summary:
+- Le logo n'a plus aucun encadré : il repose directement sur le fond clair #F1F4FC de la page atelier, ce qui le fait ressortir.
+- Fichiers clés : src/components/landing/landing.tsx (Splash), src/app/globals.css (.splash-halo-light).
