@@ -36,3 +36,23 @@ model AiVisual {
   data      String
   createdAt DateTime @default(now())
 }
+
+/// Projet du styliste-modéliste : photo d'origine, famille choisie,
+/// mesures, les 3 variantes IA (empreintes des images en cache) et
+/// la variante sélectionnée qui sert de base au patron.
+model StudioProject {
+  id        String   @id @default(cuid())
+  name      String
+  /// Photo d'origine (JPEG réduite, base64)
+  photo     String
+  /// Famille de vêtement (robe | jupe | pantalon | haut | veste)
+  family    String
+  /// Mesures JSON {P,T,H,L,W,S,C}
+  measures  String
+  /// Variantes IA JSON [{sig,label,desc,direction}]
+  variants  String  @default("[]")
+  /// Index de la variante retenue (-1 = aucune)
+  selected  Int      @default(-1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

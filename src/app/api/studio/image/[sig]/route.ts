@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
 
-/** GET /api/ai/visual/image/[sig] — renvoie l'image IA (PNG) mise en cache. */
+/** GET /api/studio/image/[sig] — renvoie une image IA (PNG) mise en cache. */
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ sig: string }> }

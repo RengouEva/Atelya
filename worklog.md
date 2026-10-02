@@ -61,3 +61,23 @@ Stage Summary:
 - L'IA est intégrée : 3 types de visuels photoréalistes (produit fini porté, texture de tissu, pièces en situation) générés côté backend avec cache en base, variations à volonté, fidélité au coloris via hex dans le prompt.
 - Le site est bien servi par Next.js : l'utilisateur accède à l'app via le panneau Preview (plus de HTML brut).
 - Fichiers clés : prisma/schema.prisma (AiVisual), src/app/api/ai/visual/* , src/lib/ai/prompt.ts, src/components/atelier/ai-studio.tsx, src/components/landing/landing.tsx (section IA), public/ai/*.png.
+
+---
+Task ID: 4
+Agent: Super Z (main)
+Task: Refonte totale — le styliste modéliste dépose la photo d'un modèle, l'IA propose 3 variantes bien habillées sur mannequin, le styliste sélectionne son choix, l'IA établit la découpe de toutes les pièces + plan de placement, puis l'app affiche les étapes d'assemblage.
+
+Work Log:
+- Vérifié les capacités IA : chat sans vision (content.type limité à text) MAIS `zai.images.generations.edit` (image→image, data URL base64) fonctionne — testé via scripts/test-vision.ts et test-edit.ts (CLI image-edit défaillant, SDK OK).
+- Prisma : nouveau modèle `StudioProject` (name, photo base64, family, measures JSON, variants JSON, selected) + db push + restart dev server.
+- Backend `/api/studio` : POST création (zod, photo ≤3,5 Mo, mesures bornées), GET liste, GET/PUT/DELETE par id ; `/api/studio/variant` (1 direction 0/1/2 → image-edit : vêtement redessiné « bien habillé » sur mannequin de couturier, cache AiVisual par sha1(photo+direction+nonce)) ; `/api/studio/pieces` (visuel pièces en situation dérivé de la variante retenue) ; `/api/studio/image/[sig]` (sert les PNG, cache immutable) ; lib `src/lib/studio/generate.ts` (editWithCache + retry ×3 avec backoff 4 s face au 429).
+- Config `src/lib/studio/config.ts` : 5 familles (robe/jupe/pantalon/haut/veste → modèles paramétriques robe/evasee/pantalon/tunique/blazer), 3 directions de variantes (Longue & fluide / Courte & moderne / Détaillée & raffinée) avec prompts EN, types StudioVariant/StudioMeasures, presets coloris.
+- Wizard `src/components/studio/` : studio-app.tsx (4 étapes, stepper latéral, récap projet avec vignettes photo+variante, métrage/pieces temps réel), step-create.tsx (drag&drop + fichier + « Essayer avec un exemple » /ai/robe-ia.png, nom, famille, mesures P·T·H·L, laize, marge, coloris ; resize client ≤900 px JPEG via canvas), step-variants.tsx (3 cartes lancées en décalé 1,5 s, squelettes animés, sélection ring + PUT persistance, régénération par carte), step-cutting.tsx (plan de placement FabricTable réutilisé + coupe animée tout/pièce + zoom, nomenclature PieceMini, visuel IA pièces, GarmentPreview miniature), step-assembly.tsx (AssemblyPlayer : coutures numérotées → produit fini sur mannequin). `src/lib/studio/client.ts` (fileToDataUrl/urlToDataUrl).
+- Landing refonte totale : héros « D'une photo, trois vêtements. Du patron à l'aiguille. » + maquette photo→3 variantes (ex-longue/ex-courte/ex-raffinée générées par image-edit), marquee, méthode 4 gestes, section Exemples (3 variantes réelles légendées), savoir-faire 6 cartes, CTA, footer. app-shell : hash #/studio (compat #/atelier).
+- Supprimé : atelier-app, models-card, measures-card, clients-card, ai-studio, /api/ai/visual (image serving déplacé vers /api/studio/image). Conservés : moteur patterns/preview, pieces, fabric-table, assembly-player, mannequin, garment-preview, /api/clients.
+- Bugs corrigés en QA : composant JSX en minuscule (motion_card → balise inconnue, cartes invisibles) renommé VariantCard ; 429 Too Many Requests sur les 3 éditions parallèles → lancement décalé côté client + retry/backoff côté serveur.
+- QA final : ESLint 0 erreur ; E2E agent-browser 1440 px + 390 px : landing → studio → exemple → projet « Robe test — Léa » créé (201) → 3 variantes IA sur mannequin (plissée longue bronze / courte moderne / raffinée ceinture marine) → sélection 01 validée → patron Robe trapèze 2 pièces 0,73 m → coupe animée 2/2 → visuel IA pièces (tissu bronze cohérent avec la variante) → assemblage 4 montages → produit fini sur mannequin ; projet en base (selected 0, 3 variantes) ; console propre après fix ; API curl vérifiée.
+
+Stage Summary:
+- Le nouveau parcours demandé est livré de bout en bout : photo → 3 variantes IA habillées sur mannequin → sélection → découpe (toutes les pièces + plan de placement + métrage) → assemblage pas à pas jusqu'au vêtement porté.
+- Architecture : Next.js 16 + Prisma/SQLite (StudioProject + cache AiVisual), image-edit IA côté serveur uniquement, moteur de patronage paramétrique réutilisé pour la découpe réelle.

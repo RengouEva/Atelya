@@ -3,34 +3,32 @@
 import * as React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { AtelierApp } from "@/components/atelier/atelier-app";
+import { StudioApp } from "@/components/studio/studio-app";
 import { Landing } from "@/components/landing/landing";
-import type { ModelKey } from "@/lib/atelier/patterns";
 
 /**
- * Coquille applicative : landing ultra premium ↔ atelier de coupe.
- * Navigation par hash (#/atelier) — l'atelier se monte avec le modèle
- * choisi depuis le catalogue.
+ * Coquille applicative : landing premium ↔ studio du styliste.
+ * Navigation par hash (#/studio) — le studio se monte prêt à recevoir
+ * la photo du modèle.
  */
 export function AppShell() {
-  const [view, setView] = React.useState<"landing" | "atelier">("landing");
-  const [initModel, setInitModel] = React.useState<ModelKey | undefined>(
-    undefined
-  );
+  const [view, setView] = React.useState<"landing" | "studio">("landing");
 
   React.useEffect(() => {
     const sync = () =>
       setView(
-        window.location.hash.startsWith("#/atelier") ? "atelier" : "landing"
+        window.location.hash.startsWith("#/studio") ||
+          window.location.hash.startsWith("#/atelier")
+          ? "studio"
+          : "landing"
       );
     sync();
     window.addEventListener("hashchange", sync);
     return () => window.removeEventListener("hashchange", sync);
   }, []);
 
-  const open = React.useCallback((k?: ModelKey) => {
-    if (k) setInitModel(k);
-    window.location.hash = "#/atelier";
+  const open = React.useCallback(() => {
+    window.location.hash = "#/studio";
     window.scrollTo({ top: 0 });
   }, []);
 
@@ -53,13 +51,13 @@ export function AppShell() {
         </motion.div>
       ) : (
         <motion.div
-          key="atelier"
+          key="studio"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
         >
-          <AtelierApp initialModel={initModel} onHome={home} />
+          <StudioApp onHome={home} />
         </motion.div>
       )}
     </AnimatePresence>
