@@ -100,3 +100,25 @@ Work Log:
 Stage Summary:
 - Identité Atelya déployée de bout en bout : logo WebP central (4 déclinaisons), charte bleu roi/or/navy appliquée à tous les tokens, splash type app native au texte minimal, parcours studio mobile-first en 4 gestes clairs.
 - Fichiers clés : public/atelya-*.webp, public/manifest.webmanifest, src/app/icon.png, src/app/layout.tsx, src/app/globals.css, src/components/landing/landing.tsx, src/components/studio/studio-app.tsx, src/components/studio/step-*.tsx, src/components/theme-toggle.tsx, scripts/logo-assets.py.
+
+---
+Task ID: 6
+Agent: Super Z (main)
+Task: Rendre l'assemblage réellement interactif — l'utilisateur coud (pièce 1 + pièce 2 = A, A + pièce 3 = B, B + pièce 4 = habit final), zones de couture précises pour l'apprentissage étudiant ; héros landing dont le fond fait ressortir le logo, renforcé en mode sombre.
+
+Work Log:
+- Nouveau composant `src/components/atelier/sewing-studio.tsx` (~1400 lignes) remplaçant AssemblyPlayer (supprimé) : machine à états place → sew → done par étape.
+- Plan de montage automatique (buildPlan) : simulation des jonctions ASM → sous-ensembles nommés A, B, C… affichés en arbre (chips pièces + badges or) avec états à venir/en cours/terminé ; testé sur les 17 modèles via scripts/test-assembly-plan.ts (tous cohérents, ex. pantalon : Devant+Devant→A, A+Dos→B, B+Dos→C, C+Ceinture→D).
+- Interaction d'assemblage : pièce mobile posée hors de l'ancre (position dépendante du type de jonction ll/rr/rl/tt/bt/ct), glisser-déposer avec accroche à ≤14 cm de la cible ou bouton « Assembler les pièces » ; animation easeInOut avec miroir progressif (scale lerp kk 0→1) ; miroir de position dans un ref (moverPosRef) pour éviter la course pointerup/state.
+- Interaction de couture : zone de couture surlignée (bande = 2×marge, ligne pointillée centrale, bords de marge), 3 épingles numérotées, chevrons de sens ; coudre au doigt (projection du pointeur sur le segment, points dorés progressifs + aiguille orientée) ou à la « pédale » (maintien du bouton, rAF ~0,4/s) ; « Découdre » remet à zéro ; « Terminer » (auto-complétion) ; verrouillage à ≥97 % avec couture bleue numérotée, badge sous-ensemble pop (spring) et étincelles dorées ; toast sonner.
+- Zones pour étapes sans jonction : pinces/plis → ligne verticale centrale, ourlets/roulottés → ligne près du bord bas (détection par mots-clés) ; fallback pour jonction ct (mouchoir).
+- Fiche couture pédagogique par étape : type (Assemblage/Pince/Ourlet/Finitions… déduit du texte), marge extraite de la note (regex cm, défaut 1 cm), point droit 2,5 mm, 3 épingles, endroit contre endroit ; toggle Aide (épingles/chevrons/étiquette marge).
+- Vue finale : MannequinView + résumé « N coutures réalisées · zones respectées · point droit 2,5 mm » + tags + Revoir/Rejouer.
+- Corrections pendant QA : viewBox SVG désormais [x,y,largeur,hauteur] (l'ancien format [x0,y0,x1,y1] ne passait que par coïncidence quand le contenu partait de l'origine) ; pièce mobile positionnée entièrement hors de l'ancre (fini le chevauchement en phase place) ; englobant calculé avec l'échelle réellement rendue ; étapes de préparation débloquées via « Aller à la couture » (bouton Assembler désactivé avant) ; labels SVG adaptés clair/sombre (var(--foreground)/var(--background)).
+- Héro landing : `.splash-halo` (halo doré + anneau bleu roi, respiration 6,5 s, version .dark intensifiée), anneau « ligne de couture » pointillé or rotatif (90 s) avec perle autour du logo, `.splash-vignette` (bords assombris, plus profond en sombre) ; workflow mini et carte Parcours renommés « La couture » (icône main).
+- QA : ESLint 0/0, tsc src propre, console 0 erreur à froid ; E2E agent-browser 390 px sombre : parcours complet (exemple → 3 variantes cache → sélection → patron → coupe 2/2 → assemblage interactif) — pédale (55 % en 1,3 s), glisser-déposer de la pièce (accroche OK), couture au doigt le long de la ligne (complétion auto + sous-ensemble A), vue finale mannequin + plan 100 % coché ; desktop 1440 clair + sombre vérifiés ; projets de test supprimés de la base.
+
+Stage Summary:
+- L'étape assemblage est devenue un véritable atelier de couture pédagogique : l'utilisateur assemble les pièces en sous-ensembles nommés (A, B…), couse chaque zone au doigt ou à la pédale avec marges, épingles et sens guidés, jusqu'au vêtement porté — exactement le schéma « pièce 1 + pièce 2 = A … habit final ».
+- Le héros met le logo en scène (halo doré + anneau de couture rotatif + vignette) avec un mode sombre renforcé.
+- Fichiers clés : src/components/atelier/sewing-studio.tsx (nouveau), src/components/atelier/assembly-player.tsx (supprimé), src/components/studio/step-assembly.tsx, src/components/landing/landing.tsx, src/app/globals.css, scripts/test-assembly-plan.ts.

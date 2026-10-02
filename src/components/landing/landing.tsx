@@ -6,7 +6,7 @@ import {
   ArrowDown,
   Camera,
   ChevronRight,
-  GitMerge,
+  Hand,
   Images,
   Scissors,
   Sparkles,
@@ -29,6 +29,7 @@ function Splash({ onOpen }: { onOpen: () => void }) {
   return (
     <section className="splash-navy relative flex min-h-[100svh] flex-col overflow-hidden text-white">
       <div className="splash-grain pointer-events-none absolute inset-0" aria-hidden="true" />
+      <div className="splash-vignette pointer-events-none absolute inset-0" aria-hidden="true" />
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/45 to-transparent"
         aria-hidden="true"
@@ -42,18 +43,44 @@ function Splash({ onOpen }: { onOpen: () => void }) {
         <ThemeToggle tone="navy" />
       </header>
 
-      {/* Logo central */}
+      {/* Logo central — halo doré + anneau de couture rotatif */}
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 py-10 text-center">
-        <motion.img
-          src="/atelya-logo-splash.webp"
-          alt="Atelya — Créez, Mesurez, Réalisez"
-          width={665}
-          height={487}
-          initial={{ opacity: 0, scale: 0.92, y: 14 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          className="animate-floaty w-[min(76vw,340px)] drop-shadow-[0_24px_60px_rgba(0,0,0,0.45)]"
-        />
+        <div className="relative grid place-items-center">
+          <div
+            className="splash-halo pointer-events-none absolute size-[min(92vw,440px)] rounded-full"
+            aria-hidden="true"
+          />
+          <motion.svg
+            viewBox="0 0 100 100"
+            aria-hidden="true"
+            className="pointer-events-none absolute size-[min(98vw,474px)] opacity-40"
+            initial={{ rotate: 0 }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 90, ease: "linear", repeat: Infinity }}
+          >
+            <circle
+              cx="50"
+              cy="50"
+              r="48.4"
+              fill="none"
+              stroke="#F0C243"
+              strokeWidth="0.55"
+              strokeDasharray="2.6 2.2"
+              strokeLinecap="round"
+            />
+            <circle cx="50" cy="1.6" r="1.15" fill="#F0C243" />
+          </motion.svg>
+          <motion.img
+            src="/atelya-logo-splash.webp"
+            alt="Atelya — Créez, Mesurez, Réalisez"
+            width={665}
+            height={487}
+            initial={{ opacity: 0, scale: 0.92, y: 14 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="animate-floaty relative z-10 w-[min(70vw,318px)] drop-shadow-[0_24px_60px_rgba(0,0,0,0.55)]"
+          />
+        </div>
 
         <motion.p
           initial={{ opacity: 0, y: 12 }}
@@ -101,7 +128,7 @@ function Splash({ onOpen }: { onOpen: () => void }) {
             { icon: Camera, t: "Photo" },
             { icon: Sparkles, t: "Variantes" },
             { icon: Scissors, t: "Découpe" },
-            { icon: GitMerge, t: "Assemblage" },
+            { icon: Hand, t: "Couture" },
           ].map((s, i) => (
             <React.Fragment key={s.t}>
               <li className="flex items-center gap-1.5">
@@ -150,9 +177,9 @@ const FLOW = [
     d: "Toutes les pièces du patron, placées sur le tissu.",
   },
   {
-    icon: GitMerge,
-    t: "L'assemblage",
-    d: "Couture par couture, jusqu'au vêtement fini.",
+    icon: Hand,
+    t: "La couture",
+    d: "Cousez chaque zone guidée : pièces, sous-ensembles, vêtement fini.",
   },
 ];
 

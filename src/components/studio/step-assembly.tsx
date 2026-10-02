@@ -1,14 +1,14 @@
 "use client";
 
-import * as React from "react";
-import { GitMerge } from "lucide-react";
+import { Hand } from "lucide-react";
 
-import { AssemblyPlayer } from "@/components/atelier/assembly-player";
+import { SewingStudio } from "@/components/atelier/sewing-studio";
 import type { Measures, ModelKey, PieceDef } from "@/lib/atelier/patterns";
 
 /**
- * Étape 04 — l'assemblage pas à pas : les pièces se rejoignent couture
- * par couture, jusqu'au vêtement fini porté sur mannequin.
+ * Étape 04 — atelier de couture interactif : l'utilisateur assemble les
+ * pièces en sous-ensembles (A, B…), couse chaque zone guidée au doigt ou
+ * à la pédale, jusqu'au vêtement fini porté sur mannequin.
  */
 export function StepAssembly({
   modelKey,
@@ -23,36 +23,32 @@ export function StepAssembly({
   fc: string;
   sa: number;
 }) {
-  const [step, setStep] = React.useState(0);
-
   return (
     <section
-      aria-label="Assemblage pas à pas"
+      aria-label="Atelier de couture guidé"
       className="card-luxe overflow-hidden rounded-2xl border border-border/70 bg-card"
     >
       <header className="flex items-center gap-3 border-b border-border/60 px-5 py-4">
         <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-primary">
-          <GitMerge className="size-[18px]" />
+          <Hand className="size-[18px]" />
         </div>
         <div>
           <h2 className="font-display text-[17px] font-bold leading-tight">
-            Montage pas à pas
+            Atelier de couture — à vous de coudre
           </h2>
           <p className="text-xs text-muted-foreground">
-            Coutures numérotées, bord à bord — jusqu&apos;au produit fini porté
-            sur mannequin
+            Assemblez les pièces en sous-ensembles A, B… puis cousez chaque
+            zone guidée, jusqu&apos;au vêtement fini
           </p>
         </div>
       </header>
       <div className="p-5">
-        <AssemblyPlayer
+        <SewingStudio
           modelKey={modelKey}
           m={mm}
           defs={defs}
           fc={fc}
           sa={sa}
-          step={step}
-          onStep={setStep}
           resetKey={`${modelKey}|${mm.P}|${mm.T}|${mm.H}|${mm.L}`}
         />
       </div>
