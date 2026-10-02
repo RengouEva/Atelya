@@ -168,3 +168,19 @@ Work Log:
 Stage Summary:
 - Le logo n'a plus aucun encadré : il repose directement sur le fond clair #F1F4FC de la page atelier, ce qui le fait ressortir.
 - Fichiers clés : src/components/landing/landing.tsx (Splash), src/app/globals.css (.splash-halo-light).
+
+---
+Task ID: 10
+Agent: Super Z (main)
+Task: Correction de portée — « J'ai demandé de retirer juste le background de la photo. Remets comme c'était » : la Task 9 était allée trop loin (photo d'atelier retirée du héros + splash repeint en clair). Restaurer l'état antérieur.
+
+Work Log:
+- Audit git : l'état souhaité correspond au commit d835e38 (Task 7 — splash navy + photo d'atelier en fond + logo transparent flottant) ; les Tasks 8 (carte claire) et 9 (splash clair) avaient modifié landing.tsx, globals.css et studio-app.tsx sans aucune autre évolution fonctionnelle (diff vérifié ligne à ligne).
+- Restauration fidèle : git checkout d835e38 -- src/components/landing/landing.tsx src/app/globals.css src/components/studio/studio-app.tsx → splash navy avec couche .splash-atelier (photo atelier-bg.webp), halo doré .splash-halo, anneau de couture or rotatif, logo transparent atelya-logo-splash.webp, textes blanc/or d'origine, ThemeToggle tone="navy", CTA final + carte navy avec fond atelier, emblème atelya-mark.webp (CTA, footer, header studio).
+- Suppression des artefacts Task 8/9 : public/atelya-logo-card.webp, public/atelya-mark-tile.webp, scripts/logo-card.py + captures QA périmées ; aucune référence restante (rg vérifié).
+- QA : ESLint 0 erreur ; agent-browser 390 px sombre + clair et 1440 px sombre — photo d'atelier perceptible derrière le logo (mannequin, machine à coudre), halo + anneau intacts, CTA final et footer conformes à l'ancien état, console 0 erreur.
+- Commit bf84a37.
+
+Stage Summary:
+- Retour à l'état « comme c'était » (Task 7) : héros navy avec la photo d'atelier en fond, logo transparent flottant sans carte ni encadré ; la carte claire #F1F4FC n'existe plus.
+- Fichiers clés : src/components/landing/landing.tsx, src/app/globals.css, src/components/studio/studio-app.tsx (restaurés du commit d835e38) ; assets carte supprimés.
