@@ -27,6 +27,7 @@ import { ClientsCard, type ApiClient } from "@/components/atelier/clients-card";
 import { FabricTable } from "@/components/atelier/fabric-table";
 import { AssemblyPlayer } from "@/components/atelier/assembly-player";
 import { GarmentPreview } from "@/components/atelier/garment-preview";
+import { AiStudio } from "@/components/atelier/ai-studio";
 import {
   ModelIcon,
   PieceMini,
@@ -593,6 +594,9 @@ export function AtelierApp({
                 </div>
               </div>
             </motion.section>
+
+            {/* Studio IA — visuels réalistes */}
+            <AiStudio modelKey={modelKey} m={mm} fc={C} />
 
             {/* Nomenclature */}
             <motion.section

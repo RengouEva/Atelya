@@ -23,3 +23,16 @@ model Client {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+/// Visuel généré par IA (produit fini, texture de tissu, pièces en situation).
+/// `sig` = empreinte déterministe des paramètres → sert de cache ; les
+/// variations ajoutent un nonce au sig pour forcer une nouvelle image.
+model AiVisual {
+  id        String   @id @default(cuid())
+  kind      String
+  sig       String   @unique
+  prompt    String
+  mime      String   @default("image/png")
+  data      String
+  createdAt DateTime @default(now())
+}

@@ -116,6 +116,9 @@ function Nav({ onOpen }: { onOpen: (k?: ModelKey) => void }) {
           <a href="#savoir-faire" className="transition hover:text-foreground">
             Savoir-faire
           </a>
+          <a href="#ia" className="transition hover:text-foreground">
+            Visuels IA
+          </a>
           <a href="#fonctionnement" className="transition hover:text-foreground">
             Fonctionnement
           </a>
@@ -617,6 +620,107 @@ function Fonctionnement() {
 }
 
 /* ------------------------------------------------------------------ */
+/* Visuels IA                                                          */
+/* ------------------------------------------------------------------ */
+
+const AI_SHOTS = [
+  {
+    src: "/ai/robe-ia.png",
+    t: "Le produit fini",
+    d: "Le vêtement terminé, porté sur un mannequin de couturier — généré depuis le modèle et vos mesures.",
+  },
+  {
+    src: "/ai/tissu-ia.png",
+    t: "La matière",
+    d: "Gros plan sur la texture du tissu conseillé, dans le coloris exact choisi au sélecteur.",
+  },
+  {
+    src: "/ai/pieces-ia.png",
+    t: "Les pièces en situation",
+    d: "Le patron papier épinglé sur le tissu, prêt pour la craie, les épingles et les ciseaux.",
+  },
+];
+
+function AiSection() {
+  return (
+    <section
+      id="ia"
+      className="border-y border-border/60 bg-card/40"
+    >
+      <div className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
+        <div className="grid items-end gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)]">
+          <motion.div {...reveal}>
+            <p className="font-editorial text-lg italic text-primary">
+              Intelligence artificielle
+            </p>
+            <h2 className="mt-2 font-display text-3xl font-bold leading-tight sm:text-4xl">
+              L&apos;IA entre dans l&apos;atelier
+            </h2>
+            <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
+              Un clic suffit pour obtenir des photographies réalistes de votre
+              projet : le vêtement fini porté sur mannequin, la texture du
+              tissu dans votre coloris, les pièces du patron posées sur la
+              table de coupe. Chaque image est calculée depuis votre modèle,
+              votre tissu et votre couleur — puis conservée en base.
+            </p>
+          </motion.div>
+          <motion.div
+            {...reveal}
+            transition={{ duration: 0.5, delay: 0.08, ease: "easeOut" }}
+            className="rounded-2xl border border-border/70 bg-background p-4 text-[13px] leading-relaxed text-muted-foreground"
+          >
+            <p className="flex items-center gap-2 font-display text-sm font-bold text-foreground">
+              <Sparkles className="size-4 text-primary" />
+              Dans l&apos;atelier, section « Studio IA »
+            </p>
+            <p className="mt-1.5">
+              Trois vues générées à la demande — produit fini, texture,
+              pièces — avec variations à volonté. Comptez 20 à 60 secondes par
+              image ; les réglages identiques se rechargent instantanément.
+            </p>
+          </motion.div>
+        </div>
+
+        <div className="mt-10 grid gap-4 md:grid-cols-3">
+          {AI_SHOTS.map((s, i) => (
+            <motion.figure
+              key={s.t}
+              {...reveal}
+              transition={{
+                duration: 0.5,
+                delay: i * 0.08,
+                ease: "easeOut",
+              }}
+              className="group overflow-hidden rounded-2xl border border-border/70 bg-card"
+            >
+              <div className="relative aspect-[4/5] overflow-hidden">
+                { }
+                <img
+                  src={s.src}
+                  alt={`${s.t} — visuel généré par IA`}
+                  className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                  loading="lazy"
+                />
+                <Badge className="absolute left-3 top-3 gap-1 rounded-full bg-background/85 px-2.5 text-[10px] font-semibold text-foreground backdrop-blur">
+                  <Sparkles className="size-3 text-primary" />
+                  Généré par IA
+                </Badge>
+              </div>
+              <figcaption className="p-5">
+                <h3 className="font-display text-lg font-bold">{s.t}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                  {s.d}
+                </p>
+              </figcaption>
+            </motion.figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /* Appel final + pied de page                                          */
 /* ------------------------------------------------------------------ */
 
@@ -748,6 +852,7 @@ export function Landing({ onOpen }: { onOpen: (k?: ModelKey) => void }) {
         <SavoirFaire />
         <Catalogue onOpen={onOpen} />
         <Fonctionnement />
+        <AiSection />
         <FinalCta onOpen={onOpen} />
       </main>
       <Footer onOpen={onOpen} />
