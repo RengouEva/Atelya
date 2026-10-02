@@ -20,3 +20,23 @@ Stage Summary:
 - Livrable : `/home/z/my-project/download/atelier-coupe.html` (fichier unique autonome, ~60 Ko, fonts Google uniquement).
 - Fonctionnalités complètes + les deux demandes clés : assemblage en images animé et aperçu du vêtement/style obtenu.
 - Scripts de test réutilisables dans `/home/z/my-project/scripts/` (extract.js, test-render.js, test-shots.js, test-mobile.js).
+
+---
+Task ID: 1
+Agent: main (Super Z)
+Task: Construire l'app « Atelier – coupe du tissu » Ultra Premium — 12 styles, assemblage animé en images et aperçu du vêtement
+
+Work Log:
+- Créé /home/z/my-project/download/atelier-coupe.html (single-file HTML, vanilla JS + SVG inline, ~55 Ko de JS)
+- Design system premium : Bricolage Grotesque + Figtree, thème clair/sombre (préférence système + bouton), palette lin/rose-or, cartes, onglets sticky
+- 12 modèles paramétriques (7 originaux + 5 nouveaux : portefeuille, pantalon, trapèze, kimono, péplum) avec pièces SVG, pli/miroir, méthode pas-à-pas, astuce, note de pliage
+- Aperçu vêtement paramétrique sur buste à l'échelle (proportions P/T/H/L) pour chaque style + couleur de tissu au choix (7 nuances)
+- Plombage : bin packing first-fit decreasing, métrage arrondi au 5 cm, lisières, avertissements de laize, zoom
+- Coupe interactive : animation de tracé (pathLength), panier des pièces coupées, progression, « Tout couper »
+- Assemblage animé : vraies pièces SVG qui se rejoignent couture par couture (codes rr/ll/rl/tt/bt + miroir), ligne de couture surlignée, lecture auto, puis aperçu final du vêtement
+- Fiches clientes (localStorage), signature de paramètres réinitialisant coupe/assemblage
+- Tests : node (syntaxe + moteur, 12 modèles × 4 morphologies) et navigateur headless (aperçu, plombage, coupe, assemblage, méthode, mode sombre, fiches) — aucune erreur console
+
+Stage Summary:
+- Livrable : /home/z/my-project/download/atelier-coupe.html (ouvrable hors ligne, mobile-first)
+- Les 2 exigences clés sont couvertes : assemblage 100 % image (pièces réelles animées) + aperçu du vêtement et du style obtenu (buste paramétrique, onglet Aperçu et carte « Aperçu final » de l'assemblage)

@@ -2,1203 +2,878 @@
 <html lang="fr" data-theme="light">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#F3F1EA" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#151318" media="(prefers-color-scheme: dark)">
-<meta name="description" content="Atelier — coupe du tissu : patrons calculés d'après vos mesures, plan de coupe, méthode et assemblage illustré étape par étape.">
-<title>Atelier — Coupe du tissu</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Atelier — coupe du tissu</title>
+<meta name="description" content="Atelier de coupe sur-mesure : patron, plombage, coupe animée, assemblage en images et aperçu du vêtement.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#F3F1EA; --card:#FCFBF7; --card2:#F5F3EA; --ink:#232B45; --mute:#6E7488;
-  --line:#E5E2D6; --line2:#D7D4C6; --chalk:#D6336C; --chalk2:#B8245A;
-  --chalk-soft:rgba(214,51,108,.09); --ok:#2E7D5B; --wrn:#B3541E;
-  --table:#DFDEC9; --table2:#CFCEB6; --fab1:#F5BCCB; --fab2:#E59CB6; --pvh:rgba(214,51,108,.16);
-  --sh:0 1px 2px rgba(35,43,69,.05),0 10px 30px -14px rgba(35,43,69,.16);
-  --r:18px; --r2:12px;
+  --bg:#F2F0E9;--bg2:#E9E6DC;--card:#FBFAF6;--ink:#262A3D;--mute:#7A7F92;
+  --line:#DCD9CE;--line2:#CBC7B9;--chalk:#C2255C;--gold:#B08D57;--ok:#3E7C59;
+  --form:#E7E3D7;--formline:#C9C4B4;--gstroke:rgba(25,28,40,.55);
+  --shadow:0 1px 2px rgba(35,40,60,.05),0 18px 44px -30px rgba(35,40,60,.38);
+  --hd:60px;--r:18px;
 }
-[data-theme="dark"]{
-  --bg:#15131A; --card:#1E1B23; --card2:#242029; --ink:#EFEAE2; --mute:#9BA0B2;
-  --line:#2F2B37; --line2:#3B3645; --chalk:#F0568B; --chalk2:#FF709E;
-  --chalk-soft:rgba(240,86,139,.13); --ok:#5FBF98; --wrn:#E08A4E;
-  --table:#26232D; --table2:#312D3A; --fab1:#6E2C49; --fab2:#8C3B5E; --pvh:rgba(240,86,139,.2);
-  --sh:0 1px 2px rgba(0,0,0,.4),0 12px 32px -14px rgba(0,0,0,.55);
+[data-theme=dark]{
+  --bg:#141519;--bg2:#1B1D23;--card:#1E2027;--ink:#ECEAE2;--mute:#8E93A3;
+  --line:#2E313B;--line2:#3C404C;--chalk:#E76E93;--gold:#C9A56A;--ok:#6FBF94;
+  --form:#262932;--formline:#3C404C;--gstroke:rgba(15,16,22,.6);
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 18px 44px -26px rgba(0,0,0,.6);
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{
-  font-family:"Outfit",system-ui,sans-serif;font-size:15.5px;line-height:1.55;color:var(--ink);
-  background:var(--bg);min-height:100vh;padding-bottom:env(safe-area-inset-bottom);
-}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:radial-gradient(var(--line2) 1px,transparent 1.1px);background-size:26px 26px;opacity:.35}
-.wrap{max-width:1120px;margin:0 auto;padding:0 22px;position:relative;z-index:1}
-h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;line-height:1.15;letter-spacing:.2px}
+*{box-sizing:border-box;margin:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{font-family:Figtree,system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;min-height:100vh}
+h1,h2,h3,h4,.dfont{font-family:'Bricolage Grotesque',Figtree,sans-serif;letter-spacing:-.01em}
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 input,select{font:inherit;color:inherit}
-.hidden{display:none!important}
-::selection{background:var(--chalk);color:#fff}
+svg{display:block}
+.pv{width:100%;height:auto;max-height:72vh}
 
-/* ---------- header ---------- */
-.top{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 82%,transparent);
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.top-in{display:flex;align-items:center;gap:14px;padding-top:calc(10px + env(safe-area-inset-top));padding-bottom:10px}
-.brand{display:flex;align-items:center;gap:11px;margin-right:auto}
-.bmark{width:34px;height:34px;flex:none;color:var(--chalk)}
-.brand h1{font-size:21px;font-style:italic}
-.brand p{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-top:1px}
-.top-actions{display:flex;align-items:center;gap:8px}
-.clients{display:flex;align-items:center;gap:6px}
-.inp{height:38px;border:1px solid var(--line2);border-radius:11px;background:var(--card);
-  padding:0 11px;font-weight:500;outline:none;transition:border-color .18s, box-shadow .18s;min-width:0}
-.inp:focus{border-color:var(--chalk);box-shadow:0 0 0 3px var(--chalk-soft)}
-.inp.slim{height:34px;font-size:13.5px}
-.inp#nm{width:128px}
-select.inp.slim{max-width:150px}
-.btn{display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 16px;border-radius:999px;
-  border:1.4px solid var(--ink);font-weight:600;font-size:14px;transition:transform .16s, background .16s, color .16s, border-color .16s;white-space:nowrap}
+/* ---------- Header ---------- */
+.hd{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:12px;
+  padding:10px max(14px,env(safe-area-inset-left)) 10px max(14px,env(safe-area-inset-right));
+  background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.logo{width:38px;height:38px;border-radius:12px;background:var(--ink);color:var(--card);
+  display:grid;place-items:center;flex:none}
+.logo svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.brand h1{font-size:1.18rem;font-weight:800;line-height:1}
+.brand p{font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:var(--mute);font-weight:600;margin-top:2px}
+.hd-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+.fabs{display:flex;gap:6px;padding:5px 7px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
+.fdot{width:17px;height:17px;border-radius:50%;border:1px solid rgba(0,0,0,.18);cursor:pointer;transition:.18s;position:relative}
+.fdot.on{transform:scale(1.22);box-shadow:0 0 0 2px var(--card),0 0 0 3.5px var(--ink)}
+.icobtn{width:36px;height:36px;border-radius:12px;border:1px solid var(--line);background:var(--card);
+  display:grid;place-items:center;transition:.18s}
+.icobtn:hover{transform:translateY(-1px)}
+.icobtn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- Layout ---------- */
+.wrap{display:grid;grid-template-columns:1fr;gap:16px;max-width:1280px;margin:0 auto;
+  padding:16px max(14px,env(safe-area-inset-left)) 60px max(14px,env(safe-area-inset-right))}
+@media(min-width:1020px){.wrap{grid-template-columns:344px 1fr;align-items:start}
+  .side{position:sticky;top:calc(var(--hd) + 14px)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);
+  padding:16px;margin-bottom:14px}
+.ov{font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);font-weight:700;margin-bottom:3px}
+.card h2{font-size:1.02rem;font-weight:700;display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.sn{width:23px;height:23px;border-radius:8px;background:var(--ink);color:var(--card);font-size:.72rem;
+  font-weight:700;display:grid;place-items:center;font-family:Figtree}
+.card h3{font-size:1.3rem;font-weight:800}
+.muted{color:var(--mute)}
+.small{font-size:.8rem}
+
+/* ---------- Chips modèles ---------- */
+.mods{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(min-width:430px){.mods{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1020px){.mods{grid-template-columns:repeat(2,1fr)}}
+.chip{display:flex;flex-direction:column;gap:6px;align-items:flex-start;padding:10px;border:1px solid var(--line);
+  border-radius:14px;background:var(--bg2);transition:.18s;text-align:left}
+.chip:hover{transform:translateY(-1px);border-color:var(--line2)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--card)}
+.chip svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.chip b{font-size:.74rem;font-weight:600;line-height:1.15}
+.lvl{display:flex;gap:3px}
+.lvl i{width:4.5px;height:4.5px;border-radius:50%;background:var(--gold);opacity:.28}
+.lvl i.f{opacity:1}
+#mdesc{margin-top:11px;font-size:.82rem;color:var(--mute)}
+
+/* ---------- Mesures ---------- */
+.mrow{display:grid;grid-template-columns:86px 58px 1fr;gap:8px;align-items:center;padding:5px 0}
+.mlab{font-size:.78rem;font-weight:600}
+.mlab i{font-style:normal;color:var(--mute);font-weight:500;font-size:.68rem;display:block}
+.nin{width:58px;padding:6px 4px;text-align:center;border:1px solid var(--line);border-radius:9px;background:var(--bg2);font-weight:600;font-size:.82rem}
+input[type=range]{width:100%;accent-color:var(--chalk);height:22px}
+.mset{margin-top:8px;border-top:1px dashed var(--line);padding-top:9px}
+.mset summary{font-size:.78rem;font-weight:600;color:var(--mute);cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px}
+.mset summary::before{content:"";width:6px;height:6px;border-right:1.6px solid var(--mute);border-bottom:1.6px solid var(--mute);transform:rotate(-45deg);transition:.2s}
+.mset[open] summary::before{transform:rotate(45deg)}
+
+/* ---------- Cliente ---------- */
+.selwrap select{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:12px;background:var(--bg2);font-size:.85rem;font-weight:600}
+#nm{width:100%;margin-top:8px;padding:9px 11px;border:1px solid var(--line);border-radius:12px;background:var(--bg2);font-size:.85rem}
+.btnrow{display:flex;gap:8px;margin-top:9px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 15px;border-radius:12px;
+  font-weight:700;font-size:.82rem;transition:.18s;border:1px solid var(--line);background:var(--bg2)}
 .btn:hover{transform:translateY(-1px)}
-.btn:active{transform:translateY(0)}
-.btn.pri{background:var(--chalk);border-color:var(--chalk);color:#fff}
-.btn.pri:hover{background:var(--chalk2);border-color:var(--chalk2)}
-.btn.ghost{border-color:var(--line2);color:var(--mute)}
-.btn.ghost:hover{color:var(--ink);border-color:var(--ink)}
-.btn.slim{height:34px;padding:0 13px;font-size:13px}
-.icon-btn{width:36px;height:36px;border-radius:11px;border:1px solid var(--line2);display:inline-flex;
-  align-items:center;justify-content:center;font-size:15px;background:var(--card);color:var(--mute);
-  transition:all .16s;flex:none}
-.icon-btn:hover{color:var(--ink);border-color:var(--ink);transform:translateY(-1px)}
+.btn.pri{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.btn.chalk{background:var(--chalk);color:#fff;border-color:var(--chalk)}
+.btn.gh{background:transparent}
+.btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.btn:disabled{opacity:.45;pointer-events:none}
 
-/* ---------- sections ---------- */
-.sec{padding:36px 0 4px}
-.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
-.sec-head .no{font-family:"Fraunces",serif;font-style:italic;font-size:14px;color:var(--chalk);font-weight:600}
-.sec-head h2{font-size:clamp(22px,3.4vw,27px)}
-.sec-head .rule{flex:1;height:1px;background:var(--line2);transform:translateY(-4px)}
-.sec-head .aside{font-size:12.5px;color:var(--mute);letter-spacing:.02em;white-space:nowrap}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:20px}
+/* ---------- Tabs ---------- */
+.tabs{display:flex;gap:5px;overflow-x:auto;position:sticky;top:var(--hd);z-index:30;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);
+  padding:8px 2px;margin:-8px -2px 12px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{display:flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;border:1px solid transparent;
+  color:var(--mute);font-weight:600;font-size:.82rem;white-space:nowrap;transition:.18s}
+.tab svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tab.on{background:var(--card);border-color:var(--line);color:var(--ink);box-shadow:var(--shadow)}
 
-/* ---------- modèles ---------- */
-.mods{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px}
-.mod{position:relative;background:var(--card);border:1.4px solid var(--line);border-radius:var(--r);
-  padding:10px 12px 13px;text-align:left;transition:transform .18s, border-color .18s, box-shadow .18s;cursor:pointer;overflow:hidden}
-.mod:hover{transform:translateY(-3px);box-shadow:var(--sh);border-color:var(--line2)}
-.mod.on{border-color:var(--chalk);background:linear-gradient(180deg,var(--chalk-soft),transparent 55%)}
-.mod .pv{width:100%;height:118px;display:block}
-.mod b{display:block;font-family:"Fraunces",serif;font-weight:600;font-size:15.5px;margin-top:2px}
-.mod .cat{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
-.mod .dif{margin-top:5px;display:flex;gap:4px}
-.mod .dif i{width:7px;height:7px;border-radius:50%;background:var(--line2)}
-.mod .dif i.f{background:var(--chalk)}
-.mod .chk{position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:50%;background:var(--chalk);
-  color:#fff;display:none;align-items:center;justify-content:center;font-size:13px}
-.mod.on .chk{display:flex}
+/* ---------- Vues ---------- */
+.view-in{animation:fadeUp .38s cubic-bezier(.2,.7,.3,1) both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.pv-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.pv-box{border:1px solid var(--line);border-radius:14px;background:var(--bg2);padding:10px;overflow:hidden}
+.pv-note{font-size:.75rem;color:var(--mute);margin-top:9px}
+.desc{font-size:.9rem}
+.statrow{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+.stat{font-size:.72rem;font-weight:600;padding:5px 10px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);color:var(--mute)}
+.stat b{color:var(--ink)}
 
-/* ---------- aperçu ---------- */
-.apv{display:grid;grid-template-columns:330px 1fr;gap:24px;align-items:start}
-.apv-stage{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:10px;position:relative;overflow:hidden}
-.apv-stage .pv{width:100%;height:auto;display:block}
-.kicker{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--chalk);font-weight:600;margin-bottom:6px}
-.apv-info h3{font-size:clamp(24px,3.6vw,31px);font-style:italic;margin-bottom:10px}
-.apv-info .desc{color:var(--mute);max-width:56ch;margin-bottom:14px}
-.tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
-.tag{font-size:12px;font-weight:600;padding:4px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--mute)}
-.specs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.specs>div{background:var(--card2);border:1px solid var(--line);border-radius:var(--r2);padding:10px 12px}
-.specs .wide{grid-column:1/-1}
-.specs span{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-bottom:3px}
-.specs b{font-size:15px;font-weight:600}
-.dots{display:inline-flex;gap:4px;align-items:center}
-.dots i{width:8px;height:8px;border-radius:50%;background:var(--line2)}
-.dots i.f{background:var(--chalk)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+@media(max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;box-shadow:var(--shadow)}
+.kpi b{font-size:1.06rem;font-family:'Bricolage Grotesque';display:block;line-height:1.15}
+.kpi span{font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:700}
 
-/* ---------- mesures ---------- */
-.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.field{background:var(--card2);border:1px solid var(--line);border-radius:var(--r2);padding:11px 13px;transition:opacity .2s}
-.field.off{opacity:.38}
-.field label{display:flex;justify-content:space-between;font-size:12px;font-weight:600;letter-spacing:.03em;color:var(--mute);margin-bottom:7px}
-.field label em{font-style:normal;font-size:10.5px;border:1px solid var(--line2);border-radius:5px;padding:0 5px}
-.stp{display:flex;align-items:stretch;gap:6px}
-.stp button{width:32px;flex:none;border:1px solid var(--line2);border-radius:9px;background:var(--card);font-size:16px;font-weight:600;color:var(--mute);transition:all .14s}
-.stp button:hover{color:var(--chalk);border-color:var(--chalk)}
-.stp input{flex:1;width:100%;min-width:0;height:38px;text-align:center;font-weight:700;font-size:16.5px;
-  border:1px solid var(--line2);border-radius:9px;background:var(--card);outline:none;transition:border-color .18s, box-shadow .18s}
-.stp input:focus{border-color:var(--chalk);box-shadow:0 0 0 3px var(--chalk-soft)}
-.stp input:disabled{color:var(--mute)}
-.wr{margin-top:12px;font-size:13.5px;font-weight:600;color:var(--wrn);display:flex;gap:8px;align-items:center}
+.rowbtns{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center}
+.zoom{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--mute);font-weight:700}
+.zoom input{width:110px}
 
-/* ---------- patron ---------- */
-.pcs{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px}
-.pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px;transition:transform .18s, box-shadow .18s}
-.pcard:hover{transform:translateY(-2px);box-shadow:var(--sh)}
-.pthumb{background:var(--card2);border-radius:10px;padding:8px;display:flex;justify-content:center}
-.pthumb svg{height:128px;width:auto;max-width:100%}
-.pmeta{margin-top:9px}
-.pmeta b{font-family:"Fraunces",serif;font-weight:600;font-size:14.5px;display:block}
-.pmeta>span{font-size:12px;color:var(--mute)}
-.badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-.badge{font-size:10.5px;font-weight:600;letter-spacing:.04em;padding:2px 8px;border-radius:999px;background:var(--chalk-soft);color:var(--chalk)}
-.badge.alt{background:transparent;border:1px solid var(--line2);color:var(--mute)}
-.pcard.done{opacity:.45}
-.pcard.done .pthumb{filter:grayscale(1)}
+.boardwrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--bg2);
+  box-shadow:inset 0 2px 14px rgba(0,0,0,.07);max-height:70vh}
+.boardwrap>svg{display:block}
+.pc{cursor:default}
+.pc-i{cursor:pointer}
+.pc-i:hover .pp{fill:rgba(255,255,255,.32)}
+.pp{fill:rgba(255,255,255,.20);stroke:var(--gstroke);stroke-width:.45;transition:fill .4s}
+.cutp .pp{fill:rgba(255,255,255,.05);stroke-dasharray:1.6 1.2;opacity:.55}
+.cutline{fill:none;stroke:var(--chalk);stroke-width:.95;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1}
+.cutline.go{transition:stroke-dashoffset 1s cubic-bezier(.5,0,.3,1);stroke-dashoffset:0}
+.plbl{font:600 3.4px Figtree,sans-serif;fill:#fff;opacity:.92;paint-order:stroke;stroke:rgba(0,0,0,.25);stroke-width:.6}
+.cutp .plbl{opacity:.55}
 
-/* ---------- plan de coupe ---------- */
-.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-bottom:13px}
-.toolbar .grp{display:flex;align-items:center;gap:6px}
-.toolbar .grp label{font-size:12px;font-weight:600;color:var(--mute);letter-spacing:.03em}
-.toolbar .inp.slim{width:74px;text-align:center}
-.toolbar .sep{flex:1}
-.prog-wrap{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.prog{flex:1;height:8px;border-radius:999px;background:var(--card2);border:1px solid var(--line);overflow:hidden}
-.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--chalk),var(--chalk2));border-radius:999px;transition:width .5s cubic-bezier(.25,.9,.25,1)}
-#prog-t{font-size:13px;font-weight:600;color:var(--mute);white-space:nowrap}
-.board-clip{border:1px solid var(--line2);border-radius:14px;overflow:auto;max-height:460px;background:var(--card2)}
-.board-clip svg{display:block;min-width:100%}
-.bp{cursor:crosshair}
-.bp .bf{fill:var(--fab1);fill-opacity:.5;stroke:var(--ink);stroke-width:.7;vector-effect:non-scaling-stroke;transition:fill-opacity .4s}
-.bp .bo{fill:none;stroke:transparent;stroke-width:.7;vector-effect:non-scaling-stroke}
-.bp .bc{fill:none;stroke:var(--chalk);stroke-width:1.6;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1}
-.bp:hover .bf{fill-opacity:.72;stroke:var(--chalk)}
-.bp.go .bc{transition:stroke-dashoffset 1.05s cubic-bezier(.55,.05,.35,1);stroke-dashoffset:0}
-.bp.cut{cursor:default}
-.bp.cut .bf{fill-opacity:.06}
-.bp.cut .bo{stroke:var(--mute);stroke-dasharray:2 1.6;opacity:.7}
-.bp.cut .bc{opacity:0}
-.bp .bl{font-size:3px;font-weight:600;fill:var(--ink);opacity:.6;text-anchor:middle;pointer-events:none}
-.bp .grain{stroke:var(--mute);stroke-width:.45;opacity:.55}
-.bp .fold{stroke:var(--chalk);stroke-width:.55;stroke-dasharray:1.6 1.2;opacity:.8}
-.bp .fl{font-size:2.6px;fill:var(--chalk);text-anchor:middle;opacity:.9}
-.ruler path{stroke:var(--mute);stroke-width:.3;opacity:.6}
-.ruler text{font-size:3.4px;fill:var(--mute);opacity:.8}
-.selv{stroke:var(--mute);stroke-width:.5;stroke-dasharray:2.4 1.8;opacity:.5}
-.banner{margin-top:13px;padding:12px 16px;border-radius:var(--r2);background:var(--chalk-soft);
-  border:1px solid var(--chalk);color:var(--chalk);font-weight:600;font-size:14.5px;display:flex;gap:9px;align-items:center}
-.tray-wrap{margin-top:14px;display:flex;align-items:flex-start;gap:12px}
-.tray-wrap .lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);font-weight:600;padding-top:8px;flex:none}
-#tray{display:flex;flex-wrap:wrap;gap:8px;min-height:46px}
-#tray .mini{width:52px;height:52px;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:5px;animation:pop .4s cubic-bezier(.2,.9,.3,1.4) both}
-#tray .mini svg{width:100%;height:100%}
-@keyframes pop{from{transform:scale(.5);opacity:0}}
+.prog{height:7px;border-radius:99px;background:var(--bg2);border:1px solid var(--line);overflow:hidden;margin-bottom:12px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--chalk));border-radius:99px;
+  transition:width .5s cubic-bezier(.3,.7,.3,1)}
 
-/* ---------- méthode ---------- */
-.ring{display:flex;align-items:center;gap:9px}
-.ring svg{width:44px;height:44px;transform:rotate(-90deg)}
-.ring circle{fill:none;stroke-width:4;stroke-linecap:round}
-.ring .rbg{stroke:var(--line)}
-.ring .rfg{stroke:var(--chalk);stroke-dasharray:119.4;stroke-dashoffset:119.4;transition:stroke-dashoffset .6s cubic-bezier(.25,.9,.25,1)}
-.ring span{font-size:13px;font-weight:700;color:var(--mute)}
-.meth{list-style:none}
-.meth li{display:flex;gap:13px;align-items:flex-start;padding:11px 4px;border-bottom:1px dashed var(--line);cursor:pointer;transition:opacity .2s}
-.meth li:last-child{border-bottom:none}
-.meth li:hover{background:var(--card2)}
-.meth .cb{flex:none;width:22px;height:22px;border-radius:50%;border:1.6px solid var(--line2);margin-top:1px;
-  display:flex;align-items:center;justify-content:center;color:transparent;font-size:12px;transition:all .2s}
-.meth li.ok .cb{background:var(--ok);border-color:var(--ok);color:#fff}
-.meth li.ok .tx{color:var(--mute);text-decoration:line-through;text-decoration-color:var(--chalk)}
-.meth .tx b{color:var(--chalk);font-weight:600;margin-right:6px}
+.tray{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px}
+.tchip{display:flex;align-items:center;gap:9px;padding:8px;border:1px solid var(--line);border-radius:13px;background:var(--card)}
+.tchip svg{width:40px;height:40px;flex:none}
+.tchip b{font-size:.76rem;display:block;line-height:1.2}
+.tchip span{font-size:.66rem;color:var(--mute);font-weight:600}
+.empty{padding:16px;border:1px dashed var(--line2);border-radius:14px;color:var(--mute);font-size:.82rem;text-align:center}
 
-/* ---------- assemblage ---------- */
-.asm{display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start}
-.asm-stage{padding:16px}
-#asm-stage{background:var(--card2);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-#asm-stage svg{display:block;width:100%;height:auto;max-height:560px;margin:0 auto}
-.ascn .sp{fill:var(--fab1);fill-opacity:.55;stroke:var(--ink);stroke-width:1;vector-effect:non-scaling-stroke;stroke-linejoin:round}
-.ascn .pz{transition:transform .95s cubic-bezier(.25,.9,.25,1)}
-.ascn .fx{transform:scale(-1,1)}
-.ascn .sm{stroke:var(--chalk);stroke-width:1.7;vector-effect:non-scaling-stroke;stroke-linecap:round;opacity:0;transition:opacity .45s .55s}
-.ascn.jd .sm{opacity:.85}
-.ascn .cr{stroke:var(--mute);stroke-width:.8;stroke-dasharray:3 2;opacity:0;transition:opacity .4s .6s}
-.ascn.jd .cr{opacity:.8}
-.ascn .ov{fill:none;stroke:var(--chalk);stroke-width:1.4;vector-effect:non-scaling-stroke;stroke-dasharray:.022 .016;animation:crawl 1.6s linear infinite}
-@keyframes crawl{to{stroke-dashoffset:-.076}}
-.ascn .lb{font-size:3.4px;font-weight:600;fill:var(--mute);text-anchor:middle}
-.ascn .dotbg{fill:var(--ink);opacity:.045}
-.pv.rv{animation:rvIn .95s cubic-bezier(.2,.85,.25,1) both}
-@keyframes rvIn{from{opacity:0;transform:translateY(12px) scale(.965)}}
-.asm-ctrl{display:flex;align-items:center;gap:10px;margin-top:13px}
-.asm-ctrl #a-cnt{font-size:13px;font-weight:700;color:var(--mute);min-width:52px;text-align:center}
-.asm-ctrl .spacer{flex:1}
-#btn-play.playing{background:var(--chalk);border-color:var(--chalk);color:#fff}
-.asm-txt{margin-top:14px;min-height:74px}
-.asm-txt h3{font-size:20px;font-style:italic;margin-bottom:5px}
-.asm-txt p{color:var(--mute);font-size:14.5px;max-width:60ch}
-.fin-note{margin-top:9px;font-weight:600;color:var(--chalk);font-size:14px}
-.asm-side{position:sticky;top:86px}
-.asm-side ol{list-style:none;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
-.asm-side li{display:flex;gap:11px;align-items:center;padding:11px 14px;border-bottom:1px dashed var(--line);cursor:pointer;font-size:14px;color:var(--mute);transition:background .16s,color .16s}
-.asm-side li:last-child{border-bottom:none}
-.asm-side li:hover{background:var(--card2);color:var(--ink)}
-.asm-side li.on{color:var(--ink);font-weight:600;background:var(--chalk-soft)}
-.asm-side li i{flex:none;width:24px;height:24px;border-radius:50%;border:1.4px solid var(--line2);display:flex;align-items:center;justify-content:center;font-style:normal;font-size:11.5px;font-weight:700}
-.asm-side li.on i{background:var(--chalk);border-color:var(--chalk);color:#fff}
-.asm-side li.done i{background:var(--ok);border-color:var(--ok);color:#fff}
-.hint{margin-top:10px;font-size:12px;color:var(--mute);text-align:center}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.pcard{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:11px;box-shadow:var(--shadow)}
+.pcard .pvb{background:var(--bg2);border-radius:11px;padding:8px;margin-bottom:9px}
+.pcard svg{width:100%;height:auto;max-height:170px}
+.pcard b{font-size:.84rem}
+.pmeta{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.badge{font-size:.64rem;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);color:var(--mute)}
+.badge.acc{background:color-mix(in srgb,var(--chalk) 12%,var(--card));border-color:color-mix(in srgb,var(--chalk) 30%,var(--line));color:var(--chalk)}
 
-/* ---------- pv garments ---------- */
-.pv .gb{stroke:var(--ink);stroke-width:1.7;stroke-linejoin:round}
-.pv .gh{stroke:none;pointer-events:none}
-.pv .gd{stroke:var(--ink);stroke-width:1;fill:none;stroke-dasharray:3 2.6;opacity:.5;stroke-linecap:round}
-.pv .gs{stroke:var(--ink);stroke-width:.9;fill:none;opacity:.4;stroke-dasharray:2 2.4;stroke-linecap:round}
-.pv .btn-c{fill:var(--ink);opacity:.75}
-.pv .band{fill:var(--fab2);stroke:var(--ink);stroke-width:1.4;stroke-linejoin:round}
+.note{display:flex;gap:10px;padding:11px 13px;border-radius:13px;background:color-mix(in srgb,var(--gold) 10%,var(--card));
+  border:1px solid color-mix(in srgb,var(--gold) 28%,var(--line));font-size:.8rem;margin-bottom:12px}
+.note svg{width:17px;height:17px;flex:none;stroke:var(--gold);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;margin-top:1px}
+.warnbox{padding:11px 13px;border-radius:13px;background:color-mix(in srgb,var(--chalk) 9%,var(--card));
+  border:1px solid color-mix(in srgb,var(--chalk) 30%,var(--line));font-size:.8rem;margin-bottom:12px}
+.warnbox b{color:var(--chalk)}
 
-/* ---------- footer / toast ---------- */
-.foot{padding:44px 22px 30px;color:var(--mute);font-size:13px;text-align:center}
-.toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,16px);
-  background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:999px;font-size:14px;font-weight:600;
-  box-shadow:var(--sh);opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.2,.9,.3,1.2);z-index:99;max-width:88vw;text-align:center}
-.toast.show{opacity:1;transform:translate(-50%,0)}
+/* ---------- Assemblage ---------- */
+.asmstage{border:1px solid var(--line);border-radius:14px;background:
+  radial-gradient(120% 90% at 50% 0%,color-mix(in srgb,var(--card) 55%,var(--bg2)),var(--bg2));
+  padding:10px;overflow:hidden}
+.asmstage svg{width:100%;height:auto}
+.apg{transition:transform .95s cubic-bezier(.55,.06,.25,1)}
+.aplbl{font:600 5px Figtree,sans-serif;fill:var(--ink);opacity:.62}
+.seamline{stroke:var(--chalk);stroke-width:.9;stroke-dasharray:2.6 2;stroke-linecap:round;animation:seamIn .6s both}
+@keyframes seamIn{from{opacity:0}to{opacity:1}}
+.asmctl{display:flex;gap:8px;margin-top:12px;align-items:center}
+.asmctl .grow{flex:1}
+.asmstep{margin-top:11px;padding:11px 13px;border-radius:13px;background:var(--bg2);border:1px solid var(--line);
+  font-size:.86rem;font-weight:600;min-height:44px;display:flex;gap:10px;align-items:center}
+.asmstep .stno{flex:none;width:26px;height:26px;border-radius:9px;background:var(--chalk);color:#fff;
+  display:grid;place-items:center;font-size:.72rem;font-weight:800}
+.asmhist{list-style:none;margin-top:11px;display:flex;flex-direction:column;gap:5px}
+.asmhist li{font-size:.78rem;color:var(--mute);display:flex;gap:8px;align-items:center;padding:5px 9px;border-radius:9px}
+.asmhist li.done{color:var(--ink)}
+.asmhist li.cur{background:var(--bg2);font-weight:600;color:var(--ink)}
+.asmhist li i{flex:none;width:15px;height:15px;border-radius:50%;border:1.4px solid var(--line2);font-size:.6rem;
+  display:grid;place-items:center;font-style:normal;font-weight:800}
+.asmhist li.done i{background:var(--ok);border-color:var(--ok);color:#fff}
+.asm-done{animation:fadeUp .5s .15s both}
+.asm-done .pv{max-height:52vh}
 
-/* ---------- responsive ---------- */
-@media (max-width:940px){
-  .apv{grid-template-columns:1fr}
-  .apv-stage{max-width:360px;margin:0 auto}
-  .asm{grid-template-columns:1fr}
-  .asm-side{position:static}
-  .specs{grid-template-columns:repeat(2,1fr)}
-}
-@media (max-width:680px){
-  .wrap{padding:0 14px}
-  .top-in{flex-wrap:wrap}
-  .brand p{display:none}
-  .clients{order:3;width:100%;justify-content:flex-start}
-  .clients .inp#nm{width:100px}
-  .fgrid{grid-template-columns:repeat(2,1fr)}
-  .sec{padding:28px 0 4px}
-  .sec-head .aside{display:none}
-  .mods{grid-template-columns:repeat(2,1fr)}
-}
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
-}
+/* ---------- Méthode ---------- */
+.mth{list-style:none;display:flex;flex-direction:column;gap:7px;margin-top:4px}
+.mth li{display:flex;gap:11px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);
+  border-radius:13px;background:var(--card);transition:.2s;font-size:.88rem}
+.mth li .ck{flex:none;width:22px;height:22px;border-radius:8px;border:1.6px solid var(--line2);margin-top:1px;
+  display:grid;place-items:center;transition:.18s}
+.mth li .ck svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.mth li.done{background:var(--bg2)}
+.mth li.done .ck{background:var(--ok);border-color:var(--ok)}
+.mth li.done .ck svg{opacity:1}
+.mth li.done span{color:var(--mute);text-decoration:line-through;text-decoration-color:var(--line2)}
+.mth .mno{color:var(--mute);font-weight:700;font-size:.74rem;margin-top:3px}
+
+footer{max-width:1280px;margin:0 auto;padding:18px 14px calc(18px + env(safe-area-inset-bottom));
+  color:var(--mute);font-size:.72rem;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
+#toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translate(-50%,80px);
+  background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:.82rem;font-weight:600;
+  box-shadow:var(--shadow);transition:transform .35s cubic-bezier(.2,.9,.3,1.2),opacity .3s;opacity:0;z-index:90;max-width:88vw;text-align:center}
+#toast.on{transform:translate(-50%,0);opacity:1}
 </style>
 </head>
 <body>
-<header class="top">
-  <div class="wrap top-in">
-    <div class="brand">
-      <svg class="bmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
-        <path d="M6.5 3.5l9.5 13.2M6.5 20.5l9.5-13.2"/>
-        <circle cx="4.6" cy="5.6" r="2.1"/><circle cx="4.6" cy="18.4" r="2.1"/>
-        <path d="M13 10.5l4.8 6.8M13 13.5l4.8-6.8" opacity=".55"/>
-      </svg>
-      <div><h1>Atelier</h1><p>coupe du tissu · studio de patronage</p></div>
-    </div>
-    <div class="top-actions">
-      <div class="clients">
-        <select id="cl" class="inp slim" aria-label="Clients enregistrés"><option value="">Client…</option></select>
-        <input id="nm" class="inp slim" placeholder="Nom du client" aria-label="Nom du client">
-        <button id="sv" class="btn slim" title="Enregistrer le client">Enregistrer</button>
-      </div>
-      <button id="th" class="icon-btn" title="Thème clair / sombre" aria-label="Changer de thème">◐</button>
-    </div>
+<header class="hd">
+  <div class="brand">
+    <span class="logo"><svg viewBox="0 0 24 24"><circle cx="5.5" cy="6" r="2.4"/><circle cx="5.5" cy="18" r="2.4"/><path d="M7.6 7.3 19 17M7.6 16.7 19 7M13 12l1.2 1"/></svg></span>
+    <div><h1>Atelier</h1><p>coupe du tissu</p></div>
+  </div>
+  <div class="hd-actions">
+    <div class="fabs" id="fabs" title="Tissu"></div>
+    <button class="icobtn" id="theme" aria-label="Thème"></button>
   </div>
 </header>
-
-<main class="wrap">
-  <section class="sec" id="s-modele">
-    <div class="sec-head"><span class="no">01</span><h2>Modèle</h2><span class="rule"></span><span class="aside">Choisissez votre pièce</span></div>
-    <div class="mods" id="mods"></div>
-  </section>
-
-  <section class="sec" id="s-apercu">
-    <div class="sec-head"><span class="no">02</span><h2>Aperçu &amp; style</h2><span class="rule"></span><span class="aside">Le vêtement que vous obtiendrez</span></div>
-    <div class="card apv" id="apv"></div>
-  </section>
-
-  <section class="sec" id="s-mesures">
-    <div class="sec-head"><span class="no">03</span><h2>Mesures</h2><span class="rule"></span><span class="aside">en centimètres, prises à plat</span></div>
-    <div class="card">
-      <div class="fgrid" id="fi"></div>
-      <p class="wr hidden" id="wr"></p>
-    </div>
-  </section>
-
-  <section class="sec" id="s-patron">
-    <div class="sec-head"><span class="no">04</span><h2>Pièces du patron</h2><span class="rule"></span><span class="aside" id="pcs-n"></span></div>
-    <div class="pcs" id="pcs"></div>
-  </section>
-
-  <section class="sec" id="s-coupe">
-    <div class="sec-head"><span class="no">05</span><h2>Plan de coupe</h2><span class="rule"></span><span class="aside" id="fold-note"></span></div>
-    <div class="card">
-      <div class="toolbar">
-        <div class="grp"><label for="W">Laize</label><input id="W" class="inp slim" inputmode="decimal" value="140"><span class="lbl" style="font-size:12px;color:var(--mute)">cm</span></div>
-        <div class="grp"><label for="M">Marge</label><input id="M" class="inp slim" inputmode="decimal" value="1"><span class="lbl" style="font-size:12px;color:var(--mute)">cm</span></div>
-        <div class="grp">
-          <button id="zo" class="icon-btn" title="Zoom arrière">−</button>
-          <button id="zr" class="icon-btn" title="Zoom 100 %">⌂</button>
-          <button id="zi" class="icon-btn" title="Zoom avant">+</button>
-        </div>
-        <div class="sep"></div>
-        <button id="all" class="btn pri slim">✂ Tout couper</button>
-        <button id="rs" class="btn ghost slim">Réinitialiser</button>
-      </div>
-      <div class="prog-wrap"><div class="prog"><i id="prog-i"></i></div><span id="prog-t">0 / 0</span></div>
-      <div class="board-clip" id="tb"></div>
-      <p class="wr hidden" id="wr2"></p>
-      <div class="banner hidden" id="met"></div>
-      <div class="tray-wrap"><span class="lbl">Pièces coupées</span><div id="tray"></div></div>
-    </div>
-  </section>
-
-  <section class="sec" id="s-methode">
-    <div class="sec-head"><span class="no">06</span><h2>Méthode de coupe</h2><span class="rule"></span>
-      <div class="ring"><svg viewBox="0 0 44 44" aria-hidden="true"><circle class="rbg" cx="22" cy="22" r="19"/><circle class="rfg" id="ring-f" cx="22" cy="22" r="19"/></svg><span id="ring-t">0 %</span></div>
-    </div>
-    <div class="card"><ol class="meth" id="meth"></ol></div>
-  </section>
-
-  <section class="sec" id="s-asm">
-    <div class="sec-head"><span class="no">07</span><h2>Assemblage illustré</h2><span class="rule"></span><span class="aside">en images, étape par étape</span></div>
-    <div class="asm">
-      <div class="card asm-stage">
-        <div id="asm-stage"></div>
-        <div class="asm-ctrl">
-          <button id="a-prev" class="icon-btn" title="Étape précédente">←</button>
-          <span id="a-cnt">1 / 1</span>
-          <button id="a-next" class="icon-btn" title="Étape suivante">→</button>
-          <div class="spacer"></div>
-          <button id="btn-play" class="btn slim">▶ Lecture</button>
-        </div>
-        <div class="asm-txt"><h3 id="a-title"></h3><p id="a-desc"></p><p class="fin-note hidden" id="a-final"></p></div>
-      </div>
-      <div class="asm-side">
-        <ol id="a-steps"></ol>
-        <p class="hint">Astuce : flèches ← → du clavier pour naviguer</p>
-      </div>
-    </div>
-  </section>
-</main>
-
-<footer class="foot wrap"><p>Atelier · coupe du tissu — patrons, tracés et métrages calculés d'après vos mesures. Valeurs indicatives : faites toujours un patron d'essai sur tissu bon marché.</p></footer>
-<div id="toast" class="toast" role="status"></div>
+<div class="wrap">
+  <aside class="side" id="side"></aside>
+  <main class="mainc">
+    <nav class="tabs" id="tabs"></nav>
+    <div id="view"></div>
+  </main>
+</div>
+<footer><span>Atelier — coupe du tissu · patrons paramétriques sur vos mesures</span><span>Fait main, avec soin</span></footer>
+<div id="toast"></div>
 <script>
 "use strict";
-/* ============ Atelier — coupe du tissu · studio de patronage ============ */
-const TAU = Math.PI * 2;
-const $  = s => document.querySelector(s);
-const $$ = s => [...document.querySelectorAll(s)];
-const r1 = n => Math.round(n * 10) / 10;
-const fr = n => String(n).replace(".", ",");
-const esc = s => String(s);
-let UID = 0;
+/* ================= Utilitaires ================= */
+const $=s=>document.querySelector(s);
+const r1=x=>Math.round(x*10)/10;
+const fmt=x=>String(r1(x)).replace('.',',');
+let UIDC=0;const uid=()=>'u'+(++UIDC);
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+let toastT=null;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2400)}
+function debounce(fn,ms){let h;return(...a)=>{clearTimeout(h);h=setTimeout(()=>fn(...a),ms)}}
 
-/* ---------- mesure par défaut ---------- */
-const m = { P: 92, T: 74, H: 100, L: 58, S: 58, C: 38 };
+/* ================= État & persistance ================= */
+const DEFM={P:92,T:74,H:100,L:58,C:58,W:150,S:1};
+const ST={style:'droite',m:{...DEFM},color:0,theme:null,client:null,clients:{},
+  cut:new Set(),step:0,z:1,checked:{},tab:'apercu'};
+let LASTSIG='';
+const KEY='atelier-v2';
+function save(){try{localStorage.setItem(KEY,JSON.stringify({
+  style:ST.style,m:ST.m,color:ST.color,theme:ST.theme,client:ST.client,
+  clients:ST.clients,checked:ST.checked,z:ST.z}))}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(!d)return;
+  Object.assign(ST,{style:d.style||'droite',color:d.color||0,client:d.client||null,
+    clients:d.clients||{},checked:d.checked||{},z:d.z||1});
+  ST.theme=d.theme||null;
+  if(d.m)for(const k in DEFM)if(isFinite(d.m[k]))ST.m[k]=+d.m[k];
+}catch(e){}}
 
-/* ---------- générateurs de pièces (cm) ---------- */
-const rectD = (w, h) => `M0 0H${r1(w)}V${r1(h)}H0Z`;
+/* ================= Tissus ================= */
+const FABRICS=[
+  {n:'Sauge',c:'#93A586',d:'#6F8262',lw:0},
+  {n:'Terracotta',c:'#C0714A',d:'#9C5535',lw:1},
+  {n:'Indigo',c:'#55639E',d:'#3E4A7C',lw:1},
+  {n:'Sable',c:'#D3BC8D',d:'#B39A67',lw:0},
+  {n:'Prune',c:'#7C5A78',d:'#5E425C',lw:1},
+  {n:'Rosé',c:'#D29A9F',d:'#B2767D',lw:0},
+  {n:'Charbon',c:'#4A4D55',d:'#33353B',lw:1}
+];
+const fab=()=>FABRICS[ST.color]||FABRICS[0];
 
-const ceinture = mm => ({ n: "Ceinture", d: rectD(mm.T + 8, 8), w: r1(mm.T + 8), h: 8, q: 1 });
+/* ================= Générateurs de pièces ================= */
+const rect=(w,h)=>`M0 0H${r1(w)}V${r1(h)}H0Z`;
+const bandP=(m,len,h=6)=>({n:'Ceinture',d:rect(len,h),w:r1(len),h:r1(h),q:1,fold:1});
+const skirtP=(m,o={})=>{const back=!!o.back,fl=o.fl!=null?o.fl:.35,len=o.len||m.L;
+  const wt=(m.T+6)/2,hh=(m.H+8)/2,yh=Math.min(len*.25,22),hm=hh+(len-yh)*fl;
+  return{n:back?'Dos':'Devant',q:1,fold:1,w:r1(Math.max(hm,hh)),h:r1(len),
+    d:`M0 0L${r1(wt)} 0C${r1((wt+hh)/2)} ${r1(yh*.35)} ${r1(hh)} ${r1(yh*.6)} ${r1(hh)} ${r1(yh)}C${r1(hh+(hm-hh)*.25)} ${r1(yh+(len-yh)*.4)} ${r1(hm)} ${r1(len*.78)} ${r1(hm)} ${r1(len)}L0 ${r1(len)}Z`}};
+const wrapP=(m,o={})=>{const back=!!o.back,ext=o.ext||0;
+  const wt=(m.T+6)/2+ext,hh=(m.H+8)/2+ext,yh=Math.min(m.L*.25,22),hm=hh+(m.L-yh)*.3;
+  return{n:o.n||(back?'Dos':'Devant'),q:1,fold:back?1:0,w:r1(Math.max(hm,hh)),h:r1(m.L),
+    d:`M0 0L${r1(wt)} 0C${r1((wt+hh)/2)} ${r1(yh*.35)} ${r1(hh)} ${r1(yh*.6)} ${r1(hh)} ${r1(yh)}C${r1(hh+(hm-hh)*.25)} ${r1(yh+(m.L-yh)*.4)} ${r1(hm)} ${r1(m.L*.78)} ${r1(hm)} ${r1(m.L)}L0 ${r1(m.L)}Z`}};
+const circleHalf=(m,back)=>{const r=(m.T+6)/(2*Math.PI),R=r+m.L,d=r1(2*R);
+  return{n:back?'Dos':'Devant',q:1,w:d,h:r1(R),
+    d:`M${r1(R-r)} 0A${r1(r)} ${r1(r)} 0 0 0 ${r1(R+r)} 0L${d} 0A${r1(R)} ${r1(R)} 0 0 1 0 0Z`}};
+const hankP=(m,back)=>{const r=(m.T+6)/(2*Math.PI),s=r1((r+m.L)*1.4142);
+  return{n:back?'Dos':'Devant',q:1,even:1,w:s,h:s,
+    d:`M0 0H${s}V${s}H0ZM${r1(s/2-r)} ${r1(s/2)}a${r1(r)} ${r1(r)} 0 1 0 ${r1(2*r)} 0a${r1(r)} ${r1(r)} 0 1 0 ${r1(-2*r)} 0Z`}};
+const bodyTop=(m,o={})=>{const back=!!o.back,fl=o.fl!=null?o.fl:.1,len=o.len||m.L;
+  const cw=(m.P+10)/4,sh=m.P*.21,nw=7.5,nd=back?2.5:9,ad=m.P/6+9,hm=Math.max(cw+(len-ad)*fl,cw);
+  return{n:back?'Dos':'Devant',q:1,fold:1,w:r1(Math.max(hm,cw)),h:r1(len),
+    d:`M0 ${r1(nd)}Q${r1(nw*.9)} ${r1(nd)} ${r1(nw)} 0L${r1(sh)} 2.5Q${r1(sh-2)} ${r1(ad*.6)} ${r1(cw)} ${r1(ad)}L${r1(hm)} ${r1(len)}H0Z`}};
+const sleeveP=(m,ml)=>{const W=m.P*.3+8,cap=m.P/9;
+  return{n:'Manche',q:2,w:r1(W),h:r1(ml),
+    d:`M0 ${r1(cap)}Q${r1(W*.15)} ${r1(cap*.1)} ${r1(W/2)} 0Q${r1(W*.85)} ${r1(cap*.1)} ${r1(W)} ${r1(cap)}L${r1(W-3)} ${r1(ml)}H3Z`}};
+const flounceP=(m,ml)=>{const W=m.P*.34+10,cap=m.P/9;
+  return{n:'Manche volant',q:2,mir:1,w:r1(W),h:r1(ml),
+    d:`M0 ${r1(cap)}Q${r1(W*.15)} ${r1(cap*.1)} ${r1(W/2)} 0Q${r1(W*.85)} ${r1(cap*.1)} ${r1(W)} ${r1(cap)}Q${r1(W*1.04)} ${r1(ml*.55)} ${r1(W*.76)} ${r1(ml)}Q${r1(W*.5)} ${r1(ml*.9)} ${r1(W*.24)} ${r1(ml)}Q${r1(-W*.04)} ${r1(ml*.55)} 0 ${r1(cap)}Z`}};
+const legP=(m,o={})=>{const back=!!o.back;
+  const wt=(m.H+8)/4,e=back?m.H*.09:m.H*.055,il=Math.max(m.L-6,20),cd=Math.min(m.H/4+2,il*.55),
+    hem=(m.H+8)/8+(o.wide?8:1)+(back?1.5:0),w=wt+e;
+  return{n:back?'Dos':'Devant',q:2,mir:1,w:r1(w),h:r1(il),
+    d:`M0 0L${r1(wt)} 0Q${r1(wt+e*.3)} ${r1(cd*.45)} ${r1(w)} ${r1(cd)}L${r1(hem)} ${r1(il)}L0 ${r1(il)}Z`}};
+const pepP=(m,back)=>{const cw=(m.P+8)/4,sh=m.P*.21,nw=7.5,nd=back?2.5:9,ad=m.P/6+9,
+    lw=Math.max(m.L*.58,ad+5),hw=r1(cw*1.5);
+  return{n:back?'Dos':'Devant',q:1,fold:1,w:hw,h:r1(m.L),
+    d:`M0 ${r1(nd)}Q${r1(nw*.9)} ${r1(nd)} ${r1(nw)} 0L${r1(sh)} 2.5Q${r1(sh-2)} ${r1(ad*.6)} ${r1(cw)} ${r1(ad)}L${r1(cw)} ${r1(lw)}C${r1(cw)} ${r1(lw+8)} ${r1(hw*.72)} ${r1(lw+9)} ${hw} ${r1(m.L)}L0 ${r1(m.L)}Z`}};
+const kimParts=m=>{const wd=r1((m.P+36)/2),wdF=r1((m.P+36)/2-6),nk=20;
+  return{
+    dos:{n:'Dos',q:1,fold:1,w:wd,h:r1(m.L),d:rect(wd,m.L)},
+    dev:{n:'Devant',q:2,mir:1,w:wdF,h:r1(m.L),d:`M0 ${nk}L${r1(nk*.55)} 0L${wdF} 0L${wdF} ${r1(m.L)}L0 ${r1(m.L)}Z`},
+    mch:{n:'Manche',q:2,mir:1,w:r1(m.C),h:r1(m.P*.42),d:rect(m.C,m.P*.42)},
+    col:{n:'Bande de col',q:1,fold:1,w:r1(m.P*.95),h:7,d:rect(m.P*.95,7)},
+    cnt:{n:'Ceinture',q:1,fold:1,w:r1(m.P*.8),h:6,d:rect(m.P*.8,6)}}};
 
-const jupe = (mm, back, fl) => {
-  const tw = mm.T / 4 + 1.5, hw = mm.H / 4 + 1.5, hy = 20, hem = hw + fl * mm.L;
-  return { n: back ? "Dos" : "Devant",
-    d: `M0 0H${r1(tw)}Q${r1(hw)} ${r1(hy * .55)} ${r1(hw)} ${hy}L${r1(hem)} ${r1(mm.L)}H0Z`,
-    w: r1(Math.max(tw, hw, hem)), h: mm.L, q: 1, fold: 1 };
+/* ================= Calcul : pièces + plombage ================= */
+let CALC=null,CALCsig='';
+const sig=()=>[ST.style,ST.m.P,ST.m.T,ST.m.H,ST.m.L,ST.m.C,ST.m.W,ST.m.S].join('_');
+function calc(){const s=sig();
+  if(CALC&&CALCsig===s)return CALC;
+  const m=ST.m,sa=m.S,W=m.W,usable=W-4,warns=[];
+  let pcs=[];
+  try{pcs=MODELS[ST.style].g(m)}catch(e){pcs=[]}
+  pcs.forEach(p=>{if(p.w+2*sa>usable)warns.push(`« ${p.n} » dépasse la laize utile (${r1(p.w+2*sa)} cm nécessaires pour ${usable} cm) — élargissez la laize ou modifiez la coupe.`)});
+  const occs=[];pcs.forEach((p,i)=>{for(let k=0;k<p.q;k++)occs.push({p,i,k})});
+  occs.sort((a,b)=>b.p.h-a.p.h);
+  let x=0,y=8,rh=0,len=8;const placed=[];
+  occs.forEach(o=>{const bw=r1(o.p.w+2*sa),bh=r1(o.p.h+2*sa);
+    if(x>0&&x+bw>usable-1){x=0;y+=rh+1.2;rh=0}
+    placed.push({p:o.p,i:o.i,k:o.k,x:r1(x+sa),y:r1(y+sa)});
+    x=r1(x+bw+1.2);rh=Math.max(rh,bh);len=Math.max(len,y+rh)});
+  len=r1(len+sa+2);
+  CALC={pcs,placed,len,warns,tot:placed.length};CALCsig=s;return CALC}
+function ensureSig(){const s=sig();
+  if(s!==LASTSIG){ST.cut.clear();ST.step=0;LASTSIG=s;save()}}
+/* ================= Modèles (12) ================= */
+const MODELS={
+droite:{n:'Jupe droite',Ld:58,lvl:1,tissu:'Gabardine, popeline, tweed léger',
+  ic:'<path d="M8 3h8l2 15H6z"/><path d="M8 6.5h8"/>',
+  d:'La base de la garde-robe : une coupe nette, légèrement évasée pour le confort de la marche. Deux panneaux, une ceinture — le premier patron idéal pour apprendre à coudre sereinement.',
+  tip:'Laissez reposer la jupe sur cintre 24 h avant l’ourlet : le tissu se détend et l’ourlet reste droit.',
+  fold:'Plier le tissu endroit contre endroit, bord-bord. Placer les milieux devant/dos sur la pliure et couper chaque panneau d’un seul geste.',
+  g:m=>[skirtP(m,{fl:.12}),skirtP(m,{back:1,fl:.12}),bandP(m,m.T+6)],
+  meth:['Surjetez les valeurs de couture de toutes les pièces avant assemblage.','Assemblez les coutures de côtés devant/dos, endroit contre endroit (1 cm).','Ouvrez les coutures au fer et repassez à plat.','Épinglez puis piquez la ceinture autour de la taille, en gardant une ouverture de 3 cm sur un côté.','Repliez la ceinture sur l’envers, surpiquez à 2 mm du bord et fermez l’ouverture à points glissés.','Réalisez l’ourlet du bas : 1 cm puis 2,5 cm, piquez au plus près.','Dernier repassage avec pattemouille, et c’est prêt à porter.'],
+  asm:[{a:0,b:1,s:'rl',l:'Coutures de côtés — Devant + Dos, endroit contre endroit'},{a:0,b:2,s:'tt',l:'Ceinture fixée au tour de taille'},{s:null,l:'Ourlet du bas (3 cm) et finitions au fer'}]},
+cercle:{n:'Jupe circulaire',Ld:60,lvl:1,tissu:'Viscose, crêpe fluide, satin',
+  ic:'<path d="M9 3h6l6 11a10 10 0 0 1-18 0z"/><path d="M9 5.5h6"/>',
+  d:'Un tourbillon de tissu : le cercle complet offre un tombé fluide et spectaculaire dès que l’on marche. Peu de coutures, beaucoup de drapé — spectaculaire pour un minimum d’effort.',
+  tip:'Ourlez après 24 h de repos : l’arc en biais s’allonge toujours un peu à la première heure.',
+  fold:'Laize suffisante indispensable : chaque demi-cercle se coupe à plat, milieu devant/dos le long d’un bord droit, trou de taille au compas à craie.',
+  g:m=>[circleHalf(m),circleHalf(m,1),bandP(m,m.T+6)],
+  meth:['Assemblez les deux panneaux sur les côtés, endroit contre endroit (1 cm).','Surjetez chaque arc de taille séparément pour éviter qu’il ne s’étire.','Piquez la ceinture au tour de taille en répartissant régulièrement l’arc.','Laissez reposer l’ourlet 24 h, il se détend, puis ourlez à 2 cm.','Reprenez l’ourlet s’il ondule : un bain de vapeur au fer l’assagit.'],
+  asm:[{a:0,b:1,s:'rl',l:'Coutures de côtés des deux panneaux'},{a:0,b:2,s:'tt',l:'Ceinture piquée sur l’arc de taille'},{s:null,l:'Ourlet circulaire 2 cm, vapeur au fer'}]},
+mouchoir:{n:'Jupe mouchoir',Ld:65,lvl:2,tissu:'Viscose, soie, modal',
+  ic:'<path d="M12 3 18 9l-3.2 9L12 15l-2.8 3L6 9z"/><path d="M10 5.5h4"/>',
+  d:'Quatre pointes qui dansent à chaque pas : la coupe carrée crée un ourlet irrégulier très graphique. Superbe dans une viscose ou une soie qui met en valeur les diagonales.',
+  tip:'Travaillez les ourlets de pointes sans étirer : un petit poids posé au bout du pan aide le tissu à tomber droit.',
+  fold:'Deux carrés identiques se coupent à plat ; le trou de taille se découpe au compas à craie, au centre de chaque carré.',
+  g:m=>[hankP(m),hankP(m,1),bandP(m,m.T+6)],
+  meth:['Découpez le trou de taille au plus juste, à 1 mm du tracé.','Assemblez les deux carrés sur deux côtés adjacents (1 cm).','Surjetez l’encolure de taille puis piquez la ceinture.','Marquez les pointes au fer : l’ourlet diagonal tombera naturellement.','Ourlez les quatre pans à 1,5 cm, en biais, sans tirer le tissu.'],
+  asm:[{a:0,b:1,s:'rl',l:'Assemblez les deux carrés sur deux côtés'},{a:0,b:2,s:'tt',l:'Ceinture posée sur le trou de taille'},{s:null,l:'Ourlets biais des pointes, 1,5 cm'}]},
+short:{n:'Short droit',Ld:32,lvl:1,tissu:'Toile, lin, twill léger',
+  ic:'<path d="M5 4h14v4l-1 12h-6l-1.5-9L9 20H4L3 8z"/><path d="M5 7.5h13"/>',
+  d:'Un short droit et net, ceinture confort et aisance juste ce qu’il faut à la fourche. La coupe en miroir simplifie la pose sur le tissu et le montage reste très rapide.',
+  tip:'Surpiquez la fourche en triangle pour une solidité maximale à l’entrejambe.',
+  fold:'Plier le tissu en deux, endroit contre endroit : couper le devant et le dos de chaque jambe en miroir (×2 chacun), ceinture au pli.',
+  g:m=>[legP(m,{wide:1}),legP(m,{back:1,wide:1}),bandP(m,m.T+10,6)],
+  meth:['Assemblez les fourches devant puis dos (1 cm) et ouvrez au fer.','Fermez les coutures de côtés gauche et droite d’une seule couture.','Superposez devant/dos et piquez l’entrejambe en une seule passe.','Montez la ceinture en laissant 3 cm d’ouverture pour l’élastique.','Insérez l’élastique, fermez l’ouverture et répartissez les fronces.','Ourlets des jambes : 1 cm puis 2 cm.'],
+  asm:[{a:0,b:1,s:'rl',l:'Coutures de côtés et fourches assemblées'},{a:0,b:2,s:'tt',l:'Ceinture montée à la taille'},{s:null,l:'Élastique inséré, ourlets de jambes 2 cm'}]},
+tunique:{n:'Tunique longue',Ld:78,lvl:2,tissu:'Double gaze, viscose, lin lavé',
+  ic:'<path d="M8 3h8l4 4-2.2 3L16 8.6V21H8V8.6L6.2 10 4 7z"/>',
+  d:'Une tunique longue et décontractée, épaules souples et fentes de côté. Parfaite en double gaze ou en viscose, elle s’enfile sur un legging ou un jean sans jamais contraindre.',
+  tip:'Essayez à mi-couture des côtés : c’est le bon moment pour régler la hauteur des fentes.',
+  fold:'Plier endroit contre endroit : devant et dos au pli (milieux), manches coupées en double épaisseur.',
+  g:m=>[bodyTop(m,{fl:.1}),bodyTop(m,{back:1,fl:.1}),sleeveP(m,m.C)],
+  meth:['Assemblez les épaules devant/dos, endroit contre endroit.','Montez les manches aux emmanchures, crans en correspondance.','Fermez les côtés et le dessous de manche d’une seule couture continue.','Traitez l’encolure par un biais rentré ou une parementure.','Piquez les fentes de côté sur 4 cm, puis ourlez le bas à 2 cm.','Repassage final sur l’envers, avec pattemouille.'],
+  asm:[{a:0,b:1,s:'rr',l:'Épaules — Devant + Dos assemblés'},{a:1,b:2,s:'rr',l:'Manche montée à l’emmanchure'},{s:null,l:'Côtés fermés d’une seule couture, encolure en biais'}]},
+blazer:{n:'Blazer oversize',Ld:72,lvl:3,tissu:'Tweed, velours côtelé, laine froide',
+  ic:'<path d="M7 3h10l3 4-2 14h-5l-1-9-1 9H6L4 7z"/><path d="M10 3l2 5 2-5"/>',
+  d:'Le blazer oversize à revers crantés : épaules carrées, coupe droite, présence immédiate. La pièce statement de l’atelier — exigez un tissu avec du corps pour tenir le revers.',
+  tip:'Le pattemouille et la vapeur font 80 % du revers : ne négligez jamais le craquage au fer.',
+  fold:'Plier endroit contre endroit : dos au pli, devants coupés en miroir (×2), manches ×2, col au pli.',
+  g:m=>[{...bodyTop(m,{fl:.03}),q:2,mir:1},bodyTop(m,{back:1,fl:.03}),sleeveP(m,m.C),{n:'Col',q:1,fold:1,w:r1(m.P*.6),h:8,d:rect(m.P*.6,8)}],
+  meth:['Surfilez toutes les pièces et piquez les pinces de poitrine sur les devants.','Assemblez les épaules, puis le col en une seule passe.','Montez les manches aux emmanchures, crans alignés.','Fermez les côtés et le dessous de manche d’une seule couture.','Posez les parementures sur les devants en reversant proprement le bas.','Craquez les revers au fer à la vapeur, puis formez la boutonnière et cousez les 2 boutons.','Ourlets de manche à 3 cm, retournés à la main pour un fini invisible.'],
+  asm:[{a:0,b:1,s:'rr',l:'Épaules et col assemblés en une passe'},{a:1,b:2,s:'rr',l:'Manches montées, crans alignés'},{a:0,b:3,s:'tt',l:'Col posé sur l’encolure'},{s:null,l:'Parementures posées, revers craqués au fer, 2 boutons'}]},
+manche:{n:'Blouse à volants',Ld:66,lvl:2,tissu:'Coton léger, voile de coton',
+  ic:'<path d="M8 3h8l4 5c1 5-1.5 9-3 10-2-2-3.5-2-5 0-1.5-1-4-5-3-10z"/><path d="M9.5 16.5c1.5-1.2 3.5-1.2 5 0"/>',
+  d:'Une blouse féminine à manches volantées : l’évasement de la manche bouge à chaque geste et donne son caractère à la pièce. Encolure simple, esprit romantique affirmé.',
+  tip:'Froncez la tête de manche à petits points pour obtenir un volant parfaitement régulier.',
+  fold:'Plier endroit contre endroit : devant/dos au pli, volants coupés en double épaisseur (×2 chacun).',
+  g:m=>[bodyTop(m,{fl:.06}),bodyTop(m,{back:1,fl:.06}),flounceP(m,m.C)],
+  meth:['Assemblez les épaules devant/dos (1 cm).','Montez les volants aux emmanchures avec une légère fronce (tête 1,2 cm).','Fermez les côtés et le dessous du volant d’une seule couture.','Traitez l’encolure : biais rentré ou petit col claudine en option.','Ourlez le bas de la blouse à 2 cm et roulottez le bord du volant.'],
+  asm:[{a:0,b:1,s:'rr',l:'Épaules assemblées'},{a:1,b:2,s:'rr',l:'Volant froncé à l’emmanchure'},{s:null,l:'Côtés fermés, encolure en biais, ourlets'}]},
+portefeuille:{n:'Jupe portefeuille',Ld:62,lvl:2,tissu:'Crêpe, jacquard léger, twill fluide',
+  ic:'<path d="M8 4h7l2 13h-4l-1-8-1 8H7L6 10z"/><path d="M15 6l4-2M15 6l3 3"/>',
+  d:'La jupe portefeuille croise sur le devant et se noue sur le côté : silhouette flatteuse et taille réglable. Attention à la laize pour les panneaux croisés — prévoyez large.',
+  tip:'Cousez un bouton-pression invisible à l’intérieur : le nœud ne se desserre plus jamais.',
+  fold:'Couper à plat, sans pli, pour les panneaux croisés (laize requise) ; les liens se coupent en longueur.',
+  g:m=>[wrapP(m,{n:'Devant dessus',ext:14}),wrapP(m,{n:'Devant dessous',ext:2}),wrapP(m,{back:1}),{n:'Lien',q:2,w:85,h:5,d:rect(85,5)}],
+  meth:['Surjetez les bords des devants : ils resteront vifs.','Assemblez le dos et le panneau dessous sur les côtés (1 cm).','Piquez la ceinture-lien sur le haut en laissant dépasser les pans de nouage.','Posez le panneau dessus par-dessus et fixez-le à la ceinture sur 1 cm.','Ourlez les diagonales à 1,5 cm, en biais, sans tirer le tissu.','Nouez fermement sur le côté : le tombé se stabilise après 24 h sur cintre.'],
+  asm:[{a:2,b:1,s:'rl',l:'Dos + panneau dessous, coutures de côtés'},{a:2,b:0,s:'ll',l:'Panneau dessus croisé sur le devant'},{a:0,b:3,s:'tt',l:'Liens noués à la ceinture'},{s:null,l:'Diagonales ourlées à 1,5 cm, nœud latéral'}]},
+pantalon:{n:'Pantalon droit',Ld:98,lvl:2,tissu:'Toile, twill, lin',
+  ic:'<path d="M5 3h14v4l-1 15h-6l-1-11-1 11H4L3 7z"/><path d="M5 6.5h14"/>',
+  d:'Un pantalon droit intemporel : fourche confortable, jambe légèrement fuselée, ceinture simple. La base parfaite pour décliner toutes les variantes, du carotte au palazzo.',
+  tip:'Craquez un cassant net à chaque jambe au fer à vapeur : effet sur-mesure immédiat.',
+  fold:'Plier endroit contre endroit : 2 jambes devant + 2 dos en miroir, ceinture au pli.',
+  g:m=>[legP(m),legP(m,{back:1}),bandP(m,m.T+10,6)],
+  meth:['Assemblez les fourches devant et dos séparément, puis ouvrez au fer.','Piquez l’entrejambe en une seule passe, des deux jambes.','Fermez les coutures de côtés d’une seule couture.','Montez la ceinture ; insérez un élastique dos en option.','Ourlet : 4 cm avec surjet, ou revers de 5 cm craqués au fer.','Repassage final jambe par jambe, cassant net au fer à vapeur.'],
+  asm:[{a:0,b:1,s:'rl',l:'Fourches et coutures de côtés assemblées'},{a:0,b:2,s:'tt',l:'Ceinture montée à la taille'},{s:null,l:'Entrejambe en une passe, ourlets 4 cm'}]},
+trapèze:{n:'Robe trapèze',Ld:92,lvl:2,tissu:'Lin, coton satiné, crêpe',
+  ic:'<path d="M9 3h6l7 5-2 3-2-1v11H6V10l-2 1-2-3z"/><path d="M10 3.5 12 8l2-4.5"/>',
+  d:'La robe trapèze s’évase depuis l’épaule dans une ligne graphique en A. Flatteuse sur toutes les silhouettes, rapide à coudre, c’est la robe de l’été qui traverse les saisons.',
+  tip:'Un ourlet large (3 cm) donne sa ligne au trapèze : prenez le temps d’épingler à plat.',
+  fold:'Plier endroit contre endroit : devant/dos au pli (milieux), manches ×2 en double épaisseur.',
+  g:m=>[bodyTop(m,{fl:.5}),bodyTop(m,{back:1,fl:.5}),sleeveP(m,m.C)],
+  meth:['Assemblez les épaules devant/dos (1 cm).','Montez les manches aux emmanchures, crans en correspondance.','Fermez les côtés et le dessous de manche d’une seule couture.','Traitez l’encolure : parementure ou biais rentré.','Ourlet du bas à 3 cm — la ligne du trapèze dépend d’un ourlet régulier.','Vapeur finale sur les courbes, cintre 24 h.'],
+  asm:[{a:0,b:1,s:'rr',l:'Épaules — Devant + Dos assemblés'},{a:1,b:2,s:'rr',l:'Manche montée à l’emmanchure'},{s:null,l:'Côtés d’une seule couture, ourlet 3 cm'}]},
+kimono:{n:'Kimono court',Ld:74,lvl:1,tissu:'Viscose, crêpe, satin léger',
+  ic:'<path d="M8 3h8l5 4-2 4-2-1.4V21H7V9.6L5 11l-2-4z"/><path d="M7 13h10"/>',
+  d:'Coupe rectangulaire japonaise : zéro chute, gestes simples, tombé élégant. Manches tombantes, bande de col rentrée et ceinture nouée — le luxe de la simplicité.',
+  tip:'Cousez la bande de col en une seule passe, du bas d’un devant à l’autre, pour un fini net.',
+  fold:'Coupe rectangulaire : dos au pli, devants en miroir (×2), manches rectangles ×2, bande de col et ceinture au pli.',
+  g:m=>{const k=kimParts(m);return[k.dos,k.dev,k.mch,k.col,k.cnt]},
+  meth:['Assemblez les épaules dos/devants (1 cm).','Montez les manches à plat, du bord extérieur vers l’encolure.','Fermez les côtés et le dessous des manches d’une seule couture.','Posez la bande de col rentrée, du bas d’un devant à l’autre.','Ourlez le bas et le bord des devants en une seule passe (2 cm).','Nouez la ceinture à la taille, pans tombants.'],
+  asm:[{a:0,b:1,s:'ll',l:'Devants montés sur le dos (épaules)'},{a:0,b:2,s:'tt',l:'Manches posées à plat sur les épaules'},{a:0,b:3,s:'tt',l:'Bande de col rentrée sur l’encolure'},{s:null,l:'Côtés fermés, ourlets 2 cm, ceinture nouée'}]},
+peplum:{n:'Top péplum',Ld:58,lvl:3,tissu:'Popeline, piqué de coton',
+  ic:'<path d="M9 3h6l2 3-1 6 4 6H4l4-6-1-6z"/><path d="M9.5 15.5h5"/>',
+  d:'Top cintré à la taille qui s’évase en péplum : la touche couture d’une tenue simple. Manches courtes, fermeture invisible au dos — une silhouette très féminine, très structurée.',
+  tip:'Posez la fermeture invisible avant les côtés : c’est cet ordre-là qui simplifie tout.',
+  fold:'Plier endroit contre endroit : devant/dos au pli (milieux), manches courtes ×2.',
+  g:m=>[pepP(m),pepP(m,1),{...sleeveP(m,Math.min(26,m.C*.55)),n:'Manche courte'}],
+  meth:['Assemblez les épaules et montez les manches courtes.','Posez la fermeture invisible au dos sur 20 cm (ou fendissez et boutonnez).','Fermez les côtés d’une seule couture, du dessous de manche au bas du péplum.','Traitez l’encolure : parementure propre ou biais assorti.','Ourlet du péplum à 2 cm, vapeur pour asseoir l’évasement.'],
+  asm:[{a:0,b:1,s:'rr',l:'Épaules + fermeture du dos'},{a:1,b:2,s:'rr',l:'Manches courtes montées'},{s:null,l:'Côtés d’une couture, ourlet péplum 2 cm'}]}
 };
-
-const manche = mm => {
-  const W = r1(mm.P * .3 + 8), cap = r1(mm.P / 9), sl = r1(mm.S);
-  return { n: "Manche",
-    d: `M0 ${cap}Q${r1(W * .16)} ${r1(cap * .12)} ${r1(W * .5)} 0Q${r1(W * .84)} ${r1(cap * .12)} ${W} ${cap}L${r1(W - 2.5)} ${sl}H2.5Z`,
-    w: W, h: sl, q: 2, pair: 1 };
+/* ================= Onglets ================= */
+const TABS=[
+  {k:'apercu',n:'Aperçu',ic:'<path d="M2 12s3.5-5.5 10-5.5S22 12 22 12s-3.5 5.5-10 5.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.6"/>'},
+  {k:'patron',n:'Patron',ic:'<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/>'},
+  {k:'plombage',n:'Plombage',ic:'<path d="M3 4h18v3H3zM3 9h9v11H3zM14 9h7v6h-7zM14 17h7v3h-7z"/>'},
+  {k:'coupe',n:'Coupe',ic:'<circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/><path d="M8.2 7.4 20 16M8.2 16.6 20 8"/>'},
+  {k:'asm',n:'Assemblage',ic:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 14l9 5 9-5"/>'},
+  {k:'meth',n:'Méthode',ic:'<path d="M4 6h1.5M4 12h1.5M4 18h1.5M9.5 6H20M9.5 12H20M9.5 18H20"/>'}
+];
+/* ================= Aperçu vêtement (buste paramétrique) ================= */
+const GS='var(--gstroke)';
+function gDefs(u){return '<defs>'
+ +'<pattern id="wv'+u+'" width="2.4" height="2.4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="2.4" height="2.4" fill="rgba(255,255,255,.09)"/><line x1="0" y1="0" x2="0" y2="2.4" stroke="rgba(255,255,255,.13)" stroke-width=".55"/></pattern>'
+ +'<pattern id="gr'+u+'" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="var(--line)" stroke-width=".22"/></pattern>'
+ +'</defs>'}
+function gp(d,u,c,op){return '<path d="'+d+'" fill="'+c.c+'"'+(op?' opacity="'+op+'"':'')+'/><path d="'+d+'" fill="url(#wv'+u+')"/><path d="'+d+'" fill="none" stroke="'+GS+'" stroke-width=".8" stroke-linejoin="round"/>'}
+function dl(x1,y1,x2,y2,o){return '<line x1="'+r1(x1)+'" y1="'+r1(y1)+'" x2="'+r1(x2)+'" y2="'+r1(y2)+'" stroke="var(--ink)" stroke-width=".45" stroke-dasharray="2.2 2" opacity="'+(o||.38)+'"/>'}
+function sl(x1,y1,x2,y2){return '<line x1="'+r1(x1)+'" y1="'+r1(y1)+'" x2="'+r1(x2)+'" y2="'+r1(y2)+'" stroke="var(--chalk)" stroke-width=".55" stroke-dasharray="2.6 1.8" opacity=".85"/>'}
+function formG(m){const shw=r1(m.P*.21+1),bw=r1(m.P*.24),ww=r1(m.T*.22),hh=r1(m.H*.245);
+ const C=(a,b,d,e,f,g)=>'C'+a+' '+b+' '+d+' '+e+' '+f+' '+g;
+ const half='M-5.5 0'+C(-6.5,3,-shw,5,-shw,8)+C(-bw,15,-bw,25,-bw,31)+C(r1(-bw*.92),38,-ww,42,-ww,48)+C(-hh,54,-hh,61,-hh,68)+C(r1(-hh*.97),75,r1(-hh*.55),81,0,83);
+ const st='fill="var(--form)" stroke="var(--formline)" stroke-width=".7"';
+ return '<path d="'+half+'" '+st+'/><path d="'+half+'" '+st+' transform="scale(-1,1)"/>'
+  +'<ellipse cx="0" cy="0" rx="5.5" ry="2.6" '+st+'/>'
+  +'<rect x="-1.3" y="83" width="2.6" height="14" rx="1.1" fill="var(--formline)"/>'
+  +'<ellipse cx="0" cy="98.5" rx="12.5" ry="3.2" fill="var(--formline)" opacity=".85"/>'
+  +'<rect x="-.8" y="-6" width="1.6" height="6" fill="var(--formline)"/><circle cx="0" cy="-7.2" r="1.6" fill="var(--formline)"/>'}
+function mk(m,cont,hw,hh,u){const W=r1(Math.max(hw*2+30,124)),H=r1(Math.max(hh,116)+10);
+ return '<svg class="pv" viewBox="'+r1(-W/2)+' -10 '+W+' '+H+'" role="img">'+gDefs(u)
+  +'<rect x="'+r1(-W/2)+'" y="-10" width="'+W+'" height="'+H+'" fill="url(#gr'+u+')"/>'
+  +formG(m)+cont+'</svg>'}
+function bandG(w,yMid,c){return '<rect x="'+r1(-w)+'" y="'+r1(yMid-3.2)+'" width="'+r1(w*2)+'" height="6.4" rx="2.2" fill="'+c.d+'" stroke="'+GS+'" stroke-width=".7"/>'}
+function topFlat(m,c,u,o){const shw=r1(m.P*.21+1),cw=r1((m.P+10)/4),ad=r1(m.P/6+9),hw=o.hw,cw2=o.cw||cw;
+ const mid=r1(cw2+(hw-cw2)*.4),hem=r1(o.hem);
+ const d='M-4.5 8.5Q0 '+(o.ndp||11.5)+' 4.5 8.5L'+shw+' 4Q'+r1(cw+3)+' '+r1(ad*.55)+' '+cw2+' '+r1(ad)
+  +'L'+mid+' '+r1((hem+ad)/2)+'L'+r1(hw)+' '+hem+'L'+r1(-hw)+' '+hem
+  +'L'+r1(-mid)+' '+r1((hem+ad)/2)+'L'+(-cw2)+' '+r1(ad)+'Q'+r1(-cw-3)+' '+r1(ad*.55)+' '+(-shw)+' 4Z';
+ return gp(d,u,c)}
+function slvG(m,c,u,o){const shw=r1(m.P*.21+1),W=o.W||r1((m.P*.3+8)*.55),C=o.C,cap=o.cap||11;
+ const one=dir=>{const sx=dir*shw;
+  return 'M'+sx+' 4C'+r1(sx+dir*W*.3)+' 5 '+r1(sx+dir*W*.9)+' 7.5 '+r1(sx+dir*W)+' '+cap
+   +'L'+r1(sx+dir*W*.88)+' '+r1(cap+C-3)+'L'+r1(sx+dir*W*.3)+' '+r1(cap+C)
+   +'C'+r1(sx+dir*W*.18)+' '+r1(cap+4)+' '+r1(sx+dir*3)+' 7 '+sx+' 4Z'};
+ return gp(one(1),u,c)+gp(one(-1),u,c)}
+function flounceG(m,c,u,o){const shw=r1(m.P*.21+1),W=r1((m.P*.34+10)*.62),C=o.C,cap=10;
+ const one=dir=>{const sx=dir*shw;
+  return 'M'+sx+' 4C'+r1(sx+dir*W*.3)+' 5 '+r1(sx+dir*W*.9)+' 7.5 '+r1(sx+dir*W)+' '+cap
+   +'Q'+r1(sx+dir*W*1.06)+' '+r1(cap+C*.5)+' '+r1(sx+dir*W*.72)+' '+r1(cap+C)
+   +'Q'+r1(sx+dir*W*.45)+' '+r1(cap+C-4)+' '+r1(sx+dir*W*.22)+' '+r1(cap+C+1)
+   +'Q'+r1(sx+dir*W*.02)+' '+r1(cap+C*.45)+' '+sx+' 4Z'};
+ return gp(one(1),u,c)+gp(one(-1),u,c)}
+const PREVIEWS={
+droite:(m,c)=>{const u=uid(),w1=(m.T+6)/2*.95,L=m.L,hem=48+L,h2=r1(w1+L*.06),yb=50.5;
+ const d='M'+r1(-w1)+' '+yb+'H'+r1(w1)+'C'+r1(w1+2)+' '+r1(yb+(hem-yb)*.35)+' '+h2+' '+r1(yb+(hem-yb)*.55)+' '+h2+' '+r1(hem)
+  +'L'+r1(-h2)+' '+r1(hem)+'C'+r1(-h2)+' '+r1(yb+(hem-yb)*.55)+' '+r1(-w1-2)+' '+r1(yb+(hem-yb)*.35)+' '+r1(-w1)+' '+yb+'Z';
+ return mk(m,gp(d,u,c)+bandG(w1,48.5,c)+dl(0,54,0,hem-4)+sl(-h2+4,hem-2.5,h2-4,hem-2.5),h2+6,hem+24,u)},
+cercle:(m,c)=>{const u=uid(),w1=(m.T+6)/2*.95,L=m.L,hem=48+L,h2=r1(w1+L*1.02),yb=50.5;
+ const d='M'+r1(-w1)+' '+yb+'H'+r1(w1)+'C'+r1(w1+8)+' '+r1(yb+(hem-yb)*.3)+' '+h2+' '+r1(yb+(hem-yb)*.72)+' '+h2+' '+r1(hem)
+  +'Q0 '+r1(hem+9)+' '+r1(-h2)+' '+r1(hem)+'C'+r1(-h2)+' '+r1(yb+(hem-yb)*.72)+' '+r1(-w1-8)+' '+r1(yb+(hem-yb)*.3)+' '+r1(-w1)+' '+yb+'Z';
+ return mk(m,gp(d,u,c)+bandG(w1,48.5,c)+dl(0,54,0,48+L*.5)+dl(r1(w1*.5),55,r1(h2*.55),48+L*.72)+dl(r1(-w1*.5),55,r1(-h2*.55),48+L*.72),h2+6,hem+26,u)},
+mouchoir:(m,c)=>{const u=uid(),w1=(m.T+6)/2*.95,L=m.L,hem=48+L,h2=r1(w1+L*.3),yb=50.5,vc=r1(hem-L*.26);
+ const d='M'+r1(-w1)+' '+yb+'H'+r1(w1)+'L'+h2+' '+r1(hem)+'L0 '+vc+'L'+r1(-h2)+' '+r1(hem)+'Z';
+ return mk(m,gp(d,u,c)+bandG(w1,48.5,c)+dl(0,54,0,r1(vc+6))+dl(r1(w1*.55),54,r1(h2*.62),r1(hem-8))+dl(r1(-w1*.55),54,r1(-h2*.62),r1(hem-8)),h2+6,hem+26,u)},
+short:(m,c)=>{const u=uid(),w1=(m.T+10)/2*.92,L=m.L,hem=48+L,
+  lg=r1(((m.H+8)/8+8)*.62),cy=r1(48+Math.min((m.H/4+2)*.95,(L-8)*.8));
+ const d='M'+r1(-w1)+' 50.5H'+r1(w1)+'L'+r1(w1-1.5)+' '+r1(hem)+'L'+lg+' '+r1(hem)
+  +'Q'+r1(lg-1.2)+' '+r1(cy+3)+' 2.5 '+cy+'Q'+r1(-lg+1.2)+' '+r1(cy+3)+' '+r1(-lg)+' '+r1(hem)+'L'+r1(-w1+1.5)+' '+r1(hem)+'Z';
+ return mk(m,gp(d,u,c)+bandG(w1,48.5,c)+dl(r1(w1*.55),56,r1(w1*.62),r1(hem-5))+dl(r1(-w1*.55),56,r1(-w1*.62),r1(hem-5))
+  +sl(r1(lg+1),r1(hem-2),r1(w1-3),r1(hem-2))+sl(r1(-w1+3),r1(hem-2),r1(-lg-1),r1(hem-2)),w1+4,hem+24,u)},
+pantalon:(m,c)=>{const u=uid(),w1=(m.T+10)/2*.92,L=m.L,hem=48+L,
+  lg=r1(((m.H+8)/8+1)*.66),cy=r1(48+(m.H/4+2)*.9);
+ const d='M'+r1(-w1)+' 50.5H'+r1(w1)+'L'+r1(w1-1.5)+' '+r1(hem)+'L'+lg+' '+r1(hem)
+  +'Q'+r1(lg-1)+' '+r1(cy+6)+' 2.5 '+cy+'Q'+r1(-lg+1)+' '+r1(cy+6)+' '+r1(-lg)+' '+r1(hem)+'L'+r1(-w1+1.5)+' '+r1(hem)+'Z';
+ return mk(m,gp(d,u,c)+bandG(w1,48.5,c)+dl(r1(w1*.52),58,r1(w1*.55),r1(hem-6))+dl(r1(-w1*.52),58,r1(-w1*.55),r1(hem-6))
+  +sl(r1(lg+1),r1(hem-2.5),r1(w1-3),r1(hem-2.5))+sl(r1(-w1+3),r1(hem-2.5),r1(-lg-1),r1(hem-2.5)),w1+4,hem+24,u)},
+portefeuille:(m,c)=>{const u=uid(),w1=(m.T+6)/2*.95,L=m.L,hem=48+L,yb=50.5,kx=r1(w1+1.5);
+ const du='M'+r1(-w1+4)+' '+yb+'H'+r1(w1)+'L'+r1(w1)+' '+r1(hem)+'L'+r1(-w1+7)+' '+r1(hem-9)+'Z';
+ const dov='M'+r1(-w1)+' '+yb+'H'+r1(w1-7)+'L'+r1(w1-9)+' '+r1(hem-11)+'L'+r1(-w1)+' '+r1(hem)+'Z';
+ return mk(m,gp(du,u,c,.78)+gp(dov,u,c)+bandG(w1+2,48.5,c)
+  +'<circle cx="'+kx+'" cy="46" r="2.6" fill="'+c.d+'" stroke="'+GS+'" stroke-width=".7"/>'
+  +'<path d="M'+kx+' 47C'+r1(kx+7)+' 54 '+r1(kx+3)+' 62 '+r1(kx+8)+' '+r1(hem-14)+'" fill="none" stroke="'+c.d+'" stroke-width="2.6" stroke-linecap="round"/>'
+  +'<path d="M'+kx+' 47C'+r1(kx+11)+' 51 '+r1(kx+9)+' 57 '+r1(kx+12)+' 62" fill="none" stroke="'+c.c+'" stroke-width="2.2" stroke-linecap="round"/>'
+  +dl(0,54,0,r1(hem-10)),w1+14,hem+24,u)},
+tunique:(m,c)=>{const u=uid(),cw=r1((m.P+10)/4),ad=r1(m.P/6+9),L=m.L,hem=8+L,hw=r1(cw+(L-ad)*.1);
+ return mk(m,slvG(m,c,u,{C:m.C})+topFlat(m,c,u,{hw,hem,cw2:cw})+sl(-hw+3,r1(hem-2),hw-3,r1(hem-2))+dl(0,14,0,r1(hem-4)),r1(hw+m.C*.5),r1(hem+24),u)},
+blazer:(m,c)=>{const u=uid(),cw=r1((m.P+10)/4),ad=r1(m.P/6+9),L=m.L,hem=8+L,hw=r1(cw+(L-ad)*.05);
+ const lp1='M-4.5 8.5L-1.2 20L-9.5 23Z',lp2='M4.5 8.5L1.2 20L9.5 23Z';
+ return mk(m,slvG(m,c,u,{C:m.C})+topFlat(m,c,u,{hw,hem,cw2:cw})
+  +'<path d="'+lp1+'" fill="'+c.d+'" stroke="'+GS+'" stroke-width=".7" stroke-linejoin="round"/>'
+  +'<path d="'+lp2+'" fill="'+c.d+'" stroke="'+GS+'" stroke-width=".7" stroke-linejoin="round"/>'
+  +dl(1.6,23,2.8,r1(hem-3))+dl(-1.6,23,-2.8,r1(hem-3))
+  +'<circle cx="-2.2" cy="34" r="1.1" fill="'+c.d+'" stroke="'+GS+'" stroke-width=".5"/><circle cx="-2.2" cy="44" r="1.1" fill="'+c.d+'" stroke="'+GS+'" stroke-width=".5"/>'
+  +sl(7,40,13.5,43)+sl(-7,40,-13.5,43),r1(hw+m.C*.5),r1(hem+24),u)},
+manche:(m,c)=>{const u=uid(),cw=r1((m.P+10)/4),ad=r1(m.P/6+9),L=m.L,hem=8+L,hw=r1(cw+(L-ad)*.06);
+ return mk(m,flounceG(m,c,u,{C:m.C})+topFlat(m,c,u,{hw,hem,cw2:cw})+sl(-hw+3,r1(hem-2),hw-3,r1(hem-2))+dl(0,14,0,r1(hem-4)),r1(hw+m.P*.34*.62),r1(hem+24),u)},
+trapèze:(m,c)=>{const u=uid(),cw=r1((m.P+10)/4),ad=r1(m.P/6+9),L=m.L,hem=8+L,hw=r1(cw+(L-ad)*.45);
+ return mk(m,slvG(m,c,u,{C:m.C})+topFlat(m,c,u,{hw,hem,cw2:cw})+sl(-hw+4,r1(hem-2.5),hw-4,r1(hem-2.5))+dl(0,14,0,r1(hem-5)),r1(hw+m.C*.5),r1(hem+24),u)},
+kimono:(m,c)=>{const u=uid(),half=r1((m.P+36)/4+2),L=m.L,hem=8+L,
+  sW=r1(m.C*.52),sB=r1(8+m.P*.42);
+ const body='M'+r1(-half)+' 8H-5L0 15L5 8H'+half+'V'+r1(hem)+'H'+r1(-half)+'Z';
+ const slv=dir=>{const sx=dir*half;
+  return 'M'+sx+' 8H'+r1(sx+dir*sW)+'V'+sB+'H'+r1(sx+dir*7)+'L'+sx+' '+r1(8+(sB-8)*.5)+'Z'};
+ return mk(m,gp(slv(1),u,c)+gp(slv(-1),u,c)+gp(body,u,c)
+  +'<rect x="-4.2" y="13" width="8.4" height="'+r1(hem-15)+'" fill="'+c.d+'" stroke="'+GS+'" stroke-width=".6"/>'
+  +'<rect x="'+r1(-half-2)+'" y="45" width="'+r1((half+2)*2)+'" height="6" rx="2" fill="'+c.d+'" stroke="'+GS+'" stroke-width=".7"/>'
+  +'<rect x="-3" y="44.6" width="6" height="6.8" rx="1.4" fill="'+c.c+'" stroke="'+GS+'" stroke-width=".6"/>'
+  +dl(r1(half*.5),57,r1(half*.5),r1(hem-4))+dl(r1(-half*.5),57,r1(-half*.5),r1(hem-4))
+  +sl(r1(-half+3),r1(hem-2),r1(half-3),r1(hem-2)),r1(half+sW+4),r1(Math.max(hem,sB)+24),u)},
+peplum:(m,c)=>{const u=uid(),cw=r1((m.P+8)/4),ad=r1(m.P/6+9),L=m.L,lw=r1(Math.max(L*.58,ad+5)),
+  hw=r1(cw*1.35),hem=8+L,shw=r1(m.P*.21+1),C=r1(Math.min(26,m.C*.55));
+ const d='M-4.5 8.5Q0 11.5 4.5 8.5L'+shw+' 4Q'+r1(cw+3)+' '+r1(ad*.55)+' '+cw+' '+r1(ad)+'L'+cw+' '+lw
+  +'C'+cw+' '+r1(lw+8)+' '+r1(hw*.72)+' '+r1(lw+9)+' '+hw+' '+r1(hem)+'L'+r1(-hw)+' '+r1(hem)
+  +'C'+r1(-hw*.72)+' '+r1(lw+9)+' '+(-cw)+' '+r1(lw+8)+' '+(-cw)+' '+lw+'L'+(-cw)+' '+r1(ad)
+  +'Q'+r1(-cw-3)+' '+r1(ad*.55)+' '+(-shw)+' 4Z';
+ return mk(m,slvG(m,c,u,{W:r1((m.P*.3+8)*.45),C})+gp(d,u,c)
+  +dl(-cw+2,r1(lw+4),cw-2,r1(lw+4))+sl(-hw+3,r1(hem-2),hw-3,r1(hem-2)),r1(hw+m.P*.3*.3),r1(hem+24),u)}
 };
+/* ================= Rendu : panneau latéral ================= */
+const MEAS=[
+ {k:'P',n:'Poitrine',min:60,max:150},{k:'T',n:'Taille',min:50,max:140},
+ {k:'H',n:'Hanches',min:70,max:160},{k:'L',n:'Longueur',min:20,max:140},
+ {k:'C',n:'Manche',min:15,max:70}];
+function renderSide(){
+ const mods=Object.keys(MODELS).map(k=>{const md=MODELS[k];
+  return `<button class="chip${ST.style===k?' on':''}" data-k="${k}">
+   <svg viewBox="0 0 24 24">${md.ic}</svg><b>${md.n}</b>
+   <span class="lvl" title="Difficulté">${[1,2,3].map(i=>`<i class="${i<=md.lvl?'f':''}"></i>`).join('')}</span></button>`}).join('');
+ const rows=MEAS.map(r=>`<label class="mrow"><span class="mlab">${r.n}<i>${r.k}</i></span>
+   <input class="nin" type="number" data-mk="${r.k}" data-src="n" min="${r.min}" max="${r.max}" value="${r1(ST.m[r.k])}">
+   <input type="range" data-mk="${r.k}" data-src="r" min="${r.min}" max="${r.max}" step="1" value="${r1(ST.m[r.k])}"></label>`).join('');
+ const cliOpts=Object.keys(ST.clients).map(n=>`<option value="${n}"${ST.client===n?' selected':''}>${n}</option>`).join('');
+ $('#side').innerHTML=`
+ <section class="card"><h2><span class="sn">1</span>Modèle</h2>
+  <div class="mods" id="mods">${mods}</div><p id="mdesc">${MODELS[ST.style].d}</p></section>
+ <section class="card"><h2><span class="sn">2</span>Mesures</h2>
+  <div id="mgrid">${rows}</div>
+  <details class="mset"><summary>Réglages tissu &amp; couture</summary>
+   <label class="mrow"><span class="mlab">Laize<i>W</i></span>
+    <input class="nin" type="number" data-mk="W" data-src="n" min="90" max="280" step="5" value="${r1(ST.m.W)}">
+    <input type="range" data-mk="W" data-src="r" min="90" max="280" step="5" value="${r1(ST.m.W)}"></label>
+   <label class="mrow"><span class="mlab">Couture<i>S</i></span>
+    <input class="nin" type="number" data-mk="S" data-src="n" min="0.5" max="2.5" step="0.25" value="${r1(ST.m.S)}">
+    <input type="range" data-mk="S" data-src="r" min="0.5" max="2.5" step="0.25" value="${r1(ST.m.S)}"></label>
+   <p class="small muted" style="margin-top:6px">Laize = largeur du tissu · Couture = valeur de couture.</p>
+  </details></section>
+ <section class="card"><h2><span class="sn">3</span>Cliente</h2>
+  <div class="selwrap"><select id="csl">
+   <option value="">— Choisir une fiche —</option>${cliOpts}<option value="__new">+ Nouvelle fiche…</option>
+  </select></div>
+  <input id="nm" placeholder="Nom de la cliente" value="${ST.client||''}">
+  <div class="btnrow">
+   <button class="btn pri" id="sv"><svg viewBox="0 0 24 24"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></svg>Enregistrer</button>
+   <button class="btn gh" id="dl" title="Supprimer la fiche"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13"/></svg></button>
+  </div>
+  <p class="small muted" style="margin-top:8px">La fiche mémorise P, T, H, L et C.</p></section>`;
+ $('#mdesc').textContent=MODELS[ST.style].d;}
+function renderFabs(){$('#fabs').innerHTML=FABRICS.map((f,i)=>
+  `<button class="fdot${i===ST.color?' on':''}" data-i="${i}" title="${f.n}" style="background:${f.c}"></button>`).join('')}
+function renderTheme(){$('#theme').innerHTML=document.documentElement.dataset.theme==='dark'
+  ?'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.4"/><path d="M12 2v2.6M12 19.4V22M2 12h2.6M19.4 12H22M4.9 4.9l1.9 1.9M17.2 17.2l1.9 1.9M19.1 4.9l-1.9 1.9M6.8 17.2l-1.9 1.9"/></svg>'
+  :'<svg viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></svg>'}
+function renderTabs(){$('#tabs').innerHTML=TABS.map(t=>
+  `<button class="tab${ST.tab===t.k?' on':''}" data-t="${t.k}"><svg viewBox="0 0 24 24">${t.ic}</svg>${t.n}</button>`).join('')}
 
-const corsage = (mm, back, fl) => {
-  const cw = (mm.P + 8) / 4, sh = r1(mm.P * .21), nw = 7.5, nd = back ? 2.5 : 9,
-        ad = r1(mm.P / 6 + 9), hm = r1(cw + (mm.L - ad) * fl);
-  return { n: back ? "Dos" : "Devant",
-    d: `M0 ${nd}Q${r1(nw * .9)} ${nd} ${nw} 0L${sh} 2.5Q${r1(sh - 3)} ${r1(ad * .6)} ${r1(cw)} ${ad}L${hm} ${r1(mm.L)}H0Z`,
-    w: r1(Math.max(hm, cw)), h: mm.L, q: 1, fold: 1 };
-};
+/* ================= Rendu : vues ================= */
+function renderView(){const v=ST.tab;
+ $('#view').innerHTML=v==='apercu'?vApercu():v==='patron'?vPatron():v==='plombage'?vPlombage()
+  :v==='coupe'?vCoupe():v==='asm'?vAsm():vMeth();
+ bindView()}
+function setTab(t){ST.tab=t;ST.step=0;renderTabs();renderView()}
+function setStyle(k){ST.style=k;ST.m.L=MODELS[k].Ld;ensureSig();save();renderSide();renderTabs();renderView();
+ window.scrollTo({top:0,behavior:'smooth'})}
+const MEASCACHE=()=>calc();
 
-const devantB = mm => { /* devant blazer, coupé ×2 en miroir */
-  const cw = (mm.P + 12) / 4, sh = r1(mm.P * .21), nw = 8.5, ad = r1(mm.P / 6 + 10),
-        hm = r1(cw + (mm.L - ad) * .05);
-  return { n: "Devant",
-    d: `M0 8Q${r1(nw * .9)} 8 ${nw} 0L${sh} 2.5Q${r1(sh - 3)} ${r1(ad * .6)} ${r1(cw)} ${ad}L${hm} ${r1(mm.L)}H0Z`,
-    w: r1(Math.max(hm, cw)), h: mm.L, q: 2, pair: 1 };
-};
+function vApercu(){const md=MODELS[ST.style],L=calc(),c=fab();
+ return `<div class="card view-in">
+  <div class="pv-head"><div><p class="ov">Aperçu du vêtement</p><h3>${md.n}</h3></div>
+   <span class="lvl" title="Difficulté">${[1,2,3].map(i=>`<i class="${i<=md.lvl?'f':''}"></i>`).join('')}</span></div>
+  <div class="pv-box">${PREVIEWS[ST.style](ST.m,c)}</div>
+  <p class="pv-note">Buste à l’échelle — proportions calculées d’après P ${fmt(ST.m.P)} · T ${fmt(ST.m.T)} · H ${fmt(ST.m.H)} · longueur ${fmt(ST.m.L)} cm. Modifiez les mesures : le tombé évolue en direct.</p></div>
+ <div class="card desc view-in"><p>${md.d}</p>
+  <div class="statrow"><span class="stat">Pièces à couper : <b>${L.tot}</b></span>
+   <span class="stat">Tissu conseillé : <b>${md.tissu}</b></span>
+   <span class="stat">Métrage : <b>≈ ${fmt(Math.ceil(L.len/5)*5/100)} m</b></span></div></div>`}
 
-const col = mm => {
-  const w = r1(mm.C * 1.15), h = 9;
-  return { n: "Col", d: `M0 0H${w}Q${r1(w - 1.5)} ${r1(h * .55)} ${r1(w - 2)} ${h}L2 ${h}Q1.5 ${r1(h * .55)} 0 0Z`,
-    w, h, q: 2, pair: 1 };
-};
+function pieceCard(p){const c=fab(),u=uid(),sw=r1(Math.max(.35,Math.min(p.w,p.h)*.014));
+ const svg='<svg viewBox="'+r1(-3)+' '+r1(-3)+' '+r1(p.w+6)+' '+r1(p.h+6)+'">'+gDefs(u)
+  +'<path d="'+p.d+'" fill="'+c.c+'" fill-rule="'+(p.even?'evenodd':'nonzero')+'"/>'
+  +'<path d="'+p.d+'" fill="url(#wv'+u+')" fill-rule="evenodd"/>'
+  +'<path d="'+p.d+'" fill="none" stroke="'+GS+'" stroke-width="'+sw+'" stroke-linejoin="round"/>'
+  +(p.fold?'<line x1="0" y1="0" x2="0" y2="'+r1(p.h)+'" stroke="var(--chalk)" stroke-width="'+sw*1.2+'" stroke-dasharray="3 2" opacity=".8"/>':'')
+  +'</svg>';
+ return `<div class="pcard"><div class="pvb">${svg}</div><b>${p.n}</b>
+  <div class="pmeta"><span class="badge acc">×${p.q}</span><span class="badge">${fmt(p.w)} × ${fmt(p.h)} cm</span>
+  ${p.fold?'<span class="badge">pli au milieu</span>':''}${p.mir?'<span class="badge">miroir ×'+p.q+'</span>':''}</div></div>`}
 
-const jambe = (mm, back) => {
-  const tw = r1(mm.H / 4 + 3 + (back ? 1 : 0)), fy = r1(mm.L * .62),
-        iw = r1(tw * .52 * (back ? 1.08 : 1)), hw = r1(tw * .94);
-  return { n: back ? "Jambe dos" : "Jambe devant",
-    d: `M0 0H${tw}L${hw} ${r1(mm.L)}L${iw} ${r1(mm.L)}L${iw} ${fy}Q${r1(iw * .9)} ${r1(fy - 8)} 0 ${r1(fy - 15)}Z`,
-    w: Math.max(tw, hw), h: mm.L, q: 2, pair: 1 };
-};
+function vPatron(){const md=MODELS[ST.style],L=calc();
+ return `<div class="card view-in"><p class="ov">Patronage</p><h3>Pièces du ${md.n.toLowerCase()}</h3>
+  <p class="small muted" style="margin:4px 0 12px">Cotes finies hors valeurs de couture (${fmt(ST.m.S)} cm ajoutées au plombage). Traits roses = ligne de pli.</p>
+  ${L.warns.length?`<div class="warnbox"><b>Attention :</b><br>${L.warns.join('<br>')}</div>`:''}
+  <div class="note"><svg viewBox="0 0 24 24"><path d="M12 2v20M12 2l-3 3M12 2l3 3"/><rect x="4" y="9" width="16" height="11" rx="2"/></svg><span><b>Pli du tissu :</b> ${md.fold}</span></div>
+  <div class="pgrid">${L.pcs.map(pieceCard).join('')}</div></div>`}
 
-const quart = mm => { /* quart de jupe cercle (anneau au 4e) */
-  const wr = r1(mm.T / TAU + 1.5), Ro = r1(wr + mm.L);
-  return { n: "Quart",
-    d: `M${wr} 0A${wr} ${wr} 0 0 1 0 ${wr}L0 ${Ro}A${Ro} ${Ro} 0 0 0 ${Ro} 0Z`,
-    w: Ro, h: Ro, q: 4, pair: 1 };
-};
+function grain(x,y,s){return '<path d="M'+r1(x)+' '+r1(y)+'V'+r1(y+8*s)+'M'+r1(x-.9)+' '+r1(y+1.8)+'L'+r1(x)+' '+r1(y)+'L'+r1(x+.9)+' '+r1(y+1.8)+'M'+r1(x-.9)+' '+r1(y+8*s-1.8)+'L'+r1(x)+' '+r1(y+8*s)+'L'+r1(x+.9)+' '+r1(y+8*s-1.8)+'" fill="none" stroke="rgba(0,0,0,.32)" stroke-width=".4"/>'}
 
-const carreM = mm => { /* jupe mouchoir : grand carré + trou de taille (evenodd) */
-  const s = Math.ceil((mm.L + 12) * 1.42), c = s / 2, rr = r1(mm.T / TAU + 1.5);
-  return { n: "Carré",
-    d: `M0 0H${s}V${s}H0Z M${r1(c - rr)} ${c}a${rr} ${rr} 0 1 0 ${r1(2 * rr)} 0a${rr} ${rr} 0 1 0 ${r1(-2 * rr)} 0Z`,
-    w: s, h: s, q: 1, hole: rr };
-};
+function boardSVG(int){const L=calc(),c=fab(),W=ST.m.W,u=uid();
+ let s='<svg viewBox="0 0 '+W+' '+L.len+'" style="width:'+(ST.z*100).toFixed(0)+'%;min-width:280px">'
+  +'<defs><pattern id="fb'+u+'" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="3" fill="'+c.c+'"/><line x1="0" y1="0" x2="0" y2="3" stroke="rgba(0,0,0,.05)" stroke-width=".9"/></pattern></defs>'
+  +'<rect x="0" y="0" width="'+W+'" height="'+L.len+'" fill="url(#fb'+u+')"/>'
+  +'<line x1="1.6" y1="0" x2="1.6" y2="'+L.len+'" stroke="rgba(255,255,255,.55)" stroke-width=".5" stroke-dasharray="4 3"/>'
+  +'<line x1="'+(W-1.6)+'" y1="0" x2="'+(W-1.6)+'" y2="'+L.len+'" stroke="rgba(255,255,255,.55)" stroke-width=".5" stroke-dasharray="4 3"/>'
+  +'<text x="4" y="5.6" font-size="4" font-weight="700" fill="rgba(255,255,255,.8)" font-family="Figtree,sans-serif">Laize '+W+' cm — endroit contre endroit</text>';
+ L.placed.forEach((o,k)=>{const cut=ST.cut.has(k);
+  s+='<g class="pc'+(int?' pc-i':'')+(cut?' cutp':'')+'" data-k="'+k+'" transform="translate('+o.x+' '+o.y+')">'
+   +'<path class="pp" d="'+o.p.d+'" fill-rule="'+(o.p.even?'evenodd':'nonzero')+'"/>'
+   +'<path class="cutline" d="'+o.p.d+'" fill-rule="'+(o.p.even?'evenodd':'nonzero')+'" pathLength="1"/>'
+   +grain(r1(o.p.w-2.6),2.2,1)
+   +'<text class="plbl" x="2" y="5.6">'+o.p.n+(o.p.q>1?' · '+(o.k+1)+'/'+o.p.q:'')+'</text>'
+   +(cut?'<path d="M'+r1(o.p.w-9)+' 5.2l2 2 3.4-4" fill="none" stroke="#fff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity=".95"/>':'')
+   +'</g>'});
+ return s+'</svg>'}
 
-/* ---------- catalogue des modèles ---------- */
-const MODELS = {
-droite: { n: "Jupe droite", cat: "Jupes", L: 58, dif: 1, laize: 120,
-  use: ["T", "H", "L"],
-  tis: "Gabardine, crêpe, velours fin",
-  tags: ["Classique", "Bureau", "Zip invisible"],
-  desc: "La silhouette droite, héritée des années 60, structure la taille et allonge la jambe. Une fermeture invisible au dos, une fente d'aisance et une ceinture franche : l'intemporel des garde-robes soignées, porté aussi bien avec un chemisier rentré qu'un pull fin.",
-  fold: "Plier en deux, lisière contre lisière — Devant & Dos sur le pli.",
-  g: mm => [jupe(mm, 0, .02), jupe(mm, 1, .008), ceinture(mm)],
-  meth: [
-    "Décatir le tissu et repasser à plat. Repérer l'endroit et l'envers au crayon discret.",
-    "Plier endroit contre endroit, lisières alignées : le Devant et le Dos se coupent au pli, encolure de taille au bord supérieur.",
-    "Épingler le long du droit-fil, tracer les pinces au savon, puis couper marge de 1 cm comprise.",
-    "Crayer l'emplacement de la fente au dos et les repères de pinces avant de dépiquer.",
-    "Couper la ceinture à plat dans une chute, droit-fil parallèle à la lisière."],
-  st: [
-    { k: "fin", p: [0], t: "Préparation des bords", d: "Surjetez ou fraisez les bords crantés des deux pans de jupe avant toute couture — le tissu ne s'effilochera pas au montage." },
-    { k: "rr", p: [0, 1], t: "Côtés, endroit contre endroit", d: "Épinglez Devant et Dos ensemble. Piquez les deux côtés à 1 cm, en laissant 20 cm ouverts en haut du dos pour la fermeture éclair." },
-    { k: "tt", p: [1, 2], t: "Montage de la ceinture", d: "La ceinture se coud endroit contre endroit sur le haut de la jupe, puis se retourne et se surpique à la main pour une finition invisible." },
-    { k: "hem", p: [0], t: "Ourlet du bas", d: "Rentrez 3 cm sur l'envers, ficelez au fer, puis surpiquez à 2,5 mm du bord replié pour un ourlet net et souple." },
-    { k: "final" } ] },
+function vPlombage(){const L=calc();
+ return `<div class="card view-in"><p class="ov">Plombage</p><h3>Plan de coupe</h3>
+  <div class="kpis" style="margin-top:11px">
+   <div class="kpi"><span>Métrage</span><b>≈ ${fmt(Math.ceil(L.len/5)*5/100)} m</b></div>
+   <div class="kpi"><span>Laize</span><b>${fmt(ST.m.W)} cm</b></div>
+   <div class="kpi"><span>Pièces</span><b>${L.tot}</b></div>
+   <div class="kpi"><span>Couture</span><b>${fmt(ST.m.S)} cm</b></div></div>
+  ${L.warns.length?`<div class="warnbox"><b>Laize insuffisante :</b><br>${L.warns.join('<br>')}</div>`:''}
+  <div class="rowbtns">
+   <span class="zoom">Zoom <input type="range" id="zm" min="0.6" max="2.4" step="0.1" value="${ST.z}"></span></div>
+  <div class="boardwrap" id="bw">${boardSVG(false)}</div>
+  <p class="pv-note">Pièces placées à plat avec leurs valeurs de couture (${fmt(ST.m.S)} cm tout autour). Les lisières sont en pointillés blancs — métrage arrondi au 5 cm supérieur.</p></div>`}
+/* ================= Coupe interactive ================= */
+function cutCounts(){const m={};calc().placed.forEach((o,k)=>{if(ST.cut.has(k))m[o.i]=(m[o.i]||0)+1});return m}
+function vCoupe(){const L=calc(),done=ST.cut.size,counts=cutCounts(),c=fab();
+ const tray=L.pcs.map((p,i)=>({p,i,n:counts[i]||0})).filter(x=>x.n>0).map(x=>{
+  const u=uid(),svg='<svg viewBox="'+r1(-2)+' '+r1(-2)+' '+r1(x.p.w+4)+' '+r1(x.p.h+4)+'" preserveAspectRatio="xMidYMid meet">'
+   +'<path d="'+x.p.d+'" fill="'+c.c+'" fill-rule="'+(x.p.even?'evenodd':'nonzero')+'" stroke="'+GS+'" stroke-width=".5"/></svg>';
+  return `<div class="tchip">${svg}<div><b>${x.p.n}</b><span>${x.n}/${x.p.q} coupée${x.p.q>1?'s':''}</span></div></div>`}).join('');
+ return `<div class="card view-in"><p class="ov">Coupe</p><h3>Coupe du tissu</h3>
+  <div class="kpis" style="margin-top:11px">
+   <div class="kpi"><span>Coupées</span><b>${done} / ${L.tot}</b></div>
+   <div class="kpi"><span>Métrage</span><b>≈ ${fmt(Math.ceil(L.len/5)*5/100)} m</b></div>
+   <div class="kpi"><span>Laize</span><b>${fmt(ST.m.W)} cm</b></div>
+   <div class="kpi"><span>Couture</span><b>${fmt(ST.m.S)} cm</b></div></div>
+  <div class="prog"><i style="width:${L.tot?Math.round(done/L.tot*100):0}%"></i></div>
+  <div class="rowbtns">
+   <button class="btn pri" id="btAll"${done>=L.tot?' disabled':''}><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/><path d="M8.2 7.4 20 16M8.2 16.6 20 8"/></svg>Tout couper</button>
+   <button class="btn gh" id="btRst"><svg viewBox="0 0 24 24"><path d="M4 5v6h6M4.5 11a8 8 0 1 1 2 5.5"/></svg>Recommencer</button>
+   <span class="zoom">Zoom <input type="range" id="zm" min="0.6" max="2.4" step="0.1" value="${ST.z}"></span></div>
+  <div class="boardwrap" id="bw">${boardSVG(true)}</div>
+  <p class="pv-note">Cliquez une pièce : le trait rose suit le tracé des ciseaux, puis la pièce rejoint le panier.</p></div>
+ <div class="card view-in"><p class="ov">Panier</p><h3>Pièces coupées</h3>
+  ${tray?`<div class="tray">${tray}</div>`:'<div class="empty" style="margin-top:10px">Aucune pièce coupée — cliquez une pièce sur le tissu ci-dessus.</div>'}</div>`}
+let busy=false;
+function doCut(k){const L=calc();if(ST.cut.has(k)||k>=L.tot)return;
+ const g=document.querySelector('#bw .pc[data-k="'+k+'"]');if(!g)return;
+ const cl=g.querySelector('.cutline');if(cl)cl.classList.add('go');
+ setTimeout(()=>{ST.cut.add(k);
+  if(ST.cut.size>=L.tot)toast('Coupe terminée ! Direction l’assemblage');
+  renderView()},1000)}
+function cutAll(){if(busy)return;busy=true;const L=calc();
+ const pend=L.placed.map((o,k)=>k).filter(k=>!ST.cut.has(k));
+ pend.forEach((k,i)=>setTimeout(()=>doCut(k),i*640));
+ setTimeout(()=>{busy=false},pend.length*640+1100)}
+function resetCut(){if(busy)return;ST.cut.clear();renderView()}
 
-cercle: { n: "Jupe cercle", cat: "Jupes", L: 58, dif: 1, laize: 140,
-  use: ["T", "L"],
-  tis: "Viscose, satin de coton, crêpe fluide",
-  tags: ["Fluide", "Tombé circulaire", "Fronces réparties"],
-  desc: "Un arc de tissu plein : la jupe cercle tourne, ondule et respire à chaque pas. Sa construction en quatre quarts répartit la mémoire du tissu tout autour de la taille. Le tombé demande un tissu souple qui prendra belle ampleur dès la première virevolte.",
-  fold: "Plié dans la longueur — quarts alternés en miroir pour économiser la surface.",
-  g: mm => [quart(mm), ceinture(mm)],
-  meth: [
-    "Décatir soigneusement : les tissus fluides glissent, repassez sur une surface stable.",
-    "Tracez les quatre quarts en alternance miroir, arcs de taille orientés vers la lisière.",
-    "Épinglez abondamment dans les courbes, puis coupez les arcs d'un geste souple et continu.",
-    "Marquez le milieu de chaque arc de taille : ces repères guident le réparti des fronces.",
-    "Coupez la ceinture dans le droit-fil, dans une chute stable."],
-  st: [
-    { k: "rr", p: [0, 1], t: "Première couture de quart", d: "Assemblez les quarts 1 et 2 endroit contre endroit, à 1 cm. Les arcs complémentaires forment déjà la moitié du cercle." },
-    { k: "rr", p: [1, 2], t: "Deuxième quart", d: "Poursuivez le cercle : le quart 3 rejoint le 2. Vérifiez à chaque couture que les arcs de taille restent alignés." },
-    { k: "rr", p: [2, 3], t: "Dernier quart", d: "Le quart 4 ferme le cercle en rejoignant le 1. Laissez 20 cm ouverts en haut d'une couture pour la fermeture." },
-    { k: "tt", p: [3, 4], t: "Ceinture fronceur", d: "Froncez l'arc de taille entre les repères, puis montez la ceinture endroit contre endroit. Les fronces se répartissent régulièrement." },
-    { k: "hem", p: [0], t: "Ourlet circulaire", d: "L'ourlet se coud en biais flottant : rentrez 1,5 cm, laissez retomber 24 h, puis surpiquez — le biais se stabilise tout seul." },
-    { k: "final" } ] },
+/* ================= Assemblage animé ================= */
+function asmLayout(){const {pcs}=calc();
+ const W=Math.max(170,Math.min(330,pcs.reduce((s,p)=>s+p.w,0)+10*pcs.length));
+ let x=6,y=6,rh=0;const init=pcs.map(p=>{if(x>6&&x+p.w>W){x=6;y+=rh+14;rh=0}
+  const q={x:r1(x),y:r1(y)};x=r1(x+p.w+10);rh=Math.max(rh,p.h);return q});
+ return{init,W}}
+function asmPose(n){const {pcs}=calc(),steps=MODELS[ST.style].asm,{init}=asmLayout();
+ const pos=init.map(q=>({...q})),mir=init.map(()=>false);let seam=null;
+ for(let k=0;k<n&&k<steps.length;k++){const st=steps[k];if(st.s==null)continue;
+  const a=pos[st.a],aw=pcs[st.a].w,bw=pcs[st.b].w,bh=pcs[st.b].h;let t;
+  if(st.s==='rl')t={x:r1(a.x+aw),y:a.y};
+  else if(st.s==='lr')t={x:r1(a.x-bw),y:a.y};
+  else if(st.s==='rr')t={x:r1(a.x+aw),y:a.y,mir:1};
+  else if(st.s==='ll')t={x:r1(a.x-bw),y:a.y,mir:1};
+  else if(st.s==='tt')t={x:a.x,y:r1(a.y-bh)};
+  else t={x:a.x,y:r1(a.y+pcs[st.a].h)};
+  pos[st.b]=t;mir[st.b]=!!t.mir;seam={s:st.s,a:st.a,b:st.b,at:{...a}}}
+ return{pos,mir,seam}}
+function seamCoords(sm,pcs){const A=pcs[sm.a],B=pcs[sm.b],a=sm.at;
+ if(sm.s==='rl'||sm.s==='rr')return[a.x+A.w,a.y,a.x+A.w,a.y+Math.min(A.h,B.h)];
+ if(sm.s==='ll'||sm.s==='lr')return[a.x,a.y,a.x,a.y+Math.min(A.h,B.h)];
+ if(sm.s==='tt')return[a.x,a.y,a.x+Math.min(A.w,B.w),a.y];
+ return[a.x,a.y+A.h,a.x+Math.min(A.w,B.w),a.y+A.h]}
+function asmSVG(){const {pcs}=calc(),c=fab(),{init,W}=asmLayout(),steps=MODELS[ST.style].asm;
+ const fin=asmPose(steps.length).pos;const u=uid();
+ let mnX=0,mxX=W,mnY=0,mxY=0;
+ for(let i=0;i<pcs.length;i++){mnX=Math.min(mnX,init[i].x,fin[i].x);mxX=Math.max(mxX,init[i].x+pcs[i].w,fin[i].x+pcs[i].w);
+  mnY=Math.min(mnY,init[i].y,fin[i].y);mxY=Math.max(mxY,init[i].y+pcs[i].h,fin[i].y+pcs[i].h)}
+ let s='<svg id="asmSvg" viewBox="'+r1(mnX-8)+' '+r1(mnY-8)+' '+r1(mxX-mnX+16)+' '+r1(mxY-mnY+20)+'">'+gDefs(u)
+  +'<line id="asmSeam" style="display:none" stroke-linecap="round"/>';
+ pcs.forEach((p,i)=>{s+='<g class="apg" id="apg'+i+'" style="transform:translate('+init[i].x+'px,'+init[i].y+'px)">'
+  +'<path d="'+p.d+'" fill="'+c.c+'" fill-rule="'+(p.even?'evenodd':'nonzero')+'"/>'
+  +'<path d="'+p.d+'" fill="url(#wv'+u+')" fill-rule="evenodd"/>'
+  +'<path d="'+p.d+'" fill="none" stroke="'+GS+'" stroke-width=".4" stroke-linejoin="round"/>'
+  +'<text class="aplbl" x="1.6" y="6.4">'+p.n+'</text></g>'});
+ return s+'</svg>'}
+function applyAsm(n){const {pcs}=calc(),steps=MODELS[ST.style].asm;n=clamp(n,0,steps.length);ST.step=n;
+ const {pos,mir,seam}=asmPose(n);
+ pcs.forEach((p,i)=>{const g=document.getElementById('apg'+i);if(!g)return;
+  g.style.transform=mir[i]?'translate('+r1(pos[i].x+p.w)+'px,'+r1(pos[i].y)+'px) scale(-1,1)'
+   :'translate('+r1(pos[i].x)+'px,'+r1(pos[i].y)+'px)'});
+ const sEl=document.getElementById('asmSeam');
+ if(sEl){if(seam&&n>0){const c4=seamCoords(seam,pcs);
+   sEl.setAttribute('x1',r1(c4[0]));sEl.setAttribute('y1',r1(c4[1]));sEl.setAttribute('x2',r1(c4[2]));sEl.setAttribute('y2',r1(c4[3]));
+   sEl.setAttribute('stroke','var(--chalk)');sEl.setAttribute('stroke-width','.9');sEl.setAttribute('stroke-dasharray','2.6 2');
+   sEl.style.display='';sEl.classList.remove('seamline');void sEl.getBoundingClientRect();sEl.classList.add('seamline')}
+  else sEl.style.display='none'}
+ const lbl=document.getElementById('asmLbl');
+ if(lbl){if(n===0)lbl.innerHTML='<span class="stno">·</span>Pièces en place — lancez l’assemblage';
+  else if(n>=steps.length)lbl.innerHTML='<span class="stno" style="background:var(--ok)">'+steps.length+'</span>Terminé — aperçu du vêtement ci-dessous';
+  else lbl.innerHTML='<span class="stno">'+n+'/'+steps.length+'</span>'+steps[n-1].l}
+ const hist=document.getElementById('asmHist');
+ if(hist)hist.innerHTML=steps.map((st,i)=>'<li class="'+(i<n?'done':(i===n?'cur':''))+'"><i>'+(i<n?'✓':i+1)+'</i>'+st.l+'</li>').join('');
+ const dn=document.getElementById('asmDone');if(dn)dn.hidden=n<steps.length}
+let playT=null;
+function stopPlay(){if(playT){clearInterval(playT);playT=null}
+ const b=$('#aPlay');if(b)b.textContent='Lecture'}
+function togglePlay(){if(playT){stopPlay();return}
+ $('#aPlay').textContent='Pause';const steps=MODELS[ST.style].asm;
+ if(ST.step>=steps.length)applyAsm(0);
+ playT=setInterval(()=>{if(ST.step>=steps.length){stopPlay();return}applyAsm(ST.step+1)},1500);
+ if(ST.step===0)applyAsm(1)}
+function asmNext(){const steps=MODELS[ST.style].asm;if(ST.step<steps.length)applyAsm(ST.step+1)}
+function asmPrev(){applyAsm(Math.max(0,ST.step-1))}
 
-mouchoir: { n: "Jupe mouchoir", cat: "Jupes", L: 58, dif: 1, laize: 140,
-  use: ["T", "L"],
-  tis: "Jersey, jersey de coton, crêpe léger",
-  tags: ["Drapé", "Été", "Sans couture côté"],
-  desc: "Quatre pointes, aucune couture latérale : le grand carré se drape tout seul autour de la taille, et chaque pas anime les pointes. Le trou de taille est découpé au centre, l'ourlet roulé délicat termine le pourtour. Le modèle le plus spectaculaire pour trois gestes de couture.",
-  fold: "À plat, une seule épaisseur — le grand carré se coupe sans pli.",
-  g: mm => [carreM(mm), ceinture(mm)],
-  meth: [
-    "Coupez à plat, en une seule épaisseur : le carré ne supporte aucun pli de coupe.",
-    "Tracez le trou de taille au compas (rayon indiqué sur la pièce), au centre exact du carré.",
-    "Faufilez le cercle, puis découpez lentement en tournant le tissu — pas les ciseaux.",
-    "Surfilez immédiatement le tour du trou : les biais du centre sont fragiles.",
-    "Prévoyez l'ourlet roulé sur tout le pourtour sans entamer les diagonales."],
-  st: [
-    { k: "fin", p: [0], t: "Surjet du pourtour", d: "Surjetez tout le tour du carré, pointes comprises. Sur jersey, le surjet remplace l'ourlet provisoire et stabilise les diagonales." },
-    { k: "tt", p: [0, 1], t: "Ceinture élastique", d: "La ceinture se pose sur le trou de taille, tendue régulièrement entre quatre repères, puis se retourne à la main." },
-    { k: "hem", p: [0], t: "Ourlet roulé", d: "Ourlet roulé à la machine ou point main sur tout le pourtour : 4 mm de repli, point avant minuscule, sans tirer le biais." },
-    { k: "final" } ] },
+function vAsm(){const md=MODELS[ST.style],L=calc(),c=fab(),steps=md.asm;
+ return `<div class="card view-in"><p class="ov">Assemblage animé</p><h3>${md.n} — pièce par pièce</h3>
+  <p class="small muted" style="margin:4px 0 10px">Les vraies pièces du patron se rejoignent couture par couture (valeur ${fmt(ST.m.S)} cm, trait rose = couture en cours).</p>
+  <div class="asmstage">${asmSVG()}</div>
+  <div class="asmctl">
+   <button class="icobtn" id="aPrev" title="Précédent"><svg viewBox="0 0 24 24"><path d="M14.5 5 7.5 12l7 7"/></svg></button>
+   <button class="btn pri grow" id="aPlay">Lecture</button>
+   <button class="icobtn" id="aNext" title="Suivant"><svg viewBox="0 0 24 24"><path d="M9.5 5l7 7-7 7"/></svg></button>
+   <button class="icobtn" id="aRst" title="Recommencer"><svg viewBox="0 0 24 24"><path d="M4 5v6h6M4.5 11a8 8 0 1 1 2 5.5"/></svg></button></div>
+  <div class="asmstep" id="asmLbl"></div>
+  <ol class="asmhist" id="asmHist"></ol></div>
+ <div class="card view-in asm-done" id="asmDone" ${ST.step>=steps.length?'':'hidden'}>
+  <p class="ov">Aperçu final</p><h3>Votre ${md.n.toLowerCase()} est terminé(e)</h3>
+  <div class="pv-box" style="margin-top:10px">${PREVIEWS[ST.style](ST.m,c)}</div>
+  <p class="pv-note">Style obtenu : ${md.tissu.toLowerCase()} de préférence · coutures ${fmt(ST.m.S)} cm · ${L.tot} pièces assemblées. Voici le vêtement et le tombé que vous obtiendrez.</p></div>`}
 
-short: { n: "Short taille haute", cat: "Pantalons", L: 38, dif: 2, laize: 140,
-  use: ["T", "H", "L"],
-  tis: "Toile de coton, velours côtelé, lin lavé",
-  tags: ["Casual", "Taille haute", "Poches italiennes"],
-  desc: "Un short taille haute à l'assise nette : fourche dessinée, jambes droites, ceinture franche et poches italiennes crantées avant découpe. En toile pour l'été, en velours côtelé pour l'automne — le même patron couvre les saisons.",
-  fold: "Plié dans la hauteur — jambes devant et dos en miroir.",
-  g: mm => [jambe(mm, 0), jambe(mm, 1), ceinture(mm)],
-  meth: [
-    "Pliez le tissu endroit contre endroit dans la hauteur, lisières ensemble.",
-    "Placez les jambes en miroir, droit-fil strictement parallèle à la lisière.",
-    "Tracez la fourche et les emplacements de poches avant toute découpe.",
-    "Coupez marge comprise, puis crayez les milieux de devants et de dos.",
-    "Ceinture coupée à plat dans le droit-fil, dans une chute ferme."],
-  st: [
-    { k: "rr", p: [0, 2], t: "Couture de côté — droite", d: "Jambe devant 1 sur jambe dos 1, endroit contre endroit : piquez le côté à 1 cm du haut de la ceinture au bas de la jambe." },
-    { k: "rr", p: [1, 3], t: "Couture de côté — gauche", d: "Même geste de l'autre côté. Les deux jambes sont maintenant reliées — le short prend forme." },
-    { k: "bt", p: [0, 2], t: "Fourche d'entrejambe", d: "Assemblez devant et dos le long de la fourche, en suivant la courbe en V. Surpiquez la couture vers l'arrière pour la solidité." },
-    { k: "tt", p: [1, 4], t: "Montage de la ceinture", d: "Ceinture endroit contre endroit sur le haut du short, puis retournée et surpiquée. Laissez l'emplacement du bouton." },
-    { k: "hem", p: [0], t: "Ourlets de jambes", d: "Rentrez 2,5 cm sur chaque jambe, ficelez, surpiquez. Le tombé droit demande un ourlet parfaitement régulier." },
-    { k: "final" } ] },
+/* ================= Méthode ================= */
+function vMeth(){const md=MODELS[ST.style],arr=ST.checked[ST.style]||[],
+  done=md.meth.filter((s,i)=>arr[i]).length;
+ return `<div class="card view-in"><p class="ov">Méthode</p><h3>Montage pas à pas</h3>
+  <div class="prog" style="margin-top:11px"><i style="width:${Math.round(done/md.meth.length*100)}%"></i></div>
+  <p class="small muted" style="margin-bottom:10px">${done}/${md.meth.length} étapes réalisées</p>
+  <ol class="mth">${md.meth.map((s,i)=>`<li class="${arr[i]?'done':''}">
+   <span class="mno">${String(i+1).padStart(2,'0')}</span>
+   <button class="ck" aria-label="Cocher"><svg viewBox="0 0 24 24"><path d="M4 12.5 10 18 20 6"/></svg></button>
+   <span>${s}</span></li>`).join('')}</ol>
+  <div class="btnrow"><button class="btn gh" id="mthRst">Tout décocher</button></div></div>
+ <div class="card view-in"><p class="ov">Astuce d’atelier</p><p style="font-size:.9rem">${md.tip}</p>
+  <div class="statrow"><span class="stat">Pli du tissu : ${md.fold}</span></div></div>`}
 
-tunique: { n: "Tunique fentes", cat: "Hauts", L: 78, dif: 2, laize: 140,
-  use: ["P", "T", "L", "S", "C"],
-  tis: "Viscose lavée, double gaze, lin souple",
-  tags: ["Ample", "Fentes latérales", "Ceinture amovible"],
-  desc: "Une coupe ample et aérée qui tombe juste : épaules nettes, manches tombantes, fentes latérales qui libèrent la marche. La ceinture nouée à la taille en fait une pièce de jour comme de soirée, sublime sur double gaze.",
-  fold: "Plié dans la longueur — Devant & Dos sur le pli.",
-  g: mm => [corsage(mm, 0, .18), corsage(mm, 1, .18), manche(mm), ceinture(mm)],
-  meth: [
-    "Décatir et repasser, tissu plié endroit contre endroit dans la longueur.",
-    "Devant et Dos sur le pli, encolure au bord supérieur du pliage.",
-    "Manches ×2 côte à côte sur la chute, sommet de tête vers le pli, droit-fil vertical.",
-    "Marquez le bas des emmanchures et la ligne de taille avant de dépingler.",
-    "Ceinture : coupez dans le droit-fil dans une chute stable, pas en biais."],
-  st: [
-    { k: "tt", p: [1, 0], t: "Épaules", d: "Devant et Dos endroit contre endroit : piquez les deux épaules à 1 cm, puis ouvrez les coutures au fer pour un montage plat." },
-    { k: "rl", p: [0, 2], t: "Montage de la manche 1", d: "Épinglez la tête de manche dans l'emmanchure, trois tirets de réparti. Piquez à 1 cm sans faire de fronce." },
-    { k: "rl", p: [1, 3], t: "Montage de la manche 2", d: "Même montage en miroir. Vérifiez la symétrie des têtes de manche avant la couture définitive." },
-    { k: "rr", p: [0, 1], t: "Côtés et dessous de manches", d: "Un seul passage : du poignet au bas de la tunique, manche puis côté d'un seul geste à 1 cm." },
-    { k: "fin", p: [0], t: "Encolure au biais", d: "Posez un biais d'encolure maison : il enveloppe la découpe, se retourne et se surpique au point invisible." },
-    { k: "tt", p: [1, 4], t: "Ceinture nouée", d: "La ceinture passe dans des passants ou se noue librement sur la taille : elle sculpte l'ampleur à votre goût." },
-    { k: "final" } ] },
+/* ================= Événements de vue ================= */
+const renderViewDeb=debounce(()=>renderView(),90);
+function bindView(){const v=ST.tab;
+ if(v==='plombage'||v==='coupe'){const zm=$('#zm');
+  if(zm)zm.addEventListener('input',e=>{ST.z=+e.target.value;save();
+   const svg=$('#bw svg');if(svg)svg.style.width=(ST.z*100).toFixed(0)+'%'})}
+ if(v==='coupe'){
+  document.querySelectorAll('#bw .pc-i').forEach(g=>g.addEventListener('click',()=>doCut(+g.dataset.k)));
+  const ba=$('#btAll');if(ba)ba.addEventListener('click',cutAll);
+  const br=$('#btRst');if(br)br.addEventListener('click',resetCut)}
+ if(v==='asm'){applyAsm(ST.step);
+  $('#aNext').addEventListener('click',()=>{stopPlay();asmNext()});
+  $('#aPrev').addEventListener('click',()=>{stopPlay();asmPrev()});
+  $('#aRst').addEventListener('click',()=>{stopPlay();applyAsm(0)});
+  $('#aPlay').addEventListener('click',togglePlay)}
+ if(v==='meth'){document.querySelectorAll('.mth li').forEach((li,i)=>{
+   li.querySelector('.ck').addEventListener('click',()=>toggleMeth(i))});
+  const mr=$('#mthRst');if(mr)mr.addEventListener('click',()=>{ST.checked[ST.style]=[];save();renderView()})}}
+function toggleMeth(i){const arr=ST.checked[ST.style]||[];arr[i]=!arr[i];
+ ST.checked[ST.style]=arr;save();renderView()}
 
-haut: { n: "Haut essentiel", cat: "Hauts", L: 58, dif: 2, laize: 120,
-  use: ["P", "T", "L", "S", "C"],
-  tis: "Popeline, chambray, tencel",
-  tags: ["Essentiel", "Encolure ronde", "Coutures nettes"],
-  desc: "L'essentiel de la garde-robe : un haut juste à encolure ronde, épaules propres, manches longues ajustées et finitions au biais. La pièce que l'on coud d'abord, puis recoud sans cesse — en popeline blanche, en chambray, en tencel noir.",
-  fold: "Plié dans la longueur — Devant & Dos sur le pli.",
-  g: mm => [corsage(mm, 0, .1), corsage(mm, 1, .08), manche(mm)],
-  meth: [
-    "Tissu plié endroit contre endroit : Devant et Dos au pli, encolure au bord supérieur.",
-    "Manches ×2 sur la double épaisseur, tête de manche orientée vers le pli.",
-    "Crayez l'encolure et les repères de montage des manches.",
-    "Coupez d'un geste continu le long des emmanchures — pas d'encoche manquée.",
-    "Prévoyez une bande d'encolure dans une chute, dans le droit-fil."],
-  st: [
-    { k: "tt", p: [1, 0], t: "Épaules", d: "Piquez les épaules à 1 cm, endroit contre endroit, puis ouvrez au fer. Une bande renfort évite qu'elles s'étirent." },
-    { k: "rl", p: [0, 2], t: "Montage de la manche 1", d: "Tête de manche dans l'emmanchure, tirets alignés. Piquez rond, sans pli, à 1 cm." },
-    { k: "rl", p: [1, 3], t: "Montage de la manche 2", d: "Même montage en miroir, vérifiez la hauteur des deux têtes avant de piquer." },
-    { k: "rr", p: [0, 1], t: "Côtés en une fois", d: "Du poignet au bas du haut, manche et côté en une seule couture à 1 cm. Ouvrez les coutures au fer, à plat." },
-    { k: "fin", p: [0], t: "Encolure au biais", d: "Bande d'encolure posée à plat, retournée et surpiquée : le col rond reste net après chaque lavage." },
-    { k: "hem", p: [1], t: "Ourlets du bas", d: "Rentrez 2 cm au bas du corps et 1,5 cm aux poignets, ficelez, surpiquez — les ourlets se répondent." },
-    { k: "final" } ] },
+/* ================= Fiches cliente ================= */
+function saveClient(){const nm=($('#nm').value||'').trim();
+ if(!nm){toast('Donnez un nom à la fiche');return}
+ if(ST.client&&ST.client!==nm&&ST.clients[ST.client])delete ST.clients[ST.client];
+ ST.clients[nm]={P:ST.m.P,T:ST.m.T,H:ST.m.H,L:ST.m.L,C:ST.m.C};
+ ST.client=nm;save();renderSide();toast('Fiche « '+nm+' » enregistrée')}
+function delClient(){if(!ST.client){toast('Aucune fiche sélectionnée');return}
+ const nm=ST.client;delete ST.clients[nm];ST.client=null;save();renderSide();toast('Fiche « '+nm+' » supprimée')}
 
-blazer: { n: "Blazer revers cranté", cat: "Vestes", L: 72, dif: 3, laize: 150,
-  use: ["P", "T", "L", "S", "C"],
-  tis: "Laine froide, flanelle, gabardine de laine",
-  tags: ["Tailoring", "Revers crantés", "Épaules nettes"],
-  desc: "L'architecture du tailoring : épaules dessinées, revers crantés, ceinture de taille marquée par des pinces profondes. La pièce maîtresse d'une garde-robe — cousez-la en laine froide pour trois saisons, la doublure en fait un vêtement qui se porte des années.",
-  fold: "Devants à plat en miroir, Dos sur le pli.",
-  g: mm => [devantB(mm), corsage(mm, 1, .04), manche(mm), col(mm)],
-  meth: [
-    "Décatir la laine à la vapeur, sans écraser : le tissu doit garder sa vie.",
-    "Devants ×2 en miroir sur simple épaisseur, Dos sur le pli.",
-    "Manches ×2 et Col ×2 sur la chute, droit-fil rigoureusement vertical.",
-    "Tracez revers, boutonnières et emplacements de poches au fil à tracer, avant la coupe.",
-    "Réservez les chutes des devants pour les parementures et dessous de poches."],
-  st: [
-    { k: "tt", p: [2, 0], t: "Épaules", d: "Dos et devants endroit contre endroit : épaules piquées à 1 cm puis moulées au fer à repasser — le renfort d'épaule vient ensuite." },
-    { k: "rl", p: [0, 3], t: "Montage de la manche 1", d: "La tête de manche embuée se pose dans l'emmanchure : tirets de hauteur, réparti régulier, couture à 1 cm côté corps." },
-    { k: "rl", p: [1, 4], t: "Montage de la manche 2", d: "Second manchon en miroir. Les deux têtes doivent présenter la même avance de 1 cm au bout d'épaule." },
-    { k: "rr", p: [0, 2], t: "Côtés et dessous de manches", d: "Piquez du poignet au bas de la veste en un passage. Ouvrez les coutures au fer manche puis corps." },
-    { k: "rl", p: [0, 5], t: "Montage du col", d: "Le col se monte entre les encolures, crans alignés : d'abord le dessous, puis le dessus au point d'arrêt main." },
-    { k: "fin", p: [0], t: "Parementure et boutonnières", d: "Parementures assemblées aux devants, revers crantés moulés au fer, boutonnières ouvertes au découseur — la signature du tailoring." },
-    { k: "final" } ] }
-};
-/* ============ APERÇUS SVG DU VÊTEMENT FINI ============ */
-/* Chaque aperçu est dessiné d'après les mesures réelles : le client voit le style obtenu. */
-const PVS = {
-droite(v, id) {
-  const tw = (v.T + 6) / 2, hw = (v.H + 6) / 2, hm = hw - 2, L = v.L;
-  const s = Math.min(1.02, 176 / L, 150 / hw);
-  const d = `M${-tw / 2} 6.5C${-hw / 2} ${L * .3} ${-hm / 2} ${L * .34} ${-hm / 2} ${L}L${hm / 2} ${L}C${hm / 2} ${L * .34} ${hw / 2} ${L * .3} ${tw / 2} 6.5Z`;
-  const body = `
-    <rect class="band" x="${-tw / 2}" y="0" width="${tw}" height="7" rx="2.5"/>
-    <path class="gb" fill="url(#${id}g)" d="${d}"/>
-    <path class="gh" fill="url(#${id}h)" d="${d}"/>
-    <path class="gd" d="M0 15V${L - 6}M${-tw / 4 + 1} 14L${-tw / 4 + 4} 34M${tw / 4 - 1} 14L${tw / 4 - 4} 34"/>
-    <path class="gs" d="M${-hm / 2 + 3} ${L - 5}H${hm / 2 - 3}"/>`;
-  return { s, ty: (250 - L * s) / 2 + 2, gx: hw * s * .5 + 6, gy: 0, body, gyFrom: L };
-},
-cercle(v, id) {
-  const wr = v.T / TAU + 1.5, tw = wr + 2, L = v.L, hw2 = Math.min(88, wr + L * 1.12);
-  const s = Math.min(1, 176 / (L * 1.1), 168 / (hw2 * 2));
-  const d = `M${-tw} 8C${-hw2 * .6} ${L * .26} ${-hw2 / 2} ${L * .5} ${-hw2 / 2} ${L * .97}Q${-hw2 * .24} ${L * 1.07} 0 ${L * 1.05}Q${hw2 * .24} ${L * 1.07} ${hw2 / 2} ${L * .97}C${hw2 / 2} ${L * .5} ${hw2 * .6} ${L * .26} ${tw} 8Z`;
-  const body = `
-    <path class="band" d="M${-tw} 1Q0 7 ${tw} 1L${tw} 7Q0 13 ${-tw} 7Z"/>
-    <path class="gb" fill="url(#${id}g)" d="${d}"/>
-    <path class="gh" fill="url(#${id}h)" d="${d}"/>
-    <path class="gd" d="M${-tw * .55} 15C${-hw2 * .42} ${L * .4} ${-hw2 * .36} ${L * .62} ${-hw2 * .34} ${L * .96}M${tw * .55} 15C${hw2 * .42} ${L * .4} ${hw2 * .36} ${L * .62} ${hw2 * .34} ${L * .96}"/>`;
-  return { s, ty: (250 - L * 1.08 * s) / 2 + 2, gx: hw2 * s * .5 + 6, gy: 0, body, gyFrom: L * 1.05 };
-},
-mouchoir(v, id) {
-  const tw = v.T / TAU + 3.5, L = v.L, pw = L * .62, dip = L * 1.22;
-  const s = Math.min(1, 172 / dip, 164 / (pw * 2));
-  const d = `M${-tw} 8L${-pw} ${L}Q${-pw * .5} ${dip - 10} 0 ${dip}Q${pw * .5} ${dip - 10} ${pw} ${L}L${tw} 8Q0 15 ${-tw} 8Z`;
-  const body = `
-    <path class="band" d="M${-tw} 1Q0 7 ${tw} 1L${tw} 7Q0 13 ${-tw} 7Z"/>
-    <path class="gb" fill="url(#${id}g)" d="${d}"/>
-    <path class="gh" fill="url(#${id}h)" d="${d}"/>
-    <path class="gd" d="M${-tw + 2} 12L${-pw + 7} ${L - 9}M${tw - 2} 12L${pw - 7} ${L - 9}M0 16V${dip - 12}"/>`;
-  return { s, ty: (250 - dip * s) / 2 + 2, gx: pw * s + 6, gy: 0, body, gyFrom: dip };
-},
-short(v, id) {
-  const tw = (v.T + 6) / 2, hw = (v.H + 6) / 2, yc = v.L * .62, lo = hw * .97, li = tw * .5, L = v.L;
-  const s = Math.min(1.02, 170 / L, 150 / lo);
-  const d = `M${-tw / 2} 7C${-hw / 2} ${L * .2} ${-lo / 2} ${L * .28} ${-lo / 2} ${L}L${-li / 2} ${L}Q${-li / 2 + 1.5} ${yc + 9} 0 ${yc}Q${li / 2 - 1.5} ${yc + 9} ${li / 2} ${L}L${lo / 2} ${L}C${lo / 2} ${L * .28} ${hw / 2} ${L * .2} ${tw / 2} 7Z`;
-  const body = `
-    <rect class="band" x="${-tw / 2}" y="0" width="${tw}" height="6.5" rx="2.2"/>
-    <path class="gb" fill="url(#${id}g)" d="${d}"/>
-    <path class="gh" fill="url(#${id}h)" d="${d}"/>
-    <path class="gd" d="M${-tw / 2 + 3} 11L${-tw / 2 + 15} 28M${tw / 2 - 3} 11L${tw / 2 - 15} 28M0 9V${yc - 4}"/>
-    <path class="gs" d="M${-lo / 2 + 2.5} ${L - 5}H${-li / 2 - 2}M${li / 2 + 2} ${L - 5}H${lo / 2 - 2.5}"/>`;
-  return { s, ty: (250 - L * s) / 2 + 2, gx: lo * s * .5 + 6, gy: 0, body, gyFrom: L };
-},
-tunique(v, id) {
-  const cw = (v.P + 10) / 2, sw = v.C / 2 + 1, sl = v.S * .72, slw = (v.P * .3 + 8) * .46,
-        ad = v.P / 6 + 8, hm = cw + (v.L - ad) * .42, L = v.L, sy = 11;
-  const s = Math.min(.98, 176 / L, 168 / ((sw + slw) * 2));
-  const d = `M-8 6L${-sw} ${sy}L${-(sw + slw)} ${sy + sl}L${-(sw + slw * .62)} ${sy + sl + 6}L${-cw / 2} ${ad + 9}L${-hm / 2} ${L}L${hm / 2} ${L}L${cw / 2} ${ad + 9}L${sw + slw * .62} ${sy + sl + 6}L${sw + slw} ${sy + sl}L${sw} ${sy}L8 6Q0 14 -8 6Z`;
-  const body = `
-    <path class="gb" fill="url(#${id}g)" d="${d}"/>
-    <path class="gh" fill="url(#${id}h)" d="${d}"/>
-    <path class="gd" d="M-8 6Q0 16 8 6M${-hm / 2 + 1.5} ${L - 16}V${L - 3}M${hm / 2 - 1.5} ${L - 16}V${L - 3}M0 18V${L - 4}"/>
-    <path class="gs" d="M${-(sw + slw * .62) - 2} ${sy + sl + 1.5}L${-(sw + slw) + 3} ${sy + sl - 1.5}M${(sw + slw * .62) + 2} ${sy + sl + 1.5}L${(sw + slw) - 3} ${sy + sl - 1.5}"/>`;
-  return { s, ty: (250 - L * s) / 2 + 2, gx: (sw + slw) * s + 6, gy: 0, body, gyFrom: L };
-},
-haut(v, id) {
-  const cw = (v.P + 8) / 2, sw = v.C / 2 + 1, sl = v.S * .78, slw = (v.P * .3 + 6) * .44,
-        ad = v.P / 6 + 8, hm = cw * 1.04, L = v.L, sy = 11;
-  const s = Math.min(.98, 178 / L, 168 / ((sw + slw) * 2));
-  const d = `M-8 6L${-sw} ${sy}L${-(sw + slw)} ${sy + sl}L${-(sw + slw * .68)} ${sy + sl + 5}L${-cw / 2} ${ad + 8}L${-hm / 2} ${L}L${hm / 2} ${L}L${cw / 2} ${ad + 8}L${sw + slw * .68} ${sy + sl + 5}L${sw + slw} ${sy + sl}L${sw} ${sy}L8 6Q0 15 -8 6Z`;
-  const body = `
-    <path class="gb" fill="url(#${id}g)" d="${d}"/>
-    <path class="gh" fill="url(#${id}h)" d="${d}"/>
-    <path class="gd" d="M-8 6Q0 17 8 6M0 18V${L - 4}M${-(sw + slw * .68) - 2} ${sy + sl + 1}L${-(sw + slw) + 3} ${sy + sl - 1.5}M${(sw + slw * .68) + 2} ${sy + sl + 1}L${(sw + slw) - 3} ${sy + sl - 1.5}"/>
-    <path class="gs" d="M${-hm / 2 + 3} ${L - 6}H${hm / 2 - 3}"/>`;
-  return { s, ty: (250 - L * s) / 2 + 2, gx: (sw + slw) * s + 6, gy: 0, body, gyFrom: L };
-},
-blazer(v, id) {
-  const cw = (v.P + 12) / 2, sw = v.C / 2 + 2, sl = v.S * .72, slw = (v.P * .3 + 10) * .46,
-        ad = v.P / 6 + 10, hm = cw + 2, L = v.L, sy = 12;
-  const s = Math.min(.98, 178 / L, 168 / ((sw + slw) * 2));
-  const d = `M-8 6L${-sw} ${sy}L${-(sw + slw)} ${sy + sl}L${-(sw + slw * .66)} ${sy + sl + 5}L${-cw / 2} ${ad + 9}L${-hm / 2} ${L}L${hm / 2} ${L}L${cw / 2} ${ad + 9}L${sw + slw * .66} ${sy + sl + 5}L${sw + slw} ${sy + sl}L${sw} ${sy}L8 6Q0 13.5 -8 6Z`;
-  const body = `
-    <path class="band" d="M-8 6Q0 2.8 8 6L6.5 2.6Q0 -.5 -6.5 2.6Z"/>
-    <path class="gb" fill="url(#${id}g)" d="${d}"/>
-    <path class="gh" fill="url(#${id}h)" d="${d}"/>
-    <path d="M-8 6L-2.5 33L-8.5 41Q-5.6 23 -8 6Z" fill="var(--fab2)" stroke="var(--ink)" stroke-width="1.3" stroke-linejoin="round"/>
-    <path d="M8 6L2.5 33L8.5 41Q5.6 23 8 6Z" fill="var(--fab2)" stroke="var(--ink)" stroke-width="1.3" stroke-linejoin="round"/>
-    <path class="gd" d="M-2.5 36V${L - 3}M2.5 36V${L - 3}M${-cw * .38} ${L * .58}H${-cw * .12}M${cw * .12} ${L * .58}H${cw * .38}"/>
-    <circle class="btn-c" cx="0" cy="44" r="1.9"/><circle class="btn-c" cx="0" cy="55" r="1.9"/>
-    <path class="gs" d="M${-(sw + slw * .66) - 2} ${sy + sl + 1.5}L${-(sw + slw) + 3} ${sy + sl - 1.5}M${(sw + slw * .66) + 2} ${sy + sl + 1.5}L${(sw + slw) - 3} ${sy + sl - 1.5}M${-hm / 2 + 3} ${L - 5}H${hm / 2 - 3}"/>`;
-  return { s, ty: (250 - L * s) / 2 + 2, gx: (sw + slw) * s + 6, gy: 0, body, gyFrom: L };
+/* ================= Thème & démarrage ================= */
+function applyTheme(t){document.documentElement.dataset.theme=t||ST.theme||'light';renderTheme()}
+function boot(){load();
+ ST.theme=ST.theme||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+ applyTheme(ST.theme);LASTSIG=sig();
+ renderFabs();renderSide();renderTabs();renderView();
+ $('#fabs').addEventListener('click',e=>{const b=e.target.closest('.fdot');if(!b)return;
+  ST.color=+b.dataset.i;save();renderFabs();renderView()});
+ $('#theme').addEventListener('click',()=>{
+  applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');save()});
+ $('#side').addEventListener('click',e=>{
+  const ch=e.target.closest('.chip');if(ch){setStyle(ch.dataset.k);return}
+  if(e.target.closest('#sv')){saveClient();return}
+  if(e.target.closest('#dl')){delClient();return}});
+ $('#side').addEventListener('input',e=>{
+  const mk=e.target.dataset.mk;if(!mk)return;
+  const val=e.target.value;if(val===''||isNaN(+val))return;
+  const v=clamp(+val,+e.target.min,+e.target.max);
+  ST.m[mk]=v;ensureSig();save();
+  document.querySelectorAll('#side [data-mk="'+mk+'"]').forEach(el=>{if(el!==e.target)el.value=v});
+  renderViewDeb()});
+ $('#side').addEventListener('change',e=>{
+  if(e.target.id!=='csl')return;const v=e.target.value;
+  if(v==='__new'){ST.client=null;$('#nm').value='';toast('Saisissez le nom puis Enregistrer');return}
+  if(v&&ST.clients[v]){ST.client=v;
+   ['P','T','H','L','C'].forEach(k=>{if(ST.clients[v][k]!=null)ST.m[k]=ST.clients[v][k]});
+   $('#nm').value=v;ensureSig();save();renderSide();renderView();toast('Fiche de '+v+' chargée')}
+  else if(!v){ST.client=null;save()}});
+ $('#tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b)setTab(b.dataset.t)});
 }
-};
+boot();
 
-function pv(key, v, cls) {
-  const id = "pv" + (++UID), M = MODELS[key], b = PVS[key](v, id);
-  const gy = b.ty + b.gyFrom * b.s + 9;
-  return `<svg class="pv ${cls || ""}" viewBox="0 0 200 250" role="img" aria-label="Aperçu : ${esc(M.n)}">
-  <defs>
-    <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="var(--fab1)"/><stop offset="1" stop-color="var(--fab2)"/>
-    </linearGradient>
-    <pattern id="${id}h" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-      <line x1="0" y1="0" x2="0" y2="6" stroke="var(--pvh)" stroke-width="1.2"/>
-    </pattern>
-  </defs>
-  <ellipse cx="100" cy="${r1(gy)}" rx="${r1(b.gx)}" ry="${r1(b.gx * .13)}" fill="var(--ink)" opacity=".08"/>
-  <g transform="translate(100,${r1(b.ty)}) scale(${r1(b.s * 100) / 100})">${b.body}</g>
-</svg>`;
-}
 
-/* mini-svg d'une pièce (cartes patron, panier, tray) */
-function pieceSvg(p, idp, opts) {
-  const o = opts || {}, pad = 4, id = "ps" + (++UID);
-  const w = p.w + pad * 2, h = p.h + pad * 2;
-  return `<svg viewBox="0 0 ${r1(w)} ${r1(h)}" aria-hidden="true">
-  <defs><marker id="${id}a" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="4.6" markerHeight="4.6" orient="auto-start-reverse">
-    <path d="M0 1L5 3L0 5Z" fill="var(--mute)"/></marker></defs>
-  <g transform="translate(${pad},${pad})">
-    <path d="${p.d}" ${p.hole ? 'fill-rule="evenodd"' : ""} fill="var(--chalk-soft)" stroke="var(--ink)" stroke-width="${o.thin ? .35 : .8}" stroke-linejoin="round"/>
-    ${p.fold ? `<line x1=".7" y1="1.4" x2=".7" y2="${r1(p.h - 1.4)}" stroke="var(--chalk)" stroke-width="${o.thin ? .3 : .7}" stroke-dasharray="1.8 1.3"/>` : ""}
-    ${o.grain ? `<line x1="${r1(p.w * .6)}" y1="${r1(Math.min(4, p.h * .16))}" x2="${r1(p.w * .6)}" y2="${r1(p.h - Math.min(4, p.h * .16))}" stroke="var(--mute)" stroke-width="${o.thin ? .3 : .55}" marker-start="url(#${id}a)" marker-end="url(#${id}a)"/>` : ""}
-  </g>
-</svg>`;
-}
-/* ============ ÉTAT ============ */
-let cur = "droite", sa = 1, Wf = 140, z = 1,
-    cut = new Set(), lay = null, busy = false, cuttingAll = false,
-    astep = 0, playT = null, joinT = null, methDone = new Set();
-
-const gen = () => { // pièces expansées (quantités incluses, libellées)
-  const out = [];
-  MODELS[cur].g(m).forEach(p => { for (let i = 0; i < (p.q || 1); i++) out.push({ ...p, lbl: p.n + ((p.q || 1) > 1 ? " " + (i + 1) + "/" + p.q : "") }); });
-  return out;
-};
-
-/* ============ TOAST ============ */
-let toastT = null;
-function toast(msg) {
-  const t = $("#toast");
-  t.textContent = msg; t.classList.add("show");
-  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2400);
-}
-
-/* ============ MESURES ============ */
-const FIELDS = [
-  ["P", "Tour de poitrine", 80, 140],
-  ["T", "Tour de taille", 55, 125],
-  ["H", "Tour de hanches", 80, 155],
-  ["L", "Longueur totale", 25, 165],
-  ["S", "Longueur de manche", 10, 78],
-  ["C", "Carrure épaules", 30, 56]];
-
-function renderInputs() {
-  $("#fi").innerHTML = FIELDS.map(([k, lab]) => `
-    <div class="field" data-k="${k}">
-      <label for="in-${k}">${lab}<em>cm</em></label>
-      <div class="stp">
-        <button type="button" data-d="-1" data-k="${k}" aria-label="Diminuer ${lab}">−</button>
-        <input id="in-${k}" inputmode="decimal" value="${m[k]}" aria-label="${lab} en centimètres">
-        <button type="button" data-d="1" data-k="${k}" aria-label="Augmenter ${lab}">+</button>
-      </div>
-    </div>`).join("");
-  $$("#fi .stp button").forEach(b => b.addEventListener("click", () => {
-    const k = b.dataset.k, f = FIELDS.find(x => x[0] === k),
-          cur0 = parseFloat(String($("#in-" + k).value).replace(",", ".")) || m[k];
-    setM(k, cur0 + (+b.dataset.d) * (k === "L" ? 2 : 1), f);
-  }));
-  FIELDS.forEach(([k]) => $("#in-" + k).addEventListener("change", e => setM(k, e.target.value, FIELDS.find(x => x[0] === k))));
-}
-function setM(k, v, f) {
-  if ($("#in-" + k).disabled) return;
-  v = parseFloat(String(v).replace(",", "."));
-  if (isNaN(v)) { warn("Mesure invalide : " + f[1].toLowerCase() + "."); $("#in-" + k).value = m[k]; return; }
-  m[k] = Math.min(f[3], Math.max(f[2], v));
-  $("#in-" + k).value = m[k];
-  hideWarn(); regen();
-}
-function warn(msg) { const w = $("#wr"); w.textContent = "⚠ " + msg; w.classList.remove("hidden"); }
-function hideWarn() { $("#wr").classList.add("hidden"); }
-function updateFieldAvail() {
-  const use = MODELS[cur].use;
-  FIELDS.forEach(([k]) => {
-    const on = use.includes(k);
-    $("#in-" + k).disabled = !on;
-    $("#fi .field[data-k='" + k + "']").classList.toggle("off", !on);
-    $("#fi .field[data-k='" + k + "']").title = on ? "" : "Non utilisé pour ce modèle";
-  });
-}
-
-/* ============ CARTES MODÈLES ============ */
-function renderMods() {
-  $("#mods").innerHTML = Object.keys(MODELS).map(k => {
-    const M = MODELS[k];
-    return `<button class="mod ${k === cur ? "on" : ""}" data-k="${k}" aria-pressed="${k === cur}">
-      <span class="chk">✓</span>
-      ${pv(k, { ...m, L: M.L, S: 58 })}
-      <span class="cat">${M.cat} · ${M.dif === 1 ? "facile" : M.dif === 2 ? "intermédiaire" : "confirmé"}</span>
-      <b>${M.n}</b>
-      <span class="dif" title="Difficulté">${[1, 2, 3].map(i => `<i class="${i <= M.dif ? "f" : ""}"></i>`).join("")}</span>
-    </button>`;
-  }).join("");
-  $$("#mods .mod").forEach(b => b.addEventListener("click", () => selectModel(b.dataset.k)));
-}
-function selectModel(k) {
-  if (cur === k && lay) return;
-  cur = k; m.L = MODELS[k].L;
-  $("#in-L").value = m.L;
-  cut.clear(); astep = 0; methDone.clear();
-  stopPlay();
-  updateFieldAvail();
-  $("#fold-note").textContent = "Pliage : " + MODELS[k].fold;
-  renderMods(); renderApercu(); renderMeth(); renderAsm();
-  regen();
-}
-
-/* ============ APERÇU & STYLE ============ */
-const dots = d => `<span class="dots">${[1, 2, 3].map(i => `<i class="${i <= d ? "f" : ""}"></i>`).join("")}</span>`;
-function renderApercu() {
-  const M = MODELS[cur], n = gen().length;
-  $("#apv").innerHTML = `
-    <div class="apv-stage">${pv(cur, m, "pv-l")}</div>
-    <div class="apv-info">
-      <p class="kicker">${M.cat} — le vêtement obtenu</p>
-      <h3>${M.n}</h3>
-      <p class="desc">${M.desc}</p>
-      <div class="tags">${M.tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
-      <div class="specs">
-        <div><span>Difficulté</span><b>${dots(M.dif)}</b></div>
-        <div><span>Pièces</span><b>${n}</b></div>
-        <div><span>Métrage estimé</span><b id="sp-met">—</b></div>
-        <div><span>Laize conseillée</span><b>${M.laize} cm</b></div>
-        <div class="wide"><span>Tissu conseillé</span><b>${M.tis}</b></div>
-      </div>
-    </div>`;
-}
-
-/* ============ PIÈCES DU PATRON ============ */
-function renderPieces() {
-  const list = gen();
-  $("#pcs-n").textContent = list.length + " pièces · tailles calculées sur vos mesures";
-  $("#pcs").innerHTML = list.map((p, i) => `
-    <div class="pcard ${cut.has(i) ? "done" : ""}">
-      <div class="pthumb">${pieceSvg(p, "", { grain: 1 })}</div>
-      <div class="pmeta">
-        <b>${p.lbl}</b>
-        <span>${fr(r1(p.w))} × ${fr(r1(p.h))} cm</span>
-        <div class="badges">
-          ${p.fold ? '<span class="badge">sur pli</span>' : ""}
-          ${p.pair ? '<span class="badge alt">miroir ×' + p.q + "</span>" : ""}
-          ${p.hole ? '<span class="badge alt">trou de taille Ø ' + fr(r1(p.hole * 2)) + "</span>" : ""}
-        </div>
-      </div>
-    </div>`).join("");
-}
-/* ============ PLAN DE COUPE (placé + ciseaux) ============ */
-function layout() {
-  const list = gen();
-  const placed = list.map((p, i) => ({ ...p, i }));
-  placed.sort((a, b) => b.h - a.h);
-  let x = 0, y = 0, rh = 0, overflow = null;
-  placed.forEach(p => {
-    const bw = p.w + 2 * sa, bh = p.h + 2 * sa;
-    if (bw > Wf && overflow === null) overflow = p.lbl;
-    if (x + bw > Wf && x > 0) { x = 0; y += rh + 1.5; rh = 0; }
-    p.x = r1(x + sa); p.y = r1(y + sa);
-    x += bw + 1.5; rh = Math.max(rh, bh);
-  });
-  lay = { placed, len: r1(y + rh + sa), overflow };
-}
-const metM = () => Math.ceil(lay.len / 5) / 20;
-
-function buildBoard() {
-  layout();
-  const W = Math.max(Wf, 60), H = Math.max(lay.len, 24);
-  let tickH = "", tickV = "", labH = "", labV = "";
-  for (let x = 10; x < W; x += 10) tickH += `M${x} 0V${x % 50 ? 3 : 5.5}`;
-  for (let y = 10; y < H; y += 10) tickV += `M0 ${y}H${y % 50 ? 3 : 5.5}`;
-  for (let x = 50; x < W; x += 50) labH += `<text x="${x}" y="9" text-anchor="middle">${x}</text>`;
-  for (let y = 50; y < H; y += 50) labV += `<text x="9" y="${y + 1}" text-anchor="middle" transform="rotate(-90 9 ${y + 1})">${y}</text>`;
-  const pieces = lay.placed.map(p => {
-    const c = cut.has(p.i), fe = p.hole ? 'fill-rule="evenodd" ' : "";
-    return `<g class="bp${c ? " cut" : ""}" data-i="${p.i}" transform="translate(${p.x},${p.y})">
-    <path class="bf" ${fe}d="${p.d}"/>
-    <path class="bo" ${fe}d="${p.d}"/>
-    <path class="bc" pathLength="1" ${fe}d="${p.d}"/>
-    ${p.fold ? `<line class="fold" x1=".8" y1="1.5" x2=".8" y2="${r1(p.h - 1.5)}"/><text class="fl" x="2.4" y="${r1(p.h / 2)}" transform="rotate(-90 2.4 ${r1(p.h / 2)})">pli</text>` : ""}
-    <line class="grain" x1="${r1(p.w * .62)}" y1="${r1(Math.min(4.5, p.h * .16))}" x2="${r1(p.w * .62)}" y2="${r1(p.h - Math.min(4.5, p.h * .16))}"/>
-    <text class="bl" x="${r1(p.w / 2)}" y="${r1(p.h / 2 + 1)}">${p.lbl}</text>
-  </g>`;
-  }).join("");
-  $("#tb").innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:${r1(100 * z)}%" aria-label="Plan de coupe sur laize de ${Wf} cm">
-  <defs>
-    <pattern id="wv" width="8" height="8" patternUnits="userSpaceOnUse">
-      <rect width="8" height="8" fill="var(--table)"/>
-      <path d="M0 2H8M0 6H8" stroke="var(--table2)" stroke-width=".7"/>
-      <path d="M2 0V8M6 0V8" stroke="var(--table2)" stroke-width=".45" opacity=".6"/>
-    </pattern>
-  </defs>
-  <rect width="${W}" height="${H}" fill="url(#wv)"/>
-  <g class="ruler"><path d="${tickH}"/><path d="${tickV}"/>${labH}${labV}</g>
-  <line class="selv" x1=".6" y1="0" x2=".6" y2="${H}"/>
-  <line class="selv" x1="${W - .6}" y1="0" x2="${W - .6}" y2="${H}"/>
-  ${pieces}
-</svg>`;
-  $$("#tb .bp").forEach(g => g.addEventListener("click", () => doCut(+g.dataset.i)));
-  updateMet(); renderProg();
-}
-
-function updateMet() {
-  const el = $("#sp-met"), met = fr(r1(metM() * 100) / 100);
-  if (el) el.textContent = "≈ " + met + " m";
-  const b = $("#met");
-  const all = lay.placed.length;
-  if (cut.size === all && all > 0) {
-    b.innerHTML = "✂&ensp;Coupe terminée — métrage utilisé : ≈ <strong>" + met + " m</strong> × " + Wf + " cm de laize";
-    b.classList.remove("hidden");
-  } else b.classList.add("hidden");
-  const w2 = $("#wr2");
-  if (lay.overflow) { w2.textContent = "⚠ " + lay.overflow + " est plus large que la laize (" + Wf + " cm) — augmentez la laize."; w2.classList.remove("hidden"); }
-  else w2.classList.add("hidden");
-}
-
-function renderProg() {
-  const all = lay.placed.length;
-  $("#prog-i").style.width = (all ? (cut.size / all * 100) : 0) + "%";
-  $("#prog-t").textContent = cut.size + " / " + all + " pièces";
-}
-
-function doCut(i) {
-  if (busy || cuttingAll || cut.has(i)) return;
-  busy = true;
-  const g = document.querySelector('#tb .bp[data-i="' + i + '"]');
-  if (g) requestAnimationFrame(() => requestAnimationFrame(() => g.classList.add("go")));
-  setTimeout(() => {
-    cut.add(i); busy = false;
-    buildBoard(); renderPieces(); renderTray();
-    if (cut.size === lay.placed.length) toast("Coupe terminée — à vous la couture !");
-  }, 1120);
-}
-
-function cutAll() {
-  if (busy || cuttingAll) return;
-  if (cut.size === lay.placed.length) { toast("Toutes les pièces sont déjà coupées."); return; }
-  cuttingAll = true;
-  $$("#tb .bp").forEach((g, idx) => {
-    const i = +g.dataset.i;
-    if (!cut.has(i)) setTimeout(() => requestAnimationFrame(() => requestAnimationFrame(() => g.classList.add("go"))), idx * 130);
-  });
-  setTimeout(() => {
-    lay.placed.forEach(p => cut.add(p.i));
-    cuttingAll = false;
-    buildBoard(); renderPieces(); renderTray();
-    toast("Coupe terminée — à vous la couture !");
-  }, $$("#tb .bp").length * 130 + 1150);
-}
-
-function renderTray() {
-  const list = gen();
-  const done = [...cut].sort((a, b) => a - b).map(i => list[i]).filter(Boolean);
-  $("#tray").innerHTML = done.map((p, k) =>
-    `<span class="mini" title="${esc(p.lbl)}" style="animation-delay:${Math.min(k * 40, 400)}ms">${pieceSvg(p, "", { thin: 1 })}</span>`).join("");
-}
-
-/* ============ MÉTHODE DE COUPE ============ */
-function renderMeth() {
-  const M = MODELS[cur];
-  $("#meth").innerHTML = M.meth.map((s, i) => `
-    <li class="${methDone.has(i) ? "ok" : ""}" data-i="${i}" role="checkbox" aria-checked="${methDone.has(i)}" tabindex="0">
-      <span class="cb">✓</span><span class="tx"><b>${String(i + 1).padStart(2, "0")}</b>${s}</span>
-    </li>`).join("");
-  $$("#meth li").forEach(li => {
-    const toggle = () => {
-      const i = +li.dataset.i;
-      methDone.has(i) ? methDone.delete(i) : methDone.add(i);
-      li.classList.toggle("ok"); li.setAttribute("aria-checked", methDone.has(i));
-      const p = methDone.size / MODELS[cur].meth.length;
-      $("#ring-f").style.strokeDashoffset = r1(119.4 * (1 - p));
-      $("#ring-t").textContent = Math.round(p * 100) + " %";
-    };
-    li.addEventListener("click", toggle);
-    li.addEventListener("keydown", e => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggle(); } });
-  });
-  $("#ring-f").style.strokeDashoffset = 119.4 * (1 - (methDone.size / M.meth.length));
-  $("#ring-t").textContent = Math.round(methDone.size / M.meth.length * 100) + " %";
-}
-
-/* ============ RÉGÉNÉRATION GLOBALE ============ */
-function regen() {
-  cut.clear();
-  buildBoard(); renderPieces(); renderTray(); renderProg(); updateMet();
-  showStep();
-}
-/* ============ ASSEMBLAGE ILLUSTRÉ ============ */
-/* Chaque étape est une scène en images : les pièces s'écartent, la couture se trace,
-   puis les pièces se rejoignent comme sur la table de couture. La dernière étape
-   révèle le vêtement fini et son style. */
-function sceneSVG(o) {
-  const list = gen(), gap = 13, pad = 9;
-  const A = list[o.p[0]], B = o.p[1] != null ? list[o.p[1]] : null;
-  const els = [], bounds = { x0: 1e9, y0: 1e9, x1: -1e9, y1: -1e9 };
-  let seam = null, crease = null, ov = null;
-  let Ax = pad, Ay = pad;
-  const add = (p, x0, y0, x1, y1, flip, lm) => {
-    els.push({ p, x0, y0, x1, y1, flip, lm });
-    [[x0, y0], [x1, y1]].forEach(([x, y]) => {
-      const l = flip === "x" ? x - p.w : x, r = flip === "x" ? x : x + p.w,
-            t = flip === "y" ? y - p.h : y, b = flip === "y" ? y : y + p.h;
-      bounds.x0 = Math.min(bounds.x0, l); bounds.x1 = Math.max(bounds.x1, r);
-      bounds.y0 = Math.min(bounds.y0, t); bounds.y1 = Math.max(bounds.y1, b);
-    });
-  };
-  if (o.k === "fin") {
-    add(A, pad, pad, pad, pad, null, "above");
-    ov = `<g transform="translate(${pad},${pad})"><path class="ov" ${A.hole ? 'fill-rule="evenodd" ' : ""}d="${A.d}"/></g>`;
-  } else if (o.k === "rl" || o.k === "rr" || o.k === "ll") {
-    if (o.k === "ll") Ax = pad + B.w + gap;
-    add(A, Ax, Ay, Ax, Ay, null, "above");
-    if (o.k === "rl") add(B, Ax + A.w + gap, Ay, Ax + A.w, Ay, null, "above");
-    if (o.k === "rr") add(B, Ax + A.w + gap + B.w, Ay, Ax + A.w + B.w, Ay, "x", "above");
-    if (o.k === "ll") add(B, Ax - gap, Ay, Ax, Ay, "x", "above");
-    const sx = o.k === "ll" ? Ax : Ax + A.w;
-    seam = { x1: sx, y1: Ay + 1, x2: sx, y2: Ay + Math.min(A.h, B.h) - 1 };
-  } else if (o.k === "tt" || o.k === "bt") {
-    if (o.k === "tt") Ay = pad + B.h + gap;
-    add(A, Ax, Ay, Ax, Ay, null, o.k === "tt" ? "below" : "above");
-    if (o.k === "tt") add(B, Ax, Ay - gap, Ax, Ay, "y", "above");
-    else add(B, Ax, Ay + A.h + gap, Ax, Ay + A.h, null, "below");
-    const sy = o.k === "tt" ? Ay : Ay + A.h;
-    seam = { x1: Ax + 1, y1: sy, x2: Ax + Math.min(A.w, B.w) - 1, y2: sy };
-  } else if (o.k === "hem") {
-    const st = { n: "Repli", d: rectD(A.w * .94, 3.4), w: r1(A.w * .94), h: 3.4 };
-    add(A, pad, pad, pad, pad, null, "above");
-    add(st, pad, Ay + A.h + gap, pad, Ay + A.h - 3.2, null, "below");
-    crease = { x1: pad + 1.5, y1: Ay + A.h - 3.2, x2: pad + A.w * .94 - 1.5, y2: Ay + A.h - 3.2 };
-  }
-  bounds.y0 -= 7; bounds.x0 -= 2; bounds.x1 += 2; bounds.y1 += 2;
-  const uw = bounds.x1 - bounds.x0, uh = bounds.y1 - bounds.y0,
-        maxS = uh < 34 ? 3.1 : uh < 80 ? 2.6 : 2.05,
-        s = Math.min(maxS, 336 / uw, 226 / uh),
-        tx = (360 - uw * s) / 2 - bounds.x0 * s,
-        ty = (250 - uh * s) / 2 - bounds.y0 * s;
-  const elsSvg = els.map(e => `
-    <g class="pz" style="transform:translate(${r1(e.x0)}px,${r1(e.y0)}px)" data-j="translate(${r1(e.x1)}px,${r1(e.y1)}px)">
-      ${e.flip ? '<g class="fx">' : ""}<path class="sp" ${e.p.hole ? 'fill-rule="evenodd" ' : ""}d="${e.p.d}"/>${e.flip ? "</g>" : ""}
-    </g>`).join("");
-  const labs = els.map(e => {
-    const left = e.flip === "x" ? e.x1 - e.p.w : e.x1,
-          top = e.flip === "y" ? e.y1 - e.p.h : e.y1,
-          cx = left + e.p.w / 2,
-          cy = e.lm === "below" ? top + e.p.h + 5.5 : top - 2.5;
-    return `<text class="lb" x="${r1(cx)}" y="${r1(cy)}">${e.p.lbl}</text>`;
-  }).join("");
-  const seamSvg = seam ? `<line class="sm" x1="${r1(seam.x1)}" y1="${r1(seam.y1)}" x2="${r1(seam.x2)}" y2="${r1(seam.y2)}"/>` : "";
-  const creaseSvg = crease ? `<line class="cr" x1="${r1(crease.x1)}" y1="${r1(crease.y1)}" x2="${r1(crease.x2)}" y2="${r1(crease.y2)}"/>` : "";
-  const did = "dg" + (++UID);
-  return `<svg class="ascn" viewBox="0 0 360 250" role="img" aria-label="Assemblage : ${esc(o.t)}">
-  <defs><pattern id="${did}" width="14" height="14" patternUnits="userSpaceOnUse"><circle class="dotbg" cx="2" cy="2" r="1.1"/></pattern></defs>
-  <rect width="360" height="250" fill="url(#${did})"/>
-  <g transform="translate(${r1(tx)},${r1(ty)}) scale(${r1(s * 100) / 100})">${elsSvg}${ov}${labs}${seamSvg}${creaseSvg}</g>
-</svg>`;
-}
-
-function showStep() {
-  const ops = MODELS[cur].st;
-  if (astep >= ops.length) astep = ops.length - 1;
-  if (astep < 0) astep = 0;
-  const o = ops[astep];
-  clearTimeout(joinT);
-  $$("#a-steps li").forEach((li, i) => { li.classList.toggle("on", i === astep); li.classList.toggle("done", i < astep); });
-  $("#a-cnt").textContent = (astep + 1) + " / " + ops.length;
-  const stage = $("#asm-stage");
-  if (o.k === "final") {
-    stage.innerHTML = pv(cur, m, "pv rv");
-    $("#a-title").textContent = "Aperçu final";
-    $("#a-desc").textContent = "Toutes les pièces sont assemblées : voici le vêtement et le style que vous obtiendrez, tracé d'après vos propres mesures.";
-    $("#a-final").classList.remove("hidden");
-    $("#a-final").textContent = MODELS[cur].n + " — " + MODELS[cur].tags.join(", ") + ". Tissu conseillé : " + MODELS[cur].tis + ".";
-    return;
-  }
-  $("#a-final").classList.add("hidden");
-  stage.innerHTML = sceneSVG(o);
-  $("#a-title").textContent = o.t;
-  $("#a-desc").textContent = o.d;
-  joinT = setTimeout(() => {
-    const s = stage.querySelector("svg");
-    if (!s) return;
-    s.classList.add("jd");
-    stage.querySelectorAll(".pz").forEach(g => { g.style.transform = g.dataset.j; });
-  }, 430);
-}
-
-function renderAsm() {
-  const ops = MODELS[cur].st;
-  $("#a-steps").innerHTML = ops.map((o, i) =>
-    `<li data-i="${i}"><i>${i + 1}</i><span>${o.k === "final" ? "Aperçu final" : o.t}</span></li>`).join("");
-  $$("#a-steps li").forEach(li => li.addEventListener("click", () => { stopPlay(); astep = +li.dataset.i; showStep(); }));
-  astep = 0;
-  showStep();
-}
-
-function aNav(d) {
-  const ops = MODELS[cur].st, n = astep + d;
-  if (n < 0 || n >= ops.length) return;
-  stopPlay(); astep = n; showStep();
-}
-function stopPlay() {
-  if (playT) { clearInterval(playT); playT = null; }
-  const b = $("#btn-play");
-  b.classList.remove("playing"); b.textContent = "▶ Lecture";
-}
-function togglePlay() {
-  if (playT) { stopPlay(); return; }
-  const b = $("#btn-play");
-  b.classList.add("playing"); b.textContent = "⏸ Pause";
-  playT = setInterval(() => {
-    const ops = MODELS[cur].st;
-    if (astep >= ops.length - 1) { stopPlay(); return; }
-    astep++; showStep();
-  }, 2700);
-}
-
-/* ============ CLIENTS (localStorage) ============ */
-const LSCL = "atelier-cl";
-const loadClients = () => { try { return JSON.parse(localStorage.getItem(LSCL)) || []; } catch (e) { return []; } };
-function renderClients() {
-  const cls = loadClients();
-  $("#cl").innerHTML = '<option value="">Client…</option>' +
-    cls.map((c, i) => `<option value="${i}">${esc(c.n)}</option>`).join("");
-}
-function saveClient() {
-  const n = $("#nm").value.trim();
-  if (!n) { toast("Donnez un nom au client avant d'enregistrer."); return; }
-  const cls = loadClients();
-  const rec = { n, P: m.P, T: m.T, H: m.H, L: m.L, S: m.S, C: m.C };
-  const ex = cls.findIndex(c => c.n.toLowerCase() === n.toLowerCase());
-  if (ex >= 0) cls[ex] = rec; else cls.push(rec);
-  try { localStorage.setItem(LSCL, JSON.stringify(cls)); } catch (e) {}
-  $("#nm").value = "";
-  renderClients();
-  $("#cl").value = ex >= 0 ? ex : cls.length - 1;
-  toast("Client enregistré — " + n);
-}
-function applyClient() {
-  const v = $("#cl").value;
-  if (v === "") return;
-  const c = loadClients()[+v];
-  if (!c) return;
-  ["P", "T", "H", "L", "S", "C"].forEach(k => { m[k] = c[k]; $("#in-" + k).value = c[k]; });
-  hideWarn(); regen();
-  toast("Mensurations de " + c.n + " chargées.");
-}
-
-/* ============ THÈME ============ */
-const LSTH = "atelier-theme";
-function applyTheme(t) {
-  document.documentElement.dataset.theme = t;
-  try { localStorage.setItem(LSTH, t); } catch (e) {}
-}
-function toggleTheme() {
-  applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
-}
-
-/* ============ INITIALISATION ============ */
-function init() {
-  let t0 = "light";
-  try { t0 = localStorage.getItem(LSTH) || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
-  applyTheme(t0);
-  renderInputs();
-  renderMods();
-  renderClients();
-  updateFieldAvail();
-  $("#fold-note").textContent = "Pliage : " + MODELS[cur].fold;
-  renderApercu(); renderMeth(); renderAsm(); regen();
-
-  $("#th").addEventListener("click", toggleTheme);
-  $("#sv").addEventListener("click", saveClient);
-  $("#cl").addEventListener("change", applyClient);
-  $("#a-prev").addEventListener("click", () => aNav(-1));
-  $("#a-next").addEventListener("click", () => aNav(1));
-  $("#btn-play").addEventListener("click", togglePlay);
-  $("#all").addEventListener("click", cutAll);
-  $("#rs").addEventListener("click", () => { cut.clear(); buildBoard(); renderPieces(); renderTray(); toast("Plan de coupe réinitialisé."); });
-  $("#zo").addEventListener("click", () => { z = Math.max(.5, z - .2); buildBoard(); });
-  $("#zi").addEventListener("click", () => { z = Math.min(2.6, z + .2); buildBoard(); });
-  $("#zr").addEventListener("click", () => { z = 1; buildBoard(); });
-  $("#W").addEventListener("change", e => {
-    const v = parseFloat(String(e.target.value).replace(",", "."));
-    if (!isNaN(v) && v >= 60 && v <= 320) { Wf = v; regen(); } else e.target.value = Wf;
-  });
-  $("#M").addEventListener("change", e => {
-    const v = parseFloat(String(e.target.value).replace(",", "."));
-    if (!isNaN(v) && v >= .3 && v <= 4) { sa = v; regen(); } else e.target.value = sa;
-  });
-  document.addEventListener("keydown", e => {
-    if (e.target.matches("input,select,textarea")) return;
-    if (e.key === "ArrowRight") aNav(1);
-    else if (e.key === "ArrowLeft") aNav(-1);
-  });
-}
-init();
 </script>
 </body>
 </html>
