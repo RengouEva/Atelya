@@ -122,3 +122,19 @@ Stage Summary:
 - L'étape assemblage est devenue un véritable atelier de couture pédagogique : l'utilisateur assemble les pièces en sous-ensembles nommés (A, B…), couse chaque zone au doigt ou à la pédale avec marges, épingles et sens guidés, jusqu'au vêtement porté — exactement le schéma « pièce 1 + pièce 2 = A … habit final ».
 - Le héros met le logo en scène (halo doré + anneau de couture rotatif + vignette) avec un mode sombre renforcé.
 - Fichiers clés : src/components/atelier/sewing-studio.tsx (nouveau), src/components/atelier/assembly-player.tsx (supprimé), src/components/studio/step-assembly.tsx, src/components/landing/landing.tsx, src/app/globals.css, scripts/test-assembly-plan.ts.
+
+---
+Task ID: 7
+Agent: Super Z (main)
+Task: Le logo doit avoir le fond de l'atelier (le background du logo = scène d'atelier) ; commit + push vers https://github.com/RengouEva/Atelya.git
+
+Work Log:
+- Généré la scène d'atelier via IA (z-ai CLI, 1024×1024) : mannequin drapé de satin bleu roi, machine à coudre dorée, bobines or, ambiance navy cinématographique — charte #0038A0/#F0C243 respectée.
+- scripts/logo-atelier.py (PIL) : public/atelier-bg.webp (59 Ko, couche CSS du splash) + public/atelya-logo-atelier.webp (1080×1080, 60 Ko) — logo complet (buste + wordmark + tagline or) composité sur l'atelier avec voile navy 40 %, dégradé vertical, halo doré central, vignette profonde et ombre portée douce.
+- landing.tsx : le splash affiche désormais la photo d'atelier comme couche de fond (object-cover + scale-105) sous le logo flottant/halo/anneau de couture ; la carte CTA finale reçoit le même fond atelier ; .splash-atelier (opacité 0,58 clair / 0,46 sombre) et .splash-atelier-shade (dégradés navy, renforcés en sombre) ajoutés à globals.css.
+- QA : ESLint 0 erreur ; assets servis 200 (60,9 Ko / 62,4 Ko) ; agent-browser 390 px + 1440 px clair et sombre — le logo repose visuellement sur l'atelier (mannequin et bobines perceptibles), lisibilité parfaite, carte CTA cohérente ; console 0 erreur.
+- Git : remote origin https://github.com/RengouEva/Atelya.git ajouté, commit de tous les changements effectué ; push bloqué faute d'identifiants GitHub dans l'environnement (pas de gh CLI, pas de ~/.git-credentials, pas de clé SSH, pas de variable d'environnement token) — en attente d'un Personal Access Token de l'utilisateur.
+
+Stage Summary:
+- Le logo Atelya a désormais le fond de l'atelier : photo d'atelier navy/or derrière le logo du splash (clair + sombre) et visuel composite dédié atelya-logo-atelier.webp.
+- Fichiers clés : public/atelier-bg.webp, public/atelya-logo-atelier.webp, scripts/logo-atelier.py, src/components/landing/landing.tsx, src/app/globals.css.

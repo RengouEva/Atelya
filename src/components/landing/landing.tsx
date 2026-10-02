@@ -28,6 +28,14 @@ const pop = {
 function Splash({ onOpen }: { onOpen: () => void }) {
   return (
     <section className="splash-navy relative flex min-h-[100svh] flex-col overflow-hidden text-white">
+      {/* Fond atelier — le logo repose sur l'atelier lui-même */}
+      <img
+        src="/atelier-bg.webp"
+        alt=""
+        aria-hidden="true"
+        className="splash-atelier pointer-events-none absolute inset-0 size-full scale-105 object-cover"
+      />
+      <div className="splash-atelier-shade pointer-events-none absolute inset-0" aria-hidden="true" />
       <div className="splash-grain pointer-events-none absolute inset-0" aria-hidden="true" />
       <div className="splash-vignette pointer-events-none absolute inset-0" aria-hidden="true" />
       <div
@@ -294,6 +302,13 @@ function FinalCta({ onOpen }: { onOpen: () => void }) {
         {...pop}
         className="splash-navy relative overflow-hidden rounded-[2rem] px-6 py-12 text-center text-white sm:py-16"
       >
+        <img
+          src="/atelier-bg.webp"
+          alt=""
+          aria-hidden="true"
+          className="splash-atelier pointer-events-none absolute inset-0 size-full object-cover"
+        />
+        <div className="splash-atelier-shade pointer-events-none absolute inset-0" aria-hidden="true" />
         <div className="splash-grain pointer-events-none absolute inset-0" aria-hidden="true" />
         { }
         <img
