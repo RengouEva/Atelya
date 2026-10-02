@@ -301,25 +301,6 @@ html {
     );
 }
 
-/* Halo clair : logo sombre sur fond clair (couleur page atelier) */
-.splash-halo-light {
-  background:
-    radial-gradient(
-      closest-side,
-      rgb(240 194 67 / 0.15),
-      rgb(240 194 67 / 0.05) 46%,
-      transparent 70%
-    ),
-    radial-gradient(
-      closest-side,
-      transparent 56%,
-      rgb(0 51 160 / 0.09) 72%,
-      transparent 84%
-    );
-  filter: blur(6px);
-  animation: halo-breathe 6.5s ease-in-out infinite;
-}
-
 /* Halo + vignette : le fond fait ressortir le logo (mode sombre renforcé) */
 .splash-halo {
   background:

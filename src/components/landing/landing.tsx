@@ -27,30 +27,41 @@ const pop = {
 
 function Splash({ onOpen }: { onOpen: () => void }) {
   return (
-    <section className="relative flex min-h-[100svh] flex-col overflow-hidden bg-[#f1f4fc] text-[#0a1b4d]">
-      {/* Fond clair = couleur de la page atelier : le logo sombre ressort sans encadré */}
-      <div className="splash-halo-light pointer-events-none absolute inset-0" aria-hidden="true" />
-      <div className="hero-grain pointer-events-none absolute inset-0" aria-hidden="true" />
+    <section className="splash-navy relative flex min-h-[100svh] flex-col overflow-hidden text-white">
+      {/* Fond atelier — le logo repose sur l'atelier lui-même */}
+      <img
+        src="/atelier-bg.webp"
+        alt=""
+        aria-hidden="true"
+        className="splash-atelier pointer-events-none absolute inset-0 size-full scale-105 object-cover"
+      />
+      <div className="splash-atelier-shade pointer-events-none absolute inset-0" aria-hidden="true" />
+      <div className="splash-grain pointer-events-none absolute inset-0" aria-hidden="true" />
+      <div className="splash-vignette pointer-events-none absolute inset-0" aria-hidden="true" />
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/45 to-transparent"
+        aria-hidden="true"
+      />
 
       {/* Barre haute */}
       <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-4 pt-[max(0.9rem,env(safe-area-inset-top))] sm:px-6">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#0a1b4d]/55">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-white/55">
           Atelier IA
         </span>
-        <ThemeToggle />
+        <ThemeToggle tone="navy" />
       </header>
 
-      {/* Logo central — halo doré discret + anneau de couture rotatif */}
+      {/* Logo central — halo doré + anneau de couture rotatif */}
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 py-10 text-center">
         <div className="relative grid place-items-center">
           <div
-            className="splash-halo-light pointer-events-none absolute size-[min(92vw,440px)] rounded-full"
+            className="splash-halo pointer-events-none absolute size-[min(92vw,440px)] rounded-full"
             aria-hidden="true"
           />
           <motion.svg
             viewBox="0 0 100 100"
             aria-hidden="true"
-            className="pointer-events-none absolute size-[min(98vw,474px)] opacity-50"
+            className="pointer-events-none absolute size-[min(98vw,474px)] opacity-40"
             initial={{ rotate: 0 }}
             animate={{ rotate: 360 }}
             transition={{ duration: 90, ease: "linear", repeat: Infinity }}
@@ -60,12 +71,12 @@ function Splash({ onOpen }: { onOpen: () => void }) {
               cy="50"
               r="48.4"
               fill="none"
-              stroke="#D9A416"
+              stroke="#F0C243"
               strokeWidth="0.55"
               strokeDasharray="2.6 2.2"
               strokeLinecap="round"
             />
-            <circle cx="50" cy="1.6" r="1.15" fill="#D9A416" />
+            <circle cx="50" cy="1.6" r="1.15" fill="#F0C243" />
           </motion.svg>
           <motion.img
             src="/atelya-logo-splash.webp"
@@ -75,7 +86,7 @@ function Splash({ onOpen }: { onOpen: () => void }) {
             initial={{ opacity: 0, scale: 0.92, y: 14 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
-            className="animate-floaty relative z-10 w-[min(70vw,318px)] drop-shadow-[0_18px_44px_rgba(10,27,77,0.22)]"
+            className="animate-floaty relative z-10 w-[min(70vw,318px)] drop-shadow-[0_24px_60px_rgba(0,0,0,0.55)]"
           />
         </div>
 
@@ -83,17 +94,17 @@ function Splash({ onOpen }: { onOpen: () => void }) {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.25, ease: "easeOut" }}
-          className="mt-6 font-display text-2xl font-bold leading-tight text-[#0a1b4d] sm:text-4xl"
+          className="mt-6 font-display text-2xl font-bold leading-tight sm:text-4xl"
         >
           D&apos;une photo,{" "}
-          <span className="font-editorial italic text-gold-deep">au vêtement fini.</span>
+          <span className="text-gold-shine font-editorial italic">au vêtement fini.</span>
         </motion.p>
 
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-2.5 text-sm text-[#0a1b4d]/65 sm:text-[15px]"
+          className="mt-2.5 text-sm text-white/65 sm:text-[15px]"
         >
           Variantes IA · patron sur mesures · découpe · assemblage
         </motion.p>
@@ -106,7 +117,7 @@ function Splash({ onOpen }: { onOpen: () => void }) {
         >
           <button
             onClick={onOpen}
-            className="group inline-flex h-[52px] w-full max-w-[300px] items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#F0C243] to-[#E09A12] text-[16px] font-bold text-[#12224e] shadow-[0_12px_34px_-8px_rgba(201,138,10,0.5)] outline-none ring-[#C98A0A]/60 transition-all duration-200 hover:scale-[1.03] hover:shadow-[0_16px_40px_-8px_rgba(201,138,10,0.65)] focus-visible:ring-2 active:scale-95"
+            className="group inline-flex h-[52px] w-full max-w-[300px] items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#F0C243] to-[#E09A12] text-[16px] font-bold text-[#12224e] shadow-[0_12px_34px_-8px_rgba(240,194,67,0.55)] outline-none ring-[#F0C243]/60 transition-all duration-200 hover:scale-[1.03] hover:shadow-[0_16px_40px_-8px_rgba(240,194,67,0.7)] focus-visible:ring-2 active:scale-95"
           >
             <Camera className="size-[18px]" />
             Ouvrir l&apos;atelier
@@ -119,7 +130,7 @@ function Splash({ onOpen }: { onOpen: () => void }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.75 }}
-          className="mt-10 flex max-w-full flex-wrap items-center justify-center gap-x-1.5 gap-y-1.5 text-[10.5px] font-semibold uppercase tracking-wider text-[#0a1b4d]/55 sm:gap-x-2.5 sm:text-xs"
+          className="mt-10 flex max-w-full flex-wrap items-center justify-center gap-x-1.5 gap-y-1.5 text-[10.5px] font-semibold uppercase tracking-wider text-white/55 sm:gap-x-2.5 sm:text-xs"
         >
           {[
             { icon: Camera, t: "Photo" },
@@ -129,10 +140,10 @@ function Splash({ onOpen }: { onOpen: () => void }) {
           ].map((s, i) => (
             <React.Fragment key={s.t}>
               <li className="flex items-center gap-1.5">
-                <s.icon className="size-3.5 text-gold-deep" />
+                <s.icon className="size-3.5 text-[#F0C243]" />
                 {s.t}
               </li>
-              {i < 3 && <ChevronRight className="size-3 text-[#0a1b4d]/30" aria-hidden="true" />}
+              {i < 3 && <ChevronRight className="size-3 text-white/30" aria-hidden="true" />}
             </React.Fragment>
           ))}
         </motion.ol>
@@ -145,7 +156,7 @@ function Splash({ onOpen }: { onOpen: () => void }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.6 }}
-        className="relative z-10 mx-auto mb-[max(1.1rem,env(safe-area-inset-bottom))] grid size-10 place-items-center rounded-full border border-[#0a1b4d]/15 bg-white/70 text-[#0a1b4d]/70 shadow-sm backdrop-blur transition hover:text-[#0a1b4d]"
+        className="relative z-10 mx-auto mb-[max(1.1rem,env(safe-area-inset-bottom))] grid size-10 place-items-center rounded-full border border-white/15 bg-white/5 text-white/70 backdrop-blur transition hover:text-white"
       >
         <ArrowDown className="size-4 animate-bounce" />
       </motion.a>
@@ -301,10 +312,10 @@ function FinalCta({ onOpen }: { onOpen: () => void }) {
         <div className="splash-grain pointer-events-none absolute inset-0" aria-hidden="true" />
         { }
         <img
-          src="/atelya-mark-tile.webp"
+          src="/atelya-mark.webp"
           alt=""
           aria-hidden="true"
-          className="animate-floaty relative z-10 w-[min(46vw,150px)] rounded-[1.9rem] drop-shadow-[0_18px_40px_rgba(0,0,0,0.5)]"
+          className="animate-floaty relative z-10 mx-auto w-[min(52vw,180px)] drop-shadow-[0_18px_40px_rgba(0,0,0,0.5)]"
         />
         <h2 className="relative z-10 mt-5 font-display text-2xl font-bold leading-tight sm:text-4xl">
           Votre prochaine pièce commence{" "}
@@ -328,7 +339,7 @@ function Footer({ onOpen }: { onOpen: () => void }) {
       <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-4 px-4 py-8 pb-[max(2rem,env(safe-area-inset-bottom))] text-center sm:flex-row sm:justify-between sm:text-left">
         <button onClick={onOpen} className="flex items-center gap-2.5" aria-label="Ouvrir l'atelier">
           { }
-          <img src="/atelya-mark-tile.webp" alt="" className="h-10 w-10 rounded-xl shadow-sm" />
+          <img src="/atelya-mark.webp" alt="" className="h-10 w-auto" />
           <span className="font-display text-base font-bold">Atelya</span>
         </button>
         <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
