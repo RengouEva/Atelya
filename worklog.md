@@ -138,3 +138,18 @@ Work Log:
 Stage Summary:
 - Le logo Atelya a désormais le fond de l'atelier : photo d'atelier navy/or derrière le logo du splash (clair + sombre) et visuel composite dédié atelya-logo-atelier.webp.
 - Fichiers clés : public/atelier-bg.webp, public/atelya-logo-atelier.webp, scripts/logo-atelier.py, src/components/landing/landing.tsx, src/app/globals.css.
+
+---
+Task ID: 8
+Agent: Super Z (main)
+Task: Correction — le logo est sombre, il ne doit PAS reposer sur un fond sombre : lui ajouter un background de la couleur de la page atelier pour le faire ressortir.
+
+Work Log:
+- scripts/logo-card.py (PIL) : cartes claires #F1F4FC (couleur exacte du fond de la page atelier en mode clair, token --background) avec coins arrondis type app native + hairline #D5DDF0 → public/atelya-logo-card.webp (1560×1160, logo complet centré à 80 %) et public/atelya-mark-tile.webp (400×400, emblème buste).
+- landing.tsx : le splash remplace le logo flottant transparent par la CARTE claire (w min(82vw,380px), floaty + drop-shadow conservés, halo doré + anneau de couture rotatif autour) — le logo sombre repose désormais sur du clair et ressort ; carte CTA finale et footer passent à atelya-mark-tile.webp ; studio-app.tsx : emblème header → tuile claire (lisible en sombre).
+- Supprimé public/atelya-logo-atelier.webp (composite sombre, direction corrigée par l'utilisateur) ; le fond atelier navy (atelier-bg.webp) reste en arrière-plan du héros, la carte claire flotte dessus.
+- QA : ESLint 0 erreur ; assets servis 200 (123 Ko / 22 Ko) ; captures agent-browser 390 px (sombre + clair) et 1440 px — logo navy parfaitement contrasté sur la carte claire, anneau doré autour, console 0 erreur.
+
+Stage Summary:
+- Le logo sombre est posé sur une carte au fond clair #F1F4FC (couleur de la page atelier) : contraste maximal, style app native conservé.
+- Fichiers clés : scripts/logo-card.py, public/atelya-logo-card.webp, public/atelya-mark-tile.webp, src/components/landing/landing.tsx, src/components/studio/studio-app.tsx.

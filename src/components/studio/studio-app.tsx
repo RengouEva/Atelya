@@ -147,7 +147,7 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
             aria-label="Atelya"
           >
             { }
-            <img src="/atelya-mark.webp" alt="" className="h-8 w-auto" />
+            <img src="/atelya-mark-tile.webp" alt="" className="h-8 w-8 rounded-lg shadow-sm" />
             <span className="font-display text-[17px] font-bold tracking-tight">
               Atelya
             </span>

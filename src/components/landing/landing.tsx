@@ -79,14 +79,14 @@ function Splash({ onOpen }: { onOpen: () => void }) {
             <circle cx="50" cy="1.6" r="1.15" fill="#F0C243" />
           </motion.svg>
           <motion.img
-            src="/atelya-logo-splash.webp"
+            src="/atelya-logo-card.webp"
             alt="Atelya — Créez, Mesurez, Réalisez"
-            width={665}
-            height={487}
+            width={1560}
+            height={1160}
             initial={{ opacity: 0, scale: 0.92, y: 14 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
-            className="animate-floaty relative z-10 w-[min(70vw,318px)] drop-shadow-[0_24px_60px_rgba(0,0,0,0.55)]"
+            className="animate-floaty relative z-10 w-[min(82vw,380px)] rounded-[2.2rem] drop-shadow-[0_24px_60px_rgba(0,0,0,0.55)]"
           />
         </div>
 
@@ -312,10 +312,10 @@ function FinalCta({ onOpen }: { onOpen: () => void }) {
         <div className="splash-grain pointer-events-none absolute inset-0" aria-hidden="true" />
         { }
         <img
-          src="/atelya-mark.webp"
+          src="/atelya-mark-tile.webp"
           alt=""
           aria-hidden="true"
-          className="animate-floaty relative z-10 mx-auto w-[min(52vw,180px)] drop-shadow-[0_18px_40px_rgba(0,0,0,0.5)]"
+          className="animate-floaty relative z-10 w-[min(46vw,150px)] rounded-[1.9rem] drop-shadow-[0_18px_40px_rgba(0,0,0,0.5)]"
         />
         <h2 className="relative z-10 mt-5 font-display text-2xl font-bold leading-tight sm:text-4xl">
           Votre prochaine pièce commence{" "}
@@ -339,7 +339,7 @@ function Footer({ onOpen }: { onOpen: () => void }) {
       <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-4 px-4 py-8 pb-[max(2rem,env(safe-area-inset-bottom))] text-center sm:flex-row sm:justify-between sm:text-left">
         <button onClick={onOpen} className="flex items-center gap-2.5" aria-label="Ouvrir l'atelier">
           { }
-          <img src="/atelya-mark.webp" alt="" className="h-10 w-auto" />
+          <img src="/atelya-mark-tile.webp" alt="" className="h-10 w-10 rounded-xl shadow-sm" />
           <span className="font-display text-base font-bold">Atelya</span>
         </button>
         <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
