@@ -1,16 +1,20 @@
 "use client";
 
 import * as React from "react";
-import { ChevronLeft, ChevronRight, RotateCw } from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCw, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   ASM,
   LETTERS,
+  MODELS,
   type Join,
+  type Measures,
   type ModelKey,
   type PieceDef,
 } from "@/lib/atelier/patterns";
 import { PiecePaths } from "@/components/atelier/pieces";
+import { GarmentPreview } from "@/components/atelier/garment-preview";
 
 /* ------------------------------------------------------------------ */
 /* Paramètres de jonction entre deux pièces                            */
@@ -90,11 +94,12 @@ const xf = (x: Xf, t: number) =>
   `translate(${lerp(x.a.tx, x.b.tx, t)} ${lerp(x.a.ty, x.b.ty, t)}) scale(${lerp(x.a.sx, x.b.sx, t)} ${lerp(x.a.sy, x.b.sy, t)})`;
 
 /* ------------------------------------------------------------------ */
-/* Lecteur d’assemblage                                                */
+/* Lecteur d'assemblage (étapes + aperçu final du vêtement)            */
 /* ------------------------------------------------------------------ */
 
 export function AssemblyPlayer({
   modelKey,
+  m,
   defs,
   fc,
   sa,
@@ -103,6 +108,7 @@ export function AssemblyPlayer({
   resetKey,
 }: {
   modelKey: ModelKey;
+  m: Measures;
   defs: PieceDef[];
   fc: string;
   sa: number;
@@ -111,25 +117,27 @@ export function AssemblyPlayer({
   resetKey: string;
 }) {
   const steps = ASM[modelKey];
+  const finalIdx = steps.length; // dernière carte = aperçu du vêtement
   const [runId, setRunId] = React.useState(0);
   const [prog, setProg] = React.useState(1);
 
-  const idx = Math.max(0, Math.min(step, steps.length - 1));
+  const idx = Math.max(0, Math.min(step, finalIdx));
+  const isFinal = idx === finalIdx;
   const s = steps[idx];
-  const g = defs.find((p) => p.n === s[1]) ?? defs[0];
-  const h = s[2] ? defs.find((p) => p.n === s[2]) : undefined;
-  const gi = defs.indexOf(g);
+  const g = !isFinal ? (defs.find((p) => p.n === s[1]) ?? defs[0]) : null;
+  const h = !isFinal && s[2] ? defs.find((p) => p.n === s[2]) : undefined;
+  const gi = g ? defs.indexOf(g) : 0;
   const hi = h ? defs.indexOf(h) : -1;
 
-  const geom: JoinGeom | null = h
-    ? computeJoin(s[3] ?? "rl", g.w, g.h, h.w, h.h, sa)
-    : null;
+  const geom: JoinGeom | null =
+    g && h ? computeJoin(s[3] ?? "rl", g.w, g.h, h.w, h.h, sa) : null;
 
   const box = geom
     ? [geom.box[0] - 2, geom.box[1] - 2, geom.box[2] + 4, geom.box[3] + 4]
-    : [-sa - 2, -sa - 2, g.w + 2 * sa + 4, g.h + 2 * sa + 4];
+    : [-sa - 2, -sa - 2, g ? g.w + 2 * sa + 4 : 40, g ? g.h + 2 * sa + 4 : 40];
 
   React.useEffect(() => {
+    if (isFinal) return;
     let raf = 0;
     setProg(0);
     const t0 = performance.now();
@@ -140,84 +148,122 @@ export function AssemblyPlayer({
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, [idx, runId, resetKey, modelKey]);
+  }, [idx, runId, resetKey, modelKey, isFinal]);
 
   const replay = () => setRunId((v) => v + 1);
 
-  const labelFs = Math.max(2.6, Math.min(g.w, g.h) / 9);
+  const model = MODELS[modelKey];
+  const labelFs = g ? Math.max(2.6, Math.min(g.w, g.h) / 9) : 4;
 
   return (
     <div className="flex flex-col gap-4">
       <div className="overflow-hidden rounded-xl border border-border/60 bg-[var(--table)]">
-        <svg
-          viewBox={box.join(" ")}
-          className="block w-full"
-          style={{ height: 250 }}
-          preserveAspectRatio="xMidYMid meet"
-          role="img"
-          aria-label={`Assemblage, étape ${idx + 1}`}
-        >
-          {/* pièce principale */}
-          <g>
-            <PiecePaths p={g} fc={fc} sa={sa} />
-            <text
-              x="1.6"
-              y={3.4}
-              fontSize={labelFs}
-              fill="#232B45"
-              fontFamily="var(--font-sans)"
-              fontWeight={700}
-              stroke="#fff"
-              strokeWidth=".5"
-              style={{ paintOrder: "stroke" }}
-            >
-              {LETTERS[gi]} · {g.n}
-            </text>
-          </g>
-
-          {/* pièce mobile qui vient se joindre */}
-          {h && geom && (
-            <g transform={xf(geom, prog)}>
-              <PiecePaths p={h} fc={fc} sa={sa} opacity={0.8} />
-              <text
-                x={h.w * 0.02 + 1.6}
-                y={h.h * 0.06 + 3.4}
-                fontSize={Math.max(2.6, Math.min(h.w, h.h) / 9)}
-                fill="#232B45"
-                fontFamily="var(--font-sans)"
-                fontWeight={700}
-                stroke="#fff"
-                strokeWidth=".5"
-                style={{ paintOrder: "stroke" }}
-              >
-                {LETTERS[hi]} · {h.n}
-              </text>
-            </g>
-          )}
-
-          {/* ligne de couture qui apparaît à la jonction */}
-          {geom && (
-            <line
-              {...geom.seam}
-              stroke="var(--primary)"
-              strokeWidth=".55"
-              strokeDasharray="1.1 0.8"
-              strokeLinecap="round"
-              opacity={Math.max(0, (prog - 0.82) / 0.18)}
+        {isFinal ? (
+          <div className="flex flex-col items-center gap-2 bg-gradient-to-b from-[var(--table)] to-background px-4 py-5">
+            <GarmentPreview
+              m={m}
+              modelKey={modelKey}
+              fc={fc}
+              className="h-[260px] w-auto max-w-full"
+              label={`Aperçu final : ${model.n}`}
             />
-          )}
-        </svg>
+            <p className="flex items-center gap-1.5 text-sm font-semibold">
+              <Sparkles className="size-4 text-primary" />
+              Le vêtement obtenu — {model.n}
+            </p>
+            <div className="flex flex-wrap justify-center gap-1.5">
+              {model.tags.map((t) => (
+                <Badge
+                  key={t}
+                  variant="secondary"
+                  className="rounded-full bg-accent px-2.5 text-[11px] font-medium text-accent-foreground"
+                >
+                  {t}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <svg
+            viewBox={box.join(" ")}
+            className="block w-full"
+            style={{ height: 250 }}
+            preserveAspectRatio="xMidYMid meet"
+            role="img"
+            aria-label={`Assemblage, étape ${idx + 1}`}
+          >
+            {/* pièce principale */}
+            {g && (
+              <g>
+                <PiecePaths p={g} fc={fc} sa={sa} />
+                <text
+                  x="1.6"
+                  y={3.4}
+                  fontSize={labelFs}
+                  fill="#232B45"
+                  fontFamily="var(--font-sans)"
+                  fontWeight={700}
+                  stroke="#fff"
+                  strokeWidth=".5"
+                  style={{ paintOrder: "stroke" }}
+                >
+                  {LETTERS[gi]} · {g.n}
+                </text>
+              </g>
+            )}
+
+            {/* pièce mobile qui vient se joindre */}
+            {g && h && geom && (
+              <g transform={xf(geom, prog)}>
+                <PiecePaths p={h} fc={fc} sa={sa} opacity={0.8} />
+                <text
+                  x={h.w * 0.02 + 1.6}
+                  y={h.h * 0.06 + 3.4}
+                  fontSize={Math.max(2.6, Math.min(h.w, h.h) / 9)}
+                  fill="#232B45"
+                  fontFamily="var(--font-sans)"
+                  fontWeight={700}
+                  stroke="#fff"
+                  strokeWidth=".5"
+                  style={{ paintOrder: "stroke" }}
+                >
+                  {LETTERS[hi]} · {h.n}
+                </text>
+              </g>
+            )}
+
+            {/* ligne de couture qui apparaît à la jonction */}
+            {geom && (
+              <line
+                {...geom.seam}
+                stroke="var(--primary)"
+                strokeWidth=".55"
+                strokeDasharray="1.1 0.8"
+                strokeLinecap="round"
+                opacity={Math.max(0, (prog - 0.82) / 0.18)}
+              />
+            )}
+          </svg>
+        )}
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">
-          <span className="font-semibold text-foreground">
-            Étape {idx + 1} sur {steps.length}
-          </span>{" "}
-          — pièces : {LETTERS[gi]} {g.n}
-          {h ? ` + ${LETTERS[hi]} ${h.n}` : ""}
+          {isFinal ? (
+            <span className="font-semibold text-foreground">
+              Aperçu final — le style obtenu
+            </span>
+          ) : (
+            <>
+              <span className="font-semibold text-foreground">
+                Étape {idx + 1} sur {steps.length}
+              </span>{" "}
+              — pièces : {LETTERS[gi]} {g?.n}
+              {h ? ` + ${LETTERS[hi]} ${h.n}` : ""}
+            </>
+          )}
         </p>
-        <div className="flex items-center gap-1.5" role="tablist">
+        <div className="flex flex-wrap items-center gap-1.5" role="tablist">
           {steps.map((_, i) => (
             <button
               key={i}
@@ -232,10 +278,25 @@ export function AssemblyPlayer({
               }`}
             />
           ))}
+          <button
+            role="tab"
+            aria-selected={isFinal}
+            aria-label="Aperçu final du vêtement"
+            onClick={() => onStep(finalIdx)}
+            className={`h-2.5 rounded-full transition-all duration-300 ${
+              isFinal
+                ? "w-7 bg-primary"
+                : "w-2.5 bg-border hover:bg-muted-foreground/50"
+            }`}
+          />
         </div>
       </div>
 
-      <p className="text-[15px] leading-relaxed">{s[0]}</p>
+      <p className="text-[15px] leading-relaxed">
+        {isFinal
+          ? `Voici ${model.n} assemblé : ${model.desc.toLowerCase()} Tissu conseillé : ${model.fab}.`
+          : s[0]}
+      </p>
 
       <div className="flex flex-wrap gap-2">
         <Button
@@ -248,14 +309,17 @@ export function AssemblyPlayer({
         </Button>
         <Button
           onClick={() => onStep(idx + 1)}
-          disabled={idx >= steps.length - 1}
+          disabled={isFinal}
           className="rounded-lg"
         >
-          Suivant <ChevronRight className="size-4" />
+          {idx === finalIdx - 1 ? "Aperçu final" : "Suivant"}
+          <ChevronRight className="size-4" />
         </Button>
-        <Button variant="outline" onClick={replay} className="rounded-lg">
-          <RotateCw className="size-4" /> Rejouer
-        </Button>
+        {!isFinal && (
+          <Button variant="outline" onClick={replay} className="rounded-lg">
+            <RotateCw className="size-4" /> Rejouer
+          </Button>
+        )}
       </div>
     </div>
   );

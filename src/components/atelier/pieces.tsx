@@ -154,6 +154,62 @@ export function ModelIcon({
     manche: (
       <path d="M7.5 3.5c2.5 2 6.5 2 9 0L20 17c-3.5 2.6-12.5 2.6-16 0z" />
     ),
+    crayon: (
+      <>
+        <path d="M9 3.5h6l.8 17H8.2z" />
+        <path d="M9 3.5h6" strokeWidth={2.2} />
+        <path d="M12 13.5v4" strokeDasharray="2 1.6" />
+      </>
+    ),
+    evasee: (
+      <>
+        <path d="M9 3.5h6l5 17H4z" />
+        <path d="M9 3.5h6" strokeWidth={2.2} />
+      </>
+    ),
+    portefeuille: (
+      <>
+        <path d="M9 3.5h6l5 17H4z" />
+        <path d="M15 3.5 7.5 20.5" />
+        <path d="M9 3.5h6" strokeWidth={2.2} />
+      </>
+    ),
+    plissee: (
+      <>
+        <path d="M7.5 3.5h9v17h-9z" />
+        <path d="M10.5 3.5v17M13.5 3.5v17" strokeDasharray="2.4 1.6" />
+      </>
+    ),
+    pantalon: (
+      <>
+        <path d="M8 3.5h8l1.6 17h-3.6L12 9.5l-2 11H6.4z" />
+        <path d="M8 3.5h8" strokeWidth={2.2} />
+      </>
+    ),
+    large: (
+      <>
+        <path d="M7.5 3.5h9L21 20.5h-4.6L12 9.5 7.6 20.5H3z" />
+        <path d="M7.5 3.5h9" strokeWidth={2.2} />
+      </>
+    ),
+    tshirt: (
+      <path d="M8.3 4 4.5 6.5 6.5 9.5l2-1v12h7v-12l2 1 2-3L15.7 4c-1 1.1-2.3 1.7-3.7 1.7S9.3 5.1 8.3 4z" />
+    ),
+    blouse: (
+      <path d="M8.3 4 4.5 6.5 6.5 9.5l2-1L7 20.5h10L15.5 8.5l2 1 2-3L15.7 4c-1 1.1-2.3 1.7-3.7 1.7S9.3 5.1 8.3 4z" />
+    ),
+    robe: (
+      <>
+        <path d="M9.8 3.5h4.4l.9 4 3.4 13H5.5l3.4-13z" />
+        <path d="M9.8 3.5 12 6.6l2.2-3.1" />
+      </>
+    ),
+    kimono: (
+      <>
+        <path d="M7.5 3.5h9V20.5h-3.7V9.2h-1.6v11.3H7.5z" />
+        <path d="M10.4 3.5 12 6.2l1.6-2.7" />
+      </>
+    ),
   };
   return (
     <svg

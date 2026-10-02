@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Trash2, Users } from "lucide-react";
+import { Database, Loader2, Trash2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,16 +12,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export interface Client {
-  nom: string;
+/** Fiche cliente renvoyée par l'API /api/clients */
+export interface ApiClient {
+  id: string;
+  name: string;
   P: number;
   T: number;
   H: number;
+  L: number;
+  notes?: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export function ClientsCard({
   clients,
   ready,
+  busy,
   selected,
   onSelect,
   name,
@@ -29,8 +36,9 @@ export function ClientsCard({
   onSave,
   onDelete,
 }: {
-  clients: Client[] | null;
+  clients: ApiClient[] | null;
   ready: boolean;
+  busy: boolean;
   selected: string;
   onSelect: (v: string) => void;
   name: string;
@@ -39,6 +47,7 @@ export function ClientsCard({
   onDelete: () => void;
 }) {
   const has = (clients?.length ?? 0) > 0;
+  const isUpdate = selected !== "";
 
   return (
     <section
@@ -53,10 +62,14 @@ export function ClientsCard({
           <h2 className="font-display text-[17px] font-bold leading-tight">
             Clientes
           </h2>
-          <p className="text-xs text-muted-foreground">
-            Mesures enregistrées sur cet appareil
+          <p className="flex items-center gap-1 text-xs text-muted-foreground">
+            <Database className="size-3" />
+            Mesures conservées en base de données
           </p>
         </div>
+        {busy && (
+          <Loader2 className="ml-auto size-4 shrink-0 animate-spin text-muted-foreground" />
+        )}
       </header>
 
       <div className="flex flex-col gap-3 px-5 pb-5 pt-4">
@@ -72,9 +85,10 @@ export function ClientsCard({
               />
             </SelectTrigger>
             <SelectContent>
-              {clients?.map((c, i) => (
-                <SelectItem key={i} value={String(i)}>
-                  {c.nom} · {c.P}/{c.T}/{c.H}
+              {clients?.map((c) => (
+                <SelectItem key={c.id} value={c.id}>
+                  {c.name} · {Math.round(c.P)}/{Math.round(c.T)}/
+                  {Math.round(c.H)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -83,7 +97,7 @@ export function ClientsCard({
             variant="outline"
             size="icon"
             className="size-11 shrink-0 rounded-lg text-muted-foreground hover:text-destructive"
-            disabled={!ready || selected === ""}
+            disabled={!ready || !isUpdate || busy}
             onClick={onDelete}
             aria-label="Supprimer la fiche sélectionnée"
           >
@@ -98,18 +112,25 @@ export function ClientsCard({
             onKeyDown={(e) => {
               if (e.key === "Enter") onSave();
             }}
-            placeholder="Nom pour enregistrer"
+            placeholder={isUpdate ? "Modifier le nom…" : "Nom pour enregistrer"}
             className="h-11 flex-1 rounded-lg"
             aria-label="Nom de la cliente"
           />
           <Button
             variant="outline"
             onClick={onSave}
+            disabled={busy}
             className="h-11 shrink-0 rounded-lg border-primary/50 text-primary hover:bg-accent hover:text-primary"
           >
-            Enregistrer
+            {isUpdate ? "Mettre à jour" : "Enregistrer"}
           </Button>
         </div>
+
+        <p className="text-[11px] leading-relaxed text-muted-foreground">
+          {isUpdate
+            ? "La fiche sélectionnée sera mise à jour avec les mesures affichées."
+            : "Enregistrez P, T, H et L courants sous le nom de votre cliente."}
+        </p>
       </div>
     </section>
   );
