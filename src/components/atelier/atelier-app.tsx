@@ -6,7 +6,6 @@ import {
   ArrowLeft,
   Eye,
   GitMerge,
-  Layers,
   MousePointerClick,
   MoveHorizontal,
   RotateCcw,
@@ -25,7 +24,6 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { ModelsCard } from "@/components/atelier/models-card";
 import { MeasuresCard, type MeasureField } from "@/components/atelier/measures-card";
 import { ClientsCard, type ApiClient } from "@/components/atelier/clients-card";
-import { MethodCard } from "@/components/atelier/method-card";
 import { FabricTable } from "@/components/atelier/fabric-table";
 import { AssemblyPlayer } from "@/components/atelier/assembly-player";
 import { GarmentPreview } from "@/components/atelier/garment-preview";
@@ -39,7 +37,6 @@ import {
   LETTERS,
   MODELS,
   buildLayout,
-  buildMethod,
   meterage,
   type ModelKey,
 } from "@/lib/atelier/patterns";
@@ -76,7 +73,6 @@ export function AtelierApp({
   const [zoom, setZoom] = React.useState(1);
   const [cut, setCut] = React.useState<Set<number>>(new Set());
   const [cuttingId, setCuttingId] = React.useState<number | null>(null);
-  const [checked, setChecked] = React.useState<Set<number>>(new Set());
   const [asmStep, setAsmStep] = React.useState(0);
 
   const [clients, setClients] = React.useState<ApiClient[] | null>(null);
@@ -105,15 +101,10 @@ export function AtelierApp({
 
   const defs = React.useMemo(() => model.g(mm), [model, mm]);
   const layout = React.useMemo(() => buildLayout(defs, sa, fw), [defs, sa, fw]);
-  const method = React.useMemo(
-    () => buildMethod(modelKey, layout, defs, sa),
-    [modelKey, layout, defs, sa]
-  );
   const meters = meterage(layout);
   const tooNarrow = layout.mx > layout.raw;
   const total = layout.pieces.length;
   const cutCount = cut.size;
-  const cutPieces = layout.pieces.filter((p) => cut.has(p.id));
 
   const sig = `${modelKey}|${P}|${T}|${H}|${L}|${W}|${S}|${C}`;
 
@@ -124,7 +115,6 @@ export function AtelierApp({
     setCut(new Set());
     setCuttingId(null);
     busyRef.current = false;
-    setChecked(new Set());
     setAsmStep(0);
   }, [sig]);
 
@@ -296,17 +286,6 @@ export function AtelierApp({
         break;
     }
   };
-
-  const toggleStep = (i: number) =>
-    setChecked((prev) => {
-      const n = new Set(prev);
-      if (n.has(i)) {
-        n.delete(i);
-      } else {
-        n.add(i);
-      }
-      return n;
-    });
 
   /* ---------------------------- rendu ------------------------------ */
   return (
@@ -615,72 +594,6 @@ export function AtelierApp({
               </div>
             </motion.section>
 
-            {/* Méthode */}
-            <motion.div {...reveal}>
-              <MethodCard
-                steps={method}
-                checked={checked}
-                onToggle={toggleStep}
-              />
-            </motion.div>
-
-            {/* Pièces coupées */}
-            <motion.section
-              {...reveal}
-              aria-label="Pièces coupées"
-              className="card-luxe rounded-2xl border border-border/70 bg-card"
-            >
-              <header className="flex items-center gap-3 border-b border-border/60 px-5 py-4">
-                <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-primary">
-                  <Layers className="size-[18px]" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h2 className="font-display text-[17px] font-bold leading-tight">
-                    Pièces coupées
-                  </h2>
-                  <p className="text-xs text-muted-foreground">
-                    Le panier de découpe, prêt pour l'assemblage
-                  </p>
-                </div>
-                <span className="text-sm font-semibold tabular-nums text-primary">
-                  {cutCount}/{total}
-                </span>
-              </header>
-              <div className="p-5">
-                {cutPieces.length === 0 ? (
-                  <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-border/80 px-6 py-10 text-center">
-                    <Scissors className="size-6 text-muted-foreground/60" />
-                    <p className="text-sm text-muted-foreground">
-                      Aucune pièce coupée pour l'instant — touchez une pièce sur
-                      le plan de coupe ou lancez « Tout couper ».
-                    </p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
-                    {cutPieces.map((p) => (
-                      <motion.div
-                        key={p.id}
-                        initial={{ scale: 0.85, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ duration: 0.35, ease: "easeOut" }}
-                        className="rounded-xl border border-border/70 bg-background p-3"
-                      >
-                        <PieceMini p={p} fc={C} sa={sa} />
-                        <p className="mt-2 truncate text-sm font-semibold">
-                          {p.name}
-                          {p.mir ? " (miroir)" : ""}
-                        </p>
-                        <p className="text-[11px] leading-snug text-muted-foreground">
-                          {p.fold ? "à couper au pli" : `couture ${sa} cm`}
-                          {p.note ? ` – ${p.note}` : ""}
-                        </p>
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </motion.section>
-
             {/* Nomenclature */}
             <motion.section
               {...reveal}
@@ -732,11 +645,11 @@ export function AtelierApp({
                 </div>
                 <div className="min-w-0">
                   <h2 className="font-display text-[17px] font-bold leading-tight">
-                    Assemblage pas à pas
+                    Montage pas à pas
                   </h2>
                   <p className="text-xs text-muted-foreground">
-                    Les pièces se rejoignent, endroit contre endroit — et
-                    l'aperçu final révèle le vêtement
+                    Coutures numérotées, bord à bord — jusqu'au produit fini
+                    porté sur mannequin
                   </p>
                 </div>
               </header>

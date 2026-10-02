@@ -1,5 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Figtree } from "next/font/google";
+import {
+  Bricolage_Grotesque,
+  Figtree,
+  Fraunces,
+} from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -12,6 +16,12 @@ const bricolage = Bricolage_Grotesque({
 const figtree = Figtree({
   variable: "--font-figtree",
   subsets: ["latin"],
+});
+
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -47,7 +57,7 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <body
-        className={`${bricolage.variable} ${figtree.variable} antialiased bg-background text-foreground`}
+        className={`${bricolage.variable} ${figtree.variable} ${fraunces.variable} antialiased bg-background text-foreground`}
       >
         <ThemeProvider
           attribute="class"

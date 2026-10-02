@@ -115,7 +115,7 @@ function skirtParts(m: Measures, fc: string, o: SkirtOpts): PreviewSpec {
 
   // Corps de jupe
   parts.push({
-    d: `M${r1(-ww)} 0L${r1(ww)} 0C${r1(ww * 0.98)} ${r1(hipY * 0.4)} ${r1(hw)} ${r1(hipY * 0.62)} ${r1(hw)} ${r1(hipY)}L${r1(hem / 2)} ${r1(L)}Q0 ${r1(L + dip)} ${r1(-hem / 2)} ${r1(L)}Z`,
+    d: `M${r1(-ww)} 0L${r1(ww)} 0C${r1(ww * 0.98)} ${r1(hipY * 0.4)} ${r1(hw)} ${r1(hipY * 0.62)} ${r1(hw)} ${r1(hipY)}L${r1(hem)} ${r1(L)}Q0 ${r1(L + dip)} ${r1(-hem)} ${r1(L)}Z`,
     fill: fc,
     stroke: INK,
     so: 0.5,
@@ -156,7 +156,7 @@ function skirtParts(m: Measures, fc: string, o: SkirtOpts): PreviewSpec {
     for (let i = 1; i < 8; i++) {
       const t = i / 8;
       parts.push({
-        d: `M${r1(-ww + 2 * ww * t)} 0L${r1(-hem / 2 + hem * t)} ${r1(L)}`,
+        d: `M${r1(-ww + 2 * ww * t)} 0L${r1(-hem + 2 * hem * t)} ${r1(L)}`,
         line: true,
         stroke: "#fff",
         so: 0.4,
@@ -196,7 +196,7 @@ function skirtParts(m: Measures, fc: string, o: SkirtOpts): PreviewSpec {
     });
   }
 
-  return { w: Math.max(hem, ww * 2, 30), h: L, y0, parts };
+  return { w: Math.max(2 * hem, 2 * ww, 30), h: L, y0, parts };
 }
 
 /* ------------------------------------------------------------------ */
@@ -210,7 +210,7 @@ function circleParts(m: Measures, fc: string): PreviewSpec {
   const dip = L * 0.16;
   const sd = shade(fc, -0.22);
   return {
-    w: hem,
+    w: 2 * hem,
     h: L,
     y0: -8,
     parts: [
@@ -222,14 +222,14 @@ function circleParts(m: Measures, fc: string): PreviewSpec {
         sw: 0.35,
       },
       {
-        d: `M${r1(-ww)} 0C${r1(-ww)} ${r1(L * 0.45)} ${r1(-hem / 2)} ${r1(L * 0.55)} ${r1(-hem / 2)} ${r1(L)}Q0 ${r1(L + dip)} ${r1(hem / 2)} ${r1(L)}C${r1(hem / 2)} ${r1(L * 0.55)} ${r1(ww)} ${r1(L * 0.45)} ${r1(ww)} 0Z`,
+        d: `M${r1(-ww)} 0C${r1(-ww)} ${r1(L * 0.45)} ${r1(-hem)} ${r1(L * 0.55)} ${r1(-hem)} ${r1(L)}Q0 ${r1(L + dip)} ${r1(hem)} ${r1(L)}C${r1(hem)} ${r1(L * 0.55)} ${r1(ww)} ${r1(L * 0.45)} ${r1(ww)} 0Z`,
         fill: fc,
         stroke: INK,
         so: 0.5,
         sw: 0.35,
       },
       {
-        d: `M${r1(-ww * 0.55)} ${r1(L * 0.25)}C${r1(-hem * 0.22)} ${r1(L * 0.5)} ${r1(-hem * 0.2)} ${r1(L * 0.75)} ${r1(-hem * 0.17)} ${r1(L - 2)}`,
+        d: `M${r1(-ww * 0.55)} ${r1(L * 0.25)}C${r1(-hem * 0.42)} ${r1(L * 0.5)} ${r1(-hem * 0.38)} ${r1(L * 0.75)} ${r1(-hem * 0.34)} ${r1(L - 2)}`,
         line: true,
         stroke: "#fff",
         so: 0.35,
@@ -237,7 +237,7 @@ function circleParts(m: Measures, fc: string): PreviewSpec {
         cap: "round",
       },
       {
-        d: `M${r1(ww * 0.55)} ${r1(L * 0.25)}C${r1(hem * 0.22)} ${r1(L * 0.5)} ${r1(hem * 0.2)} ${r1(L * 0.75)} ${r1(hem * 0.17)} ${r1(L - 2)}`,
+        d: `M${r1(ww * 0.55)} ${r1(L * 0.25)}C${r1(hem * 0.42)} ${r1(L * 0.5)} ${r1(hem * 0.38)} ${r1(L * 0.75)} ${r1(hem * 0.34)} ${r1(L - 2)}`,
         line: true,
         stroke: "#fff",
         so: 0.35,

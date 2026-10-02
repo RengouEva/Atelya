@@ -5,8 +5,6 @@
  * 17 modèles paramétriques calculés sur les mesures P·T·H·L.
  */
 
-export type Join = "rr" | "ll" | "tt" | "rl" | "bt";
-
 export interface PieceDef {
   /** nom de la pièce */
   n: string;
@@ -584,248 +582,558 @@ export const meterage = (layout: BuiltLayout) =>
   (layout.H / 100 + 0.1).toFixed(2);
 
 /* ------------------------------------------------------------------ */
-/* Méthode de coupe pas à pas                                          */
+/* Assemblage pas à pas (montage visuel cumulatif)                     */
+/*                                                                     */
+/* Chaque étape :                                                      */
+/*   [consigne, ancre, pièce à joindre, type de jonction, couture]     */
+/* - ancre / pièce : nom de pièce, avec occurrence « ·2 » si nécessaire */
+/* - Jonctions (l'ancre reste en place, la pièce vient se coller) :     */
+/*     ll = miroir à gauche · rr = miroir à droite · rl = bord à droite */
+/*     tt = miroir au-dessus · bt = en dessous · ct = centré dessus     */
+/* - Étape sans jonction = préparation sur la pièce citée.              */
 /* ------------------------------------------------------------------ */
 
-export function buildMethod(
-  key: ModelKey,
-  layout: BuiltLayout,
-  defs: PieceDef[],
-  sa: number
-): string[] {
-  return [
-    "Lavez et repassez le tissu avant de couper, pour éviter qu'il rétrécisse après le montage.",
-    "Repérez le droit-fil : la lisière doit rester parallèle au grand axe des pièces (flèche sur chaque pièce). Repérez l'endroit et l'envers.",
-    FOLD[key],
-    `Placez les pièces comme dans le schéma ci-dessus. Prévoyez ${meterage(layout)} m de tissu de ${layout.raw} cm de large.`,
-    "Épinglez ou posez des poids sur chaque pièce. Gardez le papier bien à plat.",
-    `Tracez la ligne de coupe à la craie, ${sa} cm autour de la ligne de couture (c'est la marge de couture).`,
-    `Pièces à couper : ${defs
-      .map((p) => `${p.n} ×${p.q}${p.fold ? " (au pli)" : ""}`)
-      .join(", ")}.`,
-    "Coupez avec de grands ciseaux, par grands coups, sans soulever le tissu de la table. Dans le schéma, touchez chaque pièce pour la couper.",
-    "Avant de retirer le patron, reportez les repères : pinces, crans, milieu devant et dos.",
-    "Étiquetez chaque pièce (A, B, C…) avec un bout de ruban : devant, dos, haut, bas. Passez ensuite à l'assemblage.",
-  ];
-}
+export type Join = "ll" | "rr" | "rl" | "tt" | "bt" | "ct";
 
-/* ------------------------------------------------------------------ */
-/* Assemblage pas à pas                                                */
-/* ------------------------------------------------------------------ */
-
-export type AsmStep = [string, string, string?, Join?];
+export type AsmStep = [string, string?, string?, Join?, string?];
 
 export const ASM: Record<ModelKey, AsmStep[]> = {
   droite: [
-    ["Faites les pinces de taille sur le devant et le dos.", "Devant"],
     [
-      "Assemblez devant et dos sur le côté, endroit contre endroit.",
+      "Piquez les pinces de taille du devant, puis du dos, en pli creux.",
       "Devant",
-      "Dos",
-      "rr",
-    ],
-    ["Posez la ceinture sur le haut de la jupe.", "Devant", "Ceinture", "bt"],
-    ["Posez la fermeture au milieu dos, puis faites l'ourlet.", "Dos"],
-  ],
-  crayon: [
-    ["Épinglez et piquez les pinces de taille, devant et dos.", "Devant"],
-    [
-      "Assemblez les côtés endroit contre endroit, en gardant la fente du dos ouverte.",
-      "Devant",
-      "Dos",
-      "rr",
+      undefined,
+      undefined,
+      "Couture de préparation : pinces de taille (milieux devant et dos)",
     ],
     [
-      "Posez la ceinture, puis finissez la fente et l'ourlet bien près.",
+      "Assemblez le dos au devant, bord contre bord, endroit contre endroit.",
+      "Devant",
+      "Dos",
+      "ll",
+      "Côtés : bord droit du devant ↔ bord gauche du dos, à 1,5 cm",
+    ],
+    [
+      "Posez la ceinture sur le haut de la jupe.",
       "Devant",
       "Ceinture",
-      "bt",
+      "tt",
+      "Taille : haut de la jupe ↔ ceinture, endroit contre endroit",
+    ],
+    [
+      "Posez la fermeture au milieu dos, puis faites l'ourlet à 3 cm.",
+      "Dos",
+      undefined,
+      undefined,
+      "Finitions : fermeture invisible au milieu dos + ourlet",
+    ],
+  ],
+  crayon: [
+    [
+      "Piquez les pinces de taille, devant et dos.",
+      "Devant",
+      undefined,
+      undefined,
+      "Couture de préparation : pinces de taille",
+    ],
+    [
+      "Assemblez les côtés en gardant la fente du dos ouverte.",
+      "Devant",
+      "Dos",
+      "ll",
+      "Côtés : bord droit du devant ↔ bord gauche du dos (fente au milieu dos)",
+    ],
+    [
+      "Posez la ceinture à la taille.",
+      "Devant",
+      "Ceinture",
+      "tt",
+      "Taille : haut de la jupe ↔ ceinture, endroit contre endroit",
+    ],
+    [
+      "Finissez la fente au milieu dos, puis l'ourlet bien près.",
+      "Dos",
+      undefined,
+      undefined,
+      "Finitions : fente dos + ourlet à 2 cm",
     ],
   ],
   evasee: [
     [
-      "Assemblez devant et dos sur les côtés, endroit contre endroit.",
+      "Assemblez le dos au devant sur les côtés.",
       "Devant",
       "Dos",
-      "rr",
+      "ll",
+      "Côtés : bord droit du devant ↔ bord gauche du dos, à 1,5 cm",
     ],
     [
       "Posez la ceinture à la taille, couture repassée vers le haut.",
       "Devant",
       "Ceinture",
-      "bt",
+      "tt",
+      "Taille : haut de la jupe ↔ ceinture",
     ],
-    ["Ourlet roulotté de 2 cm : l'évasement tombera tout seul.", "Devant"],
+    [
+      "Ourlet roulotté de 2 cm : l'évasement tombera tout seul.",
+      "Devant",
+      undefined,
+      undefined,
+      "Finitions : ourlet roulotté sur tout le tour",
+    ],
   ],
   cercle: [
     [
-      "Rapprochez deux quarts : quatre quarts forment le cercle.",
+      "Épinglez deux quarts bord à bord, endroit contre endroit.",
       "Quart de jupe",
       "Quart de jupe",
       "ll",
+      "Couture n°1 : bord des quarts ↔ bord des quarts, à 1 cm",
     ],
-    ["Posez la ceinture sur la taille.", "Quart de jupe", "Ceinture", "bt"],
-    ["Fendez un côté pour la fermeture, puis faites l'ourlet.", "Quart de jupe"],
+    [
+      "Ajoutez le troisième quart sur le bord libre.",
+      "Quart de jupe",
+      "Quart de jupe",
+      "rr",
+      "Couture n°2 : bord des quarts ↔ bord des quarts",
+    ],
+    [
+      "Puis le quatrième : le cercle se referme.",
+      "Quart de jupe ·2",
+      "Quart de jupe",
+      "ll",
+      "Couture n°3 : dernier bord ↔ premier bord",
+    ],
+    [
+      "Posez la ceinture sur la taille.",
+      "Quart de jupe ·1",
+      "Ceinture",
+      "tt",
+      "Taille : trou de la jupe ↔ ceinture, réparti en 4",
+    ],
+    [
+      "Fendez un côté pour la fermeture, puis ourlez à 2 cm.",
+      "Quart de jupe",
+      undefined,
+      undefined,
+      "Finitions : fermeture + ourlet circulaire",
+    ],
   ],
   mouchoir: [
     [
-      "Posez la ceinture sur le trou central, qui est la taille.",
+      "Pliez en diagonale pour repérer le centre : c'est la taille.",
+      "Carré",
+      undefined,
+      undefined,
+      "Repérage : centre du carré = trou de taille",
+    ],
+    [
+      "Posez la ceinture sur le trou central.",
       "Carré",
       "Ceinture",
-      "bt",
+      "ct",
+      "Taille : trou central ↔ ceinture, réparti tout autour",
     ],
-    ["Fendez un côté pour la fermeture, puis roulottez les bords.", "Carré"],
+    [
+      "Fendez un côté pour la fermeture, puis roulottez les quatre bords.",
+      "Carré",
+      undefined,
+      undefined,
+      "Finitions : fermeture + ourlets roulottés des 4 pointes",
+    ],
   ],
   portefeuille: [
     [
-      "Superposez les deux épaisseurs du panneau croisé et bâtissez le bord.",
+      "Superposez les deux épaisseurs du panneau croisé et bâtissez.",
       "Devant",
+      undefined,
+      undefined,
+      "Préparation : panneau croisé bâti sur le bord",
     ],
     [
       "Assemblez le panneau croisé au dos sur les côtés.",
       "Devant",
       "Dos",
-      "rr",
+      "ll",
+      "Côtés : bord du panneau croisé ↔ bord du dos, à 1,5 cm",
     ],
     [
       "Nouez les liens longs : la ceinture fait office de fermeture.",
       "Devant",
       "Ceinture",
-      "bt",
+      "tt",
+      "Taille : haut de la jupe ↔ liens, croisés dans le dos",
     ],
   ],
   plissee: [
     [
-      "Pliez et piquez chaque pli plat du devant, puis du dos, dans le sens de la chute.",
-      "Devant",
+      "Pliez et piquez chaque pli plat du devant, puis du dos.",
+      "Devant plissé",
+      undefined,
+      undefined,
+      "Coutures des plis : tous dans le même sens, du haut vers le bas",
     ],
     [
       "Assemblez les côtés en gardant les plis bien à plat.",
-      "Devant",
-      "Dos",
-      "rr",
+      "Devant plissé",
+      "Dos plissé",
+      "ll",
+      "Côtés : bord du devant ↔ bord du dos, plis maintenus",
     ],
     [
-      "Posez la ceinture à la taille, puis fixez les plis sous la ceinture.",
-      "Devant",
+      "Posez la ceinture et fixez les plis sous la ceinture.",
+      "Devant plissé",
       "Ceinture",
-      "bt",
+      "tt",
+      "Taille : haut des plis ↔ ceinture, plis pris dans la couture",
     ],
   ],
   short: [
-    ["Assemblez les deux devants au milieu.", "Devant", "Devant", "ll"],
-    ["Assemblez les deux dos de la même façon.", "Dos", "Dos", "ll"],
-    ["Fermez les côtés, devant contre dos.", "Devant", "Dos", "rr"],
     [
-      "Posez la ceinture avec élastique, puis faites l'ourlet.",
+      "Assemblez les deux devants au milieu.",
+      "Devant",
+      "Devant",
+      "ll",
+      "Milieu devant : fourche ↔ fourche, endroit contre endroit",
+    ],
+    [
+      "Fermez le côté droit, devant contre dos.",
+      "Devant",
+      "Dos",
+      "rl",
+      "Côté droit : bord du devant ↔ bord du dos, à 1,5 cm",
+    ],
+    [
+      "Assemblez les deux dos au milieu.",
+      "Dos",
+      "Dos",
+      "rr",
+      "Milieu dos : fourche ↔ fourche, endroit contre endroit",
+    ],
+    [
+      "Posez la ceinture avec élastique.",
       "Devant",
       "Ceinture",
-      "bt",
+      "tt",
+      "Taille : haut du short ↔ ceinture, élastique tiré en répartissant",
+    ],
+    [
+      "Ourlez le bas de chaque jambe.",
+      "Devant",
+      undefined,
+      undefined,
+      "Finitions : ourlets des deux jambes à 3 cm",
     ],
   ],
   pantalon: [
-    ["Assemblez les deux devants au milieu (fourche et entrejambe).", "Devant", "Devant", "ll"],
-    ["Assemblez les deux dos de la même façon.", "Dos", "Dos", "ll"],
-    ["Fermez les côtés, devant contre dos.", "Devant", "Dos", "rr"],
     [
-      "Posez la ceinture, montez la fermeture, puis ourlez chaque jambe.",
+      "Assemblez les deux devants au milieu, de la fourche à l'entrejambe.",
+      "Devant",
+      "Devant",
+      "ll",
+      "Milieu devant : fourche ↔ fourche, endroit contre endroit",
+    ],
+    [
+      "Fermez le côté droit, devant contre dos.",
+      "Devant",
+      "Dos",
+      "rl",
+      "Côté droit : bord du devant ↔ bord du dos, à 1,5 cm",
+    ],
+    [
+      "Assemblez les deux dos au milieu, puis l'entrejambe entier.",
+      "Dos",
+      "Dos",
+      "rr",
+      "Milieu dos : fourche ↔ fourche, puis entrejambe d'un geste",
+    ],
+    [
+      "Posez la ceinture, montez la fermeture.",
       "Devant",
       "Ceinture",
-      "bt",
+      "tt",
+      "Taille : haut du pantalon ↔ ceinture, fermeture au milieu dos",
+    ],
+    [
+      "Ourlez chaque jambe à 3 cm.",
+      "Devant",
+      undefined,
+      undefined,
+      "Finitions : ourlets des deux jambes",
     ],
   ],
   large: [
-    ["Assemblez les devants au milieu, endroit contre endroit.", "Devant", "Devant", "ll"],
-    ["Assemblez les dos, puis fermez l'entrejambe.", "Dos", "Dos", "ll"],
-    ["Fermez les côtés d'un seul geste, de la taille à l'ourlet.", "Devant", "Dos", "rr"],
     [
-      "Posez la ceinture, puis ourlez à 4 cm pour un tombé majestueux.",
+      "Assemblez les devants au milieu, endroit contre endroit.",
+      "Devant",
+      "Devant",
+      "ll",
+      "Milieu devant : fourche ↔ fourche",
+    ],
+    [
+      "Fermez le côté droit, devant contre dos, d'un seul geste.",
+      "Devant",
+      "Dos",
+      "rl",
+      "Côté droit : bord du devant ↔ bord du dos, de la taille à l'ourlet",
+    ],
+    [
+      "Assemblez les deux dos au milieu.",
+      "Dos",
+      "Dos",
+      "rr",
+      "Milieu dos : fourche ↔ fourche, puis entrejambe",
+    ],
+    [
+      "Posez la ceinture.",
       "Devant",
       "Ceinture",
-      "bt",
+      "tt",
+      "Taille : haut du pantalon ↔ ceinture",
+    ],
+    [
+      "Ourlez à 4 cm : un ourlet profond accentue le tombé.",
+      "Devant",
+      undefined,
+      undefined,
+      "Finitions : ourlets profonds des deux jambes",
     ],
   ],
   tshirt: [
-    ["Assemblez les épaules, endroit contre endroit.", "Devant", "Dos", "tt"],
     [
-      "Montez les manches à plat dans les emmanchures.",
+      "Assemblez les épaules, endroit contre endroit.",
+      "Devant",
+      "Dos",
+      "tt",
+      "Épaules : haut du devant ↔ haut du dos, à 1 cm",
+    ],
+    [
+      "Montez la manche dans l'emmanchure droite, à plat.",
       "Devant",
       "Manche",
       "rl",
+      "Emmanchure droite : tête de manche fronceée ↔ emmanchure du devant",
+    ],
+    [
+      "Montez la seconde manche dans l'emmanchure gauche.",
+      "Devant",
+      "Manche",
+      "ll",
+      "Emmanchure gauche : tête de manche fronceée ↔ emmanchure du dos",
     ],
     [
       "Fermez les côtés et le dessous des manches d'un seul geste.",
       "Devant",
-      "Dos",
-      "rr",
+      undefined,
+      undefined,
+      "Côtés + sous-bras : de l'emmanchure au bas, en une couture",
     ],
-    ["Posez l'encolure en biais, puis ourlez le bas.", "Devant"],
+    [
+      "Posez l'encolure en biais, puis ourlez le bas.",
+      "Devant",
+      undefined,
+      undefined,
+      "Encolure : bande biais ↔ encolure, étirée légèrement",
+    ],
   ],
   tunique: [
-    ["Assemblez les épaules, devant contre dos.", "Devant", "Dos", "tt"],
-    ["Fermez les côtés jusqu'à l'emmanchure.", "Devant", "Dos", "rr"],
     [
-      "Finissez l'encolure et les emmanchures avec un biais, puis l'ourlet.",
+      "Assemblez les épaules, devant contre dos.",
       "Devant",
+      "Dos",
+      "tt",
+      "Épaules : haut du devant ↔ haut du dos, à 1 cm",
     ],
-  ],
-  blouse: [
-    ["Assemblez les épaules, endroit contre endroit.", "Devant", "Dos", "tt"],
-    [
-      "Montez les manches évasées dans les emmanchures.",
-      "Devant",
-      "Manche",
-      "rl",
-    ],
-    ["Fermez les côtés et le dessous des manches.", "Devant", "Dos", "rr"],
-    [
-      "Faites l'encolure en biais roulotté, puis un ourlet fin partout.",
-      "Devant",
-    ],
-  ],
-  robe: [
-    ["Assemblez les épaules, devant contre dos.", "Devant", "Dos", "tt"],
     [
       "Posez le biais d'encolure et d'emmanchures avant de fermer.",
       "Devant",
+      undefined,
+      undefined,
+      "Encolure + emmanchures : biais posé à plat",
     ],
-    ["Fermez les côtés, de l'emmanchure à l'ourlet.", "Devant", "Dos", "rr"],
-    ["Ourlez à 4 cm à la main pour un beau tombé.", "Devant"],
+    [
+      "Fermez les côtés, de l'emmanchure au bas.",
+      "Devant",
+      undefined,
+      undefined,
+      "Côtés : de l'emmanchure à l'ourlet, à 1,5 cm",
+    ],
+    [
+      "Ourlez le bas à 3 cm.",
+      "Devant",
+      undefined,
+      undefined,
+      "Finitions : ourlet du bas",
+    ],
+  ],
+  blouse: [
+    [
+      "Assemblez les épaules, endroit contre endroit.",
+      "Devant",
+      "Dos",
+      "tt",
+      "Épaules : haut du devant ↔ haut du dos, à 1 cm",
+    ],
+    [
+      "Montez la manche évasée dans l'emmanchure droite.",
+      "Devant",
+      "Manche",
+      "rl",
+      "Emmanchure droite : tête de manche ↔ emmanchure du devant",
+    ],
+    [
+      "Montez la seconde manche à gauche.",
+      "Devant",
+      "Manche",
+      "ll",
+      "Emmanchure gauche : tête de manche ↔ emmanchure du dos",
+    ],
+    [
+      "Fermez les côtés et le dessous des manches.",
+      "Devant",
+      undefined,
+      undefined,
+      "Côtés + sous-bras : de l'emmanchure au bas, en une couture",
+    ],
+    [
+      "Faites l'encolure roulottée, puis un ourlet fin partout.",
+      "Devant",
+      undefined,
+      undefined,
+      "Finitions : encolure roulottée + ourlets fins",
+    ],
+  ],
+  robe: [
+    [
+      "Assemblez les épaules, devant contre dos.",
+      "Devant",
+      "Dos",
+      "tt",
+      "Épaules : haut du devant ↔ haut du dos, à 1 cm",
+    ],
+    [
+      "Posez le biais d'encolure et d'emmanchures.",
+      "Devant",
+      undefined,
+      undefined,
+      "Encolure + emmanchures : biais posé à plat",
+    ],
+    [
+      "Fermez les côtés, de l'emmanchure à l'ourlet.",
+      "Devant",
+      undefined,
+      undefined,
+      "Côtés : de l'emmanchure à l'ourlet, à 1,5 cm",
+    ],
+    [
+      "Ourlez à 4 cm à la main pour un beau tombé.",
+      "Devant",
+      undefined,
+      undefined,
+      "Finitions : ourlet main à 4 cm",
+    ],
   ],
   blazer: [
-    ["Assemblez les épaules, devant contre dos.", "Devant", "Dos", "tt"],
-    ["Piquez les côtés.", "Devant", "Dos", "rr"],
-    ["Posez les manches dans les emmanchures.", "Devant", "Manche", "rl"],
-    ["Rabattez les revers, posez la doublure, puis faites l'ourlet.", "Devant"],
-  ],
-  kimono: [
     [
-      "Assemblez les épaules du dos en T et des devants, endroit contre endroit.",
+      "Préparez le dos au pli : milieux renforcés, épaules prêtes.",
       "Dos",
-      "Devant",
-      "tt",
+      undefined,
+      undefined,
+      "Préparation : dos au pli, crans d'épaule reportés",
     ],
     [
-      "Fermez les côtés, de l'emmanchure du kimono jusqu'au bas.",
+      "Assemblez le premier devant au dos : épaule et côté gauche.",
+      "Dos",
+      "Devant",
+      "ll",
+      "Épaule + côté gauche : bord du dos ↔ bord du devant, e. c. e.",
+    ],
+    [
+      "Assemblez le second devant : épaule et côté droit.",
       "Dos",
       "Devant",
       "rr",
+      "Épaule + côté droit : bord du dos ↔ bord du devant, e. c. e.",
     ],
     [
-      "Posez la ceinture croisée, puis finissez encolures et ourlets.",
+      "Froncez la tête de la manche gauche et montez-la.",
+      "Devant ·1",
+      "Manche",
+      "ll",
+      "Emmanchure gauche : tête de manche fronceée ↔ emmanchure",
+    ],
+    [
+      "Montez la manche droite de la même façon.",
+      "Devant ·2",
+      "Manche",
+      "rr",
+      "Emmanchure droite : tête de manche fronceée ↔ emmanchure",
+    ],
+    [
+      "Rabattez les revers, posez la doublure, puis faites l'ourlet.",
+      "Devant",
+      undefined,
+      undefined,
+      "Finitions : revers + doublure + ourlets",
+    ],
+  ],
+  kimono: [
+    [
+      "Le dos en T est prêt : dos et manches d'une seule tenue.",
+      "Dos",
+      undefined,
+      undefined,
+      "Préparation : pièce en T au pli, crans d'emmanchure",
+    ],
+    [
+      "Assemblez le premier devant au dos : épaule et côté gauche.",
+      "Dos",
+      "Devant",
+      "ll",
+      "Épaule + côté gauche : bord du T ↔ bord du devant",
+    ],
+    [
+      "Assemblez le second devant : épaule et côté droit.",
+      "Dos",
+      "Devant",
+      "rr",
+      "Épaule + côté droit : bord du T ↔ bord du devant",
+    ],
+    [
+      "Nouez la ceinture à la taille.",
       "Dos",
       "Ceinture",
-      "bt",
+      "ct",
+      "Taille : ceinture nouée, croisée sur le devant",
+    ],
+    [
+      "Finissez encolures et ourlets.",
+      "Dos",
+      undefined,
+      undefined,
+      "Finitions : encolures + ourlets droits",
     ],
   ],
   manche: [
     [
-      "Fermez le dessous : les deux bords de la manche se rejoignent.",
+      "La manche est coupée au pli : deux épaisseurs identiques.",
       "Manche",
+      undefined,
+      undefined,
+      "Préparation : pièces de manche repérées (tête, dessous)",
     ],
     [
-      "Froncez la tête de manche, montez-la dans l'emmanchure, puis faites l'ourlet.",
+      "Fermez le dessous : les deux bords se rejoignent.",
       "Manche",
+      "Manche",
+      "ll",
+      "Dessous de manche : bord ↔ bord, endroit contre endroit",
+    ],
+    [
+      "Froncez la tête, montez dans l'emmanchure, puis ourlez.",
+      "Manche",
+      undefined,
+      undefined,
+      "Montage : deux fils de fronce à 0,5 et 1,5 cm de la tête",
     ],
   ],
 };

@@ -8,6 +8,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-bricolage), Georgia, serif;
+  --font-editorial: var(--font-fraunces), Georgia, serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -194,4 +195,46 @@
   box-shadow:
     0 1px 2px rgb(0 0 0 / 0.4),
     0 10px 30px -14px rgb(0 0 0 / 0.55);
+}
+
+/* ---------- Montage : pièce surlignée en préparation ---------- */
+@keyframes asmpulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.asm-hl {
+  animation: asmpulse 1.6s ease-in-out infinite;
+}
+
+/* ---------- Landing : défilement des modèles ---------- */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 36s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* ---------- Défilement fluide vers les ancres ---------- */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ---------- Grain éditorial du héros ---------- */
+.hero-grain {
+  background-image: radial-gradient(
+      circle at 1px 1px,
+      color-mix(in srgb, var(--foreground) 7%, transparent) 1px,
+      transparent 0
+    );
+  background-size: 22px 22px;
 }
