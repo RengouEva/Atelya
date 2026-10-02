@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ImagePlus, Loader2, Ruler, Shirt, Upload, X } from "lucide-react";
+import { ImagePlus, Loader2, Ruler, Shirt, Sparkles, Upload, X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -301,9 +301,9 @@ export function StepCreate({
           onClick={onSubmit}
           disabled={!photo || !name.trim() || busy}
           size="lg"
-          className="h-12 rounded-xl text-[15px] shadow-md"
+          className="sticky bottom-[max(1rem,env(safe-area-inset-bottom))] z-20 h-13 w-full rounded-full text-[15px] font-bold shadow-lg"
         >
-          {busy ? <Loader2 className="size-4 animate-spin" /> : null}
+          {busy ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
           {busy ? "Création du projet…" : "Générer les 3 variantes IA"}
         </Button>
         <p className="text-center text-[11px] leading-relaxed text-muted-foreground">

@@ -81,3 +81,22 @@ Work Log:
 Stage Summary:
 - Le nouveau parcours demandé est livré de bout en bout : photo → 3 variantes IA habillées sur mannequin → sélection → découpe (toutes les pièces + plan de placement + métrage) → assemblage pas à pas jusqu'au vêtement porté.
 - Architecture : Next.js 16 + Prisma/SQLite (StudioProject + cache AiVisual), image-edit IA côté serveur uniquement, moteur de patronage paramétrique réutilisé pour la découpe réelle.
+
+---
+Task ID: 5
+Agent: Super Z (main)
+Task: Rebranding Atelya — convertir le logo fourni en WebP, en faire le logo central de la landing, appliquer la charte visuelle du logo à toute l'app, landing type app native (moins de texte, droit au but), app mobile-first au workflow clair.
+
+Work Log:
+- Charte extraite du logo par échantillonnage : bleu roi #0038A0–#0048C0, or #F8C840/#D89000, navy profond #001040.
+- Assets générés via scripts/logo-assets.py (PIL) : atelya-logo.webp (logo complet nettoyé des artefacts de contour), atelya-logo-splash.webp (tagline « Créez • Mesurez • Réalisez » recolorée en or pour fond navy), atelya-mark.webp (buste seul isolé par composantes connexes scipy), atelya-icon.webp/192 + src/app/icon.png 512 (buste sur dégradé navy, coins arrondis) — favicon PWA.
+- globals.css : nouveaux tokens bleu roi/or/navy (light : fond #F1F4FC, primaire #0B47C4, accent doré #FDF3D7 ; dark : fond #040B1E, primaire #6D95FF), + tokens gold/gold-deep/royal, styles splash (.splash-navy dégradé navy, .splash-grain, floaty, text-gold-shine, snap-row).
+- layout.tsx : titre « Atelya — Créez • Mesurez • Réalisez », manifest.webmanifest (display standalone, icônes webp), themeColor navy, favicon atelya.
+- landing.tsx réécrite en style app native : splash 100svh fond navy, logo central flottant avec tagline dorée, une seule phrase (« D'une photo, au vêtement fini. » + or animé), CTA or plein (« Ouvrir l'atelier »), mini-workflow 4 icônes, section Parcours 4 cartes, 3 visuels IA en snap-scroll, CTA final navy avec emblème, footer minimal (Créez • Mesurez • Réalisez). Moins ~60 % de texte qu'avant.
+- studio-app.tsx refondu mobile-first : header natif 3 zones (retour / emblème + Atelya / reset + thème), stepper horizontal compact sticky (numéros → checks, barres de liaison), colonne unique max-w-3xl, bandeau récap projet (photo + nom + famille/pièces/métrage/variante), CTA sticky pleine largeur arrondis par étape, footer tagline.
+- step-create/variants/cutting : CTA sticky bottom (safe-area) pleine largeur rounded-full, grilles recalées (3 variantes côte à côte dès sm, découpe 2 colonnes dès md) ; ThemeToggle : variante tone="navy" pour le splash.
+- QA : ESLint 0/0 ; E2E agent-browser 390 px : splash → atelier → exemple → « Robe test — Léa » (201) → 3 variantes IA (cache) → sélection 01 → patron Robe trapèze 2 pièces 0,73 m → coupe 2/2 → assemblage 4 montages → produit fini porté ; desktop 1440 px clair + sombre vérifiés ; 0 erreur console (corrigé : icon.png corrompu par écriture concurrente — régénéré et revalidé 200/112 Ko) ; API studio vérifiée par curl ; projet de test supprimé.
+
+Stage Summary:
+- Identité Atelya déployée de bout en bout : logo WebP central (4 déclinaisons), charte bleu roi/or/navy appliquée à tous les tokens, splash type app native au texte minimal, parcours studio mobile-first en 4 gestes clairs.
+- Fichiers clés : public/atelya-*.webp, public/manifest.webmanifest, src/app/icon.png, src/app/layout.tsx, src/app/globals.css, src/components/landing/landing.tsx, src/components/studio/studio-app.tsx, src/components/studio/step-*.tsx, src/components/theme-toggle.tsx, scripts/logo-assets.py.

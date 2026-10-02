@@ -25,27 +25,30 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Atelier de coupe — patronage, plan de coupe & assemblage",
+  title: "Atelya — Créez • Mesurez • Réalisez",
   description:
-    "Choisissez un modèle, entrez les mesures : les pièces sont placées sur le tissu, la méthode de coupe pas à pas et l’assemblage animé s’affichent. Un atelier de couture complet, du tissu à la pièce finie.",
+    "L'IA d'atelier : une photo, trois variantes sur mannequin, le patron complet, le plan de coupe et l'assemblage guidé.",
   keywords: [
-    "couture",
+    "Atelya",
+    "stylisme",
+    "modélisme",
     "patronage",
-    "coupe du tissu",
-    "jupe",
-    "blazer",
-    "atelier",
+    "IA",
+    "couture",
+    "découpe",
     "assemblage",
   ],
+  manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/scissors.svg",
+    icon: "/atelya-icon-192.webp",
+    apple: "/atelya-icon-192.webp",
   },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f2f0e9" },
-    { media: "(prefers-color-scheme: dark)", color: "#12162a" },
+    { media: "(prefers-color-scheme: light)", color: "#f1f4fc" },
+    { media: "(prefers-color-scheme: dark)", color: "#040b1e" },
   ],
 };
 

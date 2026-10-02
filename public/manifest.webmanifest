@@ -1,0 +1,23 @@
+{
+  "name": "Atelya — Créez • Mesurez • Réalisez",
+  "short_name": "Atelya",
+  "description": "L'IA d'atelier : une photo, trois variantes, le patron et la découpe.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#040b1e",
+  "theme_color": "#0033a0",
+  "icons": [
+    {
+      "src": "/atelya-icon-192.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
+      "src": "/atelya-icon.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any"
+    }
+  ]
+}

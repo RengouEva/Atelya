@@ -6,6 +6,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-gold: var(--gold);
+  --color-gold-deep: var(--gold-deep);
+  --color-royal: var(--royal);
   --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-bricolage), Georgia, serif;
   --font-editorial: var(--font-fraunces), Georgia, serif;
@@ -46,74 +49,81 @@
 }
 
 :root {
-  --radius: 0.75rem;
-  --background: #f2f0e9;
-  --foreground: #232b45;
-  --card: #fbfaf6;
-  --card-foreground: #232b45;
-  --popover: #fbfaf6;
-  --popover-foreground: #232b45;
-  --primary: #d6336c;
+  /* Charte Atelya — extraite du logo : bleu roi, or, navy profond */
+  --radius: 0.9rem;
+  --gold: #e9b949;
+  --gold-deep: #c98a0a;
+  --royal: #0033a0;
+  --background: #f1f4fc;
+  --foreground: #0a1b4d;
+  --card: #ffffff;
+  --card-foreground: #0a1b4d;
+  --popover: #ffffff;
+  --popover-foreground: #0a1b4d;
+  --primary: #0b47c4;
   --primary-foreground: #ffffff;
-  --secondary: #e8e5da;
-  --secondary-foreground: #232b45;
-  --muted: #eae8df;
-  --muted-foreground: #676d86;
-  --accent: #f7e5ed;
-  --accent-foreground: #232b45;
+  --secondary: #e4eaf8;
+  --secondary-foreground: #0a1b4d;
+  --muted: #e7ecf8;
+  --muted-foreground: #5a6484;
+  --accent: #fdf3d7;
+  --accent-foreground: #0a1b4d;
   --destructive: #c2413b;
-  --border: #dad7cb;
-  --input: #d6d3c6;
-  --ring: #d6336c;
-  --chart-1: #d6336c;
-  --chart-2: #2a9db5;
-  --chart-3: #d9a441;
-  --chart-4: #4a7c59;
-  --chart-5: #7d4e7e;
-  --sidebar: #fbfaf6;
-  --sidebar-foreground: #232b45;
-  --sidebar-primary: #d6336c;
+  --border: #d5ddf0;
+  --input: #c9d3ea;
+  --ring: #0b47c4;
+  --chart-1: #0b47c4;
+  --chart-2: #1fa6b8;
+  --chart-3: #e9b949;
+  --chart-4: #3e8e5f;
+  --chart-5: #7a5ec4;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0a1b4d;
+  --sidebar-primary: #0b47c4;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f7e5ed;
-  --sidebar-accent-foreground: #232b45;
-  --sidebar-border: #dad7cb;
-  --sidebar-ring: #d6336c;
-  --table: #c9ccc4;
+  --sidebar-accent: #fdf3d7;
+  --sidebar-accent-foreground: #0a1b4d;
+  --sidebar-border: #d5ddf0;
+  --sidebar-ring: #0b47c4;
+  --table: #bcc8e4;
 }
 
 .dark {
-  --background: #12162a;
-  --foreground: #eef0f8;
-  --card: #1b2140;
-  --card-foreground: #eef0f8;
-  --popover: #1b2140;
-  --popover-foreground: #eef0f8;
-  --primary: #ff6b9a;
-  --primary-foreground: #33101f;
-  --secondary: #242b52;
-  --secondary-foreground: #eef0f8;
-  --muted: #222850;
-  --muted-foreground: #9aa1c0;
-  --accent: #3c2246;
-  --accent-foreground: #ffd3e2;
+  --gold: #f5c951;
+  --gold-deep: #e9b949;
+  --royal: #7ba3ff;
+  --background: #040b1e;
+  --foreground: #edf1fb;
+  --card: #0b1631;
+  --card-foreground: #edf1fb;
+  --popover: #0b1631;
+  --popover-foreground: #edf1fb;
+  --primary: #6d95ff;
+  --primary-foreground: #041034;
+  --secondary: #16224a;
+  --secondary-foreground: #edf1fb;
+  --muted: #141f44;
+  --muted-foreground: #97a2c6;
+  --accent: #332b12;
+  --accent-foreground: #f6d879;
   --destructive: #e5534b;
-  --border: #2f3763;
-  --input: #2f3763;
-  --ring: #ff6b9a;
-  --chart-1: #ff6b9a;
+  --border: #1c2954;
+  --input: #1c2954;
+  --ring: #6d95ff;
+  --chart-1: #6d95ff;
   --chart-2: #3cb7cf;
-  --chart-3: #e8b45a;
+  --chart-3: #f5c951;
   --chart-4: #6cae81;
   --chart-5: #b07fb3;
-  --sidebar: #1b2140;
-  --sidebar-foreground: #eef0f8;
-  --sidebar-primary: #ff6b9a;
-  --sidebar-primary-foreground: #33101f;
-  --sidebar-accent: #3c2246;
-  --sidebar-accent-foreground: #ffd3e2;
-  --sidebar-border: #2f3763;
-  --sidebar-ring: #ff6b9a;
-  --table: #262c52;
+  --sidebar: #0b1631;
+  --sidebar-foreground: #edf1fb;
+  --sidebar-primary: #6d95ff;
+  --sidebar-primary-foreground: #041034;
+  --sidebar-accent: #332b12;
+  --sidebar-accent-foreground: #f6d879;
+  --sidebar-border: #1c2954;
+  --sidebar-ring: #6d95ff;
+  --table: #17224a;
 }
 
 @layer base {
@@ -188,8 +198,8 @@
 /* Grain de papier très subtil pour les cartes premium */
 .card-luxe {
   box-shadow:
-    0 1px 2px rgb(35 43 69 / 0.05),
-    0 8px 24px -12px rgb(35 43 69 / 0.12);
+    0 1px 2px rgb(10 27 77 / 0.05),
+    0 8px 24px -12px rgb(10 27 77 / 0.14);
 }
 .dark .card-luxe {
   box-shadow:
@@ -237,4 +247,59 @@ html {
       transparent 0
     );
   background-size: 22px 22px;
+}
+
+/* ---------- Splash app native Atelya ---------- */
+.splash-navy {
+  background:
+    radial-gradient(1100px 620px at 82% -10%, rgb(0 72 192 / 0.5), transparent 60%),
+    radial-gradient(900px 560px at -12% 108%, rgb(0 56 160 / 0.38), transparent 55%),
+    linear-gradient(178deg, #030a1e 4%, #071640 46%, #0b2a7e 118%);
+}
+.splash-grain {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgb(255 255 255 / 0.05) 1px,
+    transparent 0
+  );
+  background-size: 24px 24px;
+}
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.animate-floaty {
+  animation: floaty 5.5s ease-in-out infinite;
+}
+@keyframes shine {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+.text-gold-shine {
+  background: linear-gradient(
+    100deg,
+    #f5c951 20%,
+    #fff3c4 40%,
+    #f5c951 60%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shine 4.5s linear infinite;
+}
+.snap-row {
+  scroll-snap-type: x mandatory;
+}
+.snap-row > * {
+  scroll-snap-align: center;
 }

@@ -145,7 +145,7 @@ export function StepVariants({
         </Badge>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-3">
         {DIRECTIONS.map((dir, i) => {
           const v = variants[i];
           const st = status[i];
@@ -172,17 +172,17 @@ export function StepVariants({
         })}
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="sticky bottom-[max(1rem,env(safe-area-inset-bottom))] z-20 flex flex-col gap-2">
         <Button
           onClick={onContinue}
           disabled={!ready}
           size="lg"
-          className="h-12 rounded-xl text-[15px] shadow-md"
+          className="h-13 w-full rounded-full text-[15px] font-bold shadow-lg"
         >
           <Check className="size-4" />
           Valider et établir le patron
         </Button>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-center text-xs text-muted-foreground">
           {selected < 0
             ? "Sélectionnez d'abord une variante."
             : doneCount < 3

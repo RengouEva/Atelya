@@ -220,7 +220,7 @@ export function StepCutting({
       </section>
 
       {/* Nomenclature + visuel IA */}
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_400px]">
+      <div className="grid gap-5 md:grid-cols-2">
         <section
           aria-label="Les pièces à couper"
           className="card-luxe rounded-2xl border border-border/70 bg-card"
@@ -325,12 +325,14 @@ export function StepCutting({
         </section>
       </div>
 
-      <div className="flex justify-end">
-        <Button onClick={onContinue} size="lg" className="h-12 rounded-xl text-[15px] shadow-md">
-          Passer à l&apos;assemblage
-          <ArrowRight className="size-4" />
-        </Button>
-      </div>
+      <Button
+        onClick={onContinue}
+        size="lg"
+        className="sticky bottom-[max(1rem,env(safe-area-inset-bottom))] z-20 h-13 w-full rounded-full text-[15px] font-bold shadow-lg"
+      >
+        Passer à l&apos;assemblage
+        <ArrowRight className="size-4" />
+      </Button>
     </div>
   );
 }
