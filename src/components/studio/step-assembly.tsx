@@ -3,6 +3,7 @@
 import { Hand } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { AssemblyGuide } from "@/components/atelier/assembly-guide";
 import { SewingStudio } from "@/components/atelier/sewing-studio";
 import type { Measures, ModelKey, PieceDef } from "@/lib/atelier/patterns";
 
@@ -49,7 +50,10 @@ export function StepAssembly({
         </div>
       </div>
 
-      <header className="flex items-center gap-3 border-b border-border/60 px-5 py-4">
+      {/* Guide d'assemblage façon affiche : pièces numérotées + pas-à-pas + récap */}
+      <AssemblyGuide modelKey={modelKey} mm={mm} defs={defs} fc={fc} sa={sa} />
+
+      <header className="flex items-center gap-3 border-t border-border/60 px-5 py-4">
         <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-primary">
           <Hand className="size-[18px]" />
         </div>
@@ -58,8 +62,8 @@ export function StepAssembly({
             Atelier de couture — à vous de coudre
           </h2>
           <p className="text-xs text-muted-foreground">
-            Assemblez les pièces en sous-ensembles A, B… puis cousez chaque
-            zone guidée, jusqu&apos;au vêtement fini
+            Suivez le guide ci-dessus, sous-ensemble par sous-ensemble, en
+            cousant chaque zone guidée
           </p>
         </div>
       </header>
