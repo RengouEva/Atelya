@@ -296,7 +296,7 @@ export function FabricTable({
                   </text>
                   {p.fold && (
                     <text
-                      x="1"
+                      x={p.foldMid ? p.w / 2 - 2 : 1}
                       y={ty}
                       fontSize={fs * 0.72}
                       fill="var(--primary)"

@@ -110,6 +110,13 @@ function placeJoin(join: Join, a: Inst, w: number, h: number) {
       return { tx: B.x1, ty: B.y0, sx: 1 as const, sy: 1 as const };
     case "tt":
       return { tx: B.x0, ty: B.y0, sx: 1 as const, sy: -1 as const };
+    case "tc":
+      return {
+        tx: B.x0 + (B.x1 - B.x0 - w) / 2,
+        ty: B.y0,
+        sx: 1 as const,
+        sy: -1 as const,
+      };
     case "bt":
       return { tx: B.x0, ty: B.y1, sx: 1 as const, sy: 1 as const };
     case "ct":
@@ -135,6 +142,7 @@ function seamFor(join: Join, a: Inst, w: number, h: number): SeamMark | null {
     case "rl":
       return { x1: B.x1, y1: B.y0, x2: B.x1, y2: B.y0 + yl, step: 0 };
     case "tt":
+    case "tc":
       return { x1: B.x0, y1: B.y0, x2: B.x0 + xl, y2: B.y0, step: 0 };
     case "bt":
       return { x1: B.x0, y1: B.y1, x2: B.x0 + xl, y2: B.y1, step: 0 };
@@ -195,7 +203,12 @@ function buildScene(
     if (s[2] && s[3]) {
       const aRef = s[1] ?? defs[0].n;
       const a =
-        anchorFor(aRef) ?? place(findDef(parseRef(aRef).base), 0, 0, 1, 1, i);
+        anchorFor(aRef) ??
+        (() => {
+          // l'ancre n'est pas encore posée : on la pose à un emplacement libre
+          const spot = freeSpot();
+          return place(findDef(parseRef(aRef).base), spot.x, spot.y, 1, 1, i);
+        })();
       const md = findDef(parseRef(s[2]).base);
       const p = placeJoin(s[3], a, md.w, md.h);
       place(md, p.tx, p.ty, p.sx, p.sy, i);
@@ -216,7 +229,11 @@ function buildScene(
     const s = steps[activeJoin];
     const aRef = s[1] ?? defs[0].n;
     scene.activeAnchor =
-      anchorFor(aRef) ?? place(findDef(parseRef(aRef).base), 0, 0, 1, 1, activeJoin);
+      anchorFor(aRef) ??
+      (() => {
+        const spot = freeSpot();
+        return place(findDef(parseRef(aRef).base), spot.x, spot.y, 1, 1, activeJoin);
+      })();
   }
 
   if (prepIdx >= 0) placeStep(prepIdx);
@@ -328,13 +345,13 @@ function buildPlan(steps: AsmStep[], defs: PieceDef[]): StepPlan[] {
 
 function seamType(s: AsmStep): string {
   const t = `${s[0]} ${s[4] ?? ""}`.toLowerCase();
+  if (s[2]) return /ceinture/.test(t) ? "Ceinture" : "Assemblage";
   if (/pince/.test(t)) return "Pince";
-  if (/ourlet|roulott/.test(t)) return "Ourlet";
-  if (/fermeture|finition/.test(t)) return "Finitions";
   if (/plis/.test(t)) return "Plis";
-  if (/ceinture/.test(t)) return "Ceinture";
-  if (/bâti|épingl|repér/.test(t)) return "Préparation";
-  return s[2] ? "Assemblage" : "Préparation";
+  if (/fermez|côtés|milieu dos/.test(t)) return "Montage";
+  if (/ourlet|roulott/.test(t)) return "Ourlet";
+  if (/surpiqu|goutti|fermeture|fente/.test(t)) return "Finitions";
+  return "Préparation";
 }
 
 function seamValue(s: AsmStep): string {
@@ -821,6 +838,8 @@ export function SewingStudio({
         return { x: B.x1 + 3, y: B.y0, kk: 0 };
       case "tt":
         return { x: B.x0, y: B.y0 - moverDef.h - 3, kk: 0 };
+      case "tc":
+        return { x: (target as { tx: number }).tx, y: B.y0 - moverDef.h - 3, kk: 0 };
       case "bt":
         return { x: B.x0, y: B.y1 + 3, kk: 0 };
       default:

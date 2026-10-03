@@ -16,6 +16,8 @@ export interface PieceDef {
   q: number;
   /** pièce à couper au pli */
   fold?: boolean;
+  /** le pli est au milieu de la pièce (devant de pantalon entier) */
+  foldMid?: boolean;
   /** remplissage even-odd (trou central, jupe mouchoir) */
   eo?: boolean;
   note?: string;
@@ -136,7 +138,42 @@ const skirtPanel = (m: Measures, back: boolean, flare: number): PieceDef => {
   };
 };
 
-/** Jambe de pantalon / short (wide = évasement de l'ourlet) */
+/** Devant de pantalon ENTIER, coupé au pli : les deux jambes d'une seule tenue,
+ *  creux de fourche au milieu. Aucune couture au milieu devant. */
+const pantsFrontFold = (m: Measures, wide = 0): PieceDef => {
+  const hw = (m.H + 4) / 4;
+  const tw = (m.T + 4) / 4;
+  const cd = Math.min(26, m.L * 0.7);
+  const sp = wide * Math.max(0, m.L * 0.16);
+  const hipY = Math.min(22, m.L * 0.35);
+  const fork = Math.max(4, m.H / 16);
+  const W = hw + sp; // demi-largeur
+  const O = W; // décalage : la pièce est dessinée de x=0 à x=2W, pli au centre
+  return {
+    n: "Devant",
+    d: [
+      `M${-tw + O} 0`,
+      `H${tw + O}`,
+      `C${tw + (hw - tw) * 0.25 + O} ${hipY * 0.4} ${hw - (hw - tw) * 0.1 + O} ${hipY * 0.75} ${hw + O} ${hipY}`,
+      `L${W + O} ${m.L}`,
+      `H${fork + O}`,
+      `L${O} ${cd}`,
+      `L${-fork + O} ${m.L}`,
+      `H${-W + O}`,
+      `L${-hw + O} ${hipY}`,
+      `C${-hw + (hw - tw) * 0.1 + O} ${hipY * 0.75} ${-tw - (hw - tw) * 0.25 + O} ${hipY * 0.4} ${-tw + O} 0`,
+      "Z",
+    ].join(""),
+    w: 2 * W,
+    h: m.L,
+    q: 1,
+    fold: true,
+    foldMid: true,
+    note: "au pli : les 2 jambes",
+  };
+};
+
+/** Jambe de pantalon / short (dos) — (wide = évasement de l'ourlet) */
 const leg = (m: Measures, b: boolean, wide = 0): PieceDef => {
   const hw = (m.H + 4) / 4 + (b ? 2 : 0);
   const c = m.H / 16 + (b ? 2 : 0);
@@ -340,31 +377,31 @@ export const MODELS: Record<ModelKey, Model> = {
     n: "Short taille haute",
     L: 40,
     cat: "pantalons",
-    desc: "Le short facile de l'été : taille haute, fourche confortable, ceinture à passer l'élastique.",
+    desc: "Le short facile de l'été : devant coupé au pli en une pièce, deux dos, ceinture à élastique.",
     tags: ["Été", "Facile", "Débutant"],
     diff: 1,
     fab: "Twill de coton",
-    g: (m) => [leg(m, false), leg(m, true), belt(m)],
+    g: (m) => [pantsFrontFold(m), leg(m, true), belt(m)],
   },
   pantalon: {
     n: "Pantalon droit",
     L: 100,
     cat: "pantalons",
-    desc: "Le classique à jambe droite : courbe de fourche travaillée, tombé net du matin au soir.",
+    desc: "Le classique à jambe droite : devant entier au pli, deux dos, montage par les entrejambes.",
     tags: ["Classique", "Bureau", "Vestiaire"],
     diff: 2,
     fab: "Gabardine de laine",
-    g: (m) => [leg(m, false), leg(m, true), belt(m)],
+    g: (m) => [pantsFrontFold(m), leg(m, true), belt(m)],
   },
   large: {
     n: "Pantalon large",
     L: 105,
     cat: "pantalons",
-    desc: "Fluide et majestueux : l'ourlet s'évase depuis le genou pour un mouvement souple et aéré.",
+    desc: "Fluide et majestueux : devant au pli, ourlet évasé depuis le genou pour un mouvement aéré.",
     tags: ["Fluide", "Confort", "Tendance"],
     diff: 1,
     fab: "Crêpe lourd ou lin",
-    g: (m) => [leg(m, false, 1), leg(m, true, 1), belt(m)],
+    g: (m) => [pantsFrontFold(m, 1), leg(m, true, 1), belt(m)],
   },
   tshirt: {
     n: "Tee-shirt",
@@ -481,11 +518,11 @@ export const FOLD: Record<ModelKey, string> = {
   plissee:
     "Pliez le tissu en deux, endroit contre endroit. Chaque panneau est deux fois plus large que la taille : les plis sont compris.",
   short:
-    "Pliez le tissu en deux, endroit contre endroit, pour couper les pièces par paires, en miroir.",
+    "Pliez le tissu en deux, endroit contre endroit. Le devant se coupe ENTIER au pli ; les deux dos se coupent en miroir.",
   pantalon:
-    "Pliez le tissu en deux, endroit contre endroit, pour couper les jambes en paires miroir.",
+    "Pliez le tissu en deux, endroit contre endroit. Le devant se coupe ENTIER au pli (les 2 jambes) ; les deux dos se coupent en miroir.",
   large:
-    "Pliez le tissu en deux, endroit contre endroit. Prévoyez une laize large : l'ourlet évasé demande de la place.",
+    "Pliez le tissu en deux, endroit contre endroit. Le devant se coupe ENTIER au pli ; les deux dos en miroir. Prévoyez une laize large pour l'ourlet évasé.",
   tshirt:
     "Pliez le tissu en deux, endroit contre endroit. Le dos se place au pli, les manches se coupent en paires miroir.",
   tunique:
@@ -593,7 +630,14 @@ export const meterage = (layout: BuiltLayout) =>
 /* - Étape sans jonction = préparation sur la pièce citée.              */
 /* ------------------------------------------------------------------ */
 
-export type Join = "ll" | "rr" | "rl" | "tt" | "bt" | "ct";
+export type Join =
+  | "ll" // miroir à gauche (bord droit de la pièce contre bord gauche de l'ancre)
+  | "rr" // miroir à droite
+  | "rl" // bord à droite, sans miroir
+  | "tt" // miroir au-dessus, aligné à gauche
+  | "tc" // au-dessus, centré sur l'ancre (ceintures)
+  | "bt" // en dessous
+  | "ct"; // centré dessus (ceinture nouée, enfilée)
 
 export type AsmStep = [string, string?, string?, Join?, string?];
 
@@ -614,18 +658,18 @@ export const ASM: Record<ModelKey, AsmStep[]> = {
       "Côtés : bord droit du devant ↔ bord gauche du dos, à 1,5 cm",
     ],
     [
-      "Posez la ceinture sur le haut de la jupe.",
+      "Ceinture montée : entoilez-la, pliez-la en deux endos contre endos, puis appliquez-la sur la taille.",
       "Devant",
       "Ceinture",
-      "tt",
-      "Taille : haut de la jupe ↔ ceinture, endroit contre endroit",
+      "tc",
+      "Taille : haut de la jupe ↔ ceinture, bords égaux, endroit contre endroit, à 1 cm",
     ],
     [
-      "Posez la fermeture au milieu dos, puis faites l'ourlet à 3 cm.",
+      "Posez la fermeture au milieu dos, surpiquez la ceinture dans la gouttière, puis faites l'ourlet à 3 cm.",
       "Dos",
       undefined,
       undefined,
-      "Finitions : fermeture invisible au milieu dos + ourlet",
+      "Finitions : fermeture invisible + surpiqûre de ceinture + ourlet",
     ],
   ],
   crayon: [
@@ -644,18 +688,18 @@ export const ASM: Record<ModelKey, AsmStep[]> = {
       "Côtés : bord droit du devant ↔ bord gauche du dos (fente au milieu dos)",
     ],
     [
-      "Posez la ceinture à la taille.",
+      "Ceinture montée : entoilée, pliée en deux, appliquée endroit contre endroit à la taille.",
       "Devant",
       "Ceinture",
-      "tt",
-      "Taille : haut de la jupe ↔ ceinture, endroit contre endroit",
+      "tc",
+      "Taille : haut de la jupe ↔ ceinture, bords égaux, à 1 cm",
     ],
     [
-      "Finissez la fente au milieu dos, puis l'ourlet bien près.",
+      "Finissez la fente au milieu dos, surpiquez la ceinture, puis ourlez bien près.",
       "Dos",
       undefined,
       undefined,
-      "Finitions : fente dos + ourlet à 2 cm",
+      "Finitions : fente dos + surpiqûre de ceinture + ourlet à 2 cm",
     ],
   ],
   evasee: [
@@ -667,18 +711,18 @@ export const ASM: Record<ModelKey, AsmStep[]> = {
       "Côtés : bord droit du devant ↔ bord gauche du dos, à 1,5 cm",
     ],
     [
-      "Posez la ceinture à la taille, couture repassée vers le haut.",
+      "Ceinture montée : entoilée, pliée en deux, appliquée à la taille, couture repassée vers le haut.",
       "Devant",
       "Ceinture",
-      "tt",
-      "Taille : haut de la jupe ↔ ceinture",
+      "tc",
+      "Taille : haut de la jupe ↔ ceinture, bords égaux",
     ],
     [
-      "Ourlet roulotté de 2 cm : l'évasement tombera tout seul.",
+      "Surpiquez la ceinture dans la gouttière, puis ourlet roulotté de 2 cm : l'évasement tombera tout seul.",
       "Devant",
       undefined,
       undefined,
-      "Finitions : ourlet roulotté sur tout le tour",
+      "Finitions : surpiqûre de ceinture + ourlet roulotté sur tout le tour",
     ],
   ],
   cercle: [
@@ -704,10 +748,10 @@ export const ASM: Record<ModelKey, AsmStep[]> = {
       "Couture n°3 : dernier bord ↔ premier bord",
     ],
     [
-      "Posez la ceinture sur la taille.",
+      "Ceinture montée : entoilée, pliée en deux, appliquée sur le trou de taille, répartie en 4.",
       "Quart de jupe ·1",
       "Ceinture",
-      "tt",
+      "tc",
       "Taille : trou de la jupe ↔ ceinture, réparti en 4",
     ],
     [
@@ -757,10 +801,10 @@ export const ASM: Record<ModelKey, AsmStep[]> = {
       "Côtés : bord du panneau croisé ↔ bord du dos, à 1,5 cm",
     ],
     [
-      "Nouez les liens longs : la ceinture fait office de fermeture.",
+      "Ceinture-liens : entoilée, pliée en deux, appliquée à la taille — les longues extrémités se nouent devant.",
       "Devant",
       "Ceinture",
-      "tt",
+      "tc",
       "Taille : haut de la jupe ↔ liens, croisés dans le dos",
     ],
   ],
@@ -780,44 +824,44 @@ export const ASM: Record<ModelKey, AsmStep[]> = {
       "Côtés : bord du devant ↔ bord du dos, plis maintenus",
     ],
     [
-      "Posez la ceinture et fixez les plis sous la ceinture.",
+      "Ceinture montée : entoilée, pliée en deux, appliquée à la taille — les plis pris dans la couture.",
       "Devant plissé",
       "Ceinture",
-      "tt",
-      "Taille : haut des plis ↔ ceinture, plis pris dans la couture",
+      "tc",
+      "Taille : haut des plis ↔ ceinture, plis répartis et fixés",
     ],
   ],
   short: [
     [
-      "Assemblez les deux devants au milieu.",
+      "Surfilez les pièces, puis piquez les pinces du devant et des dos.",
       "Devant",
+      undefined,
+      undefined,
+      "Coutures de préparation : pinces de taille",
+    ],
+    [
+      "Prenez un dos et le devant : assemblez l'entrejambe gauche, de la fourche au bas.",
       "Devant",
+      "Dos",
       "ll",
-      "Milieu devant : fourche ↔ fourche, endroit contre endroit",
+      "Entrejambe gauche : bord du dos ↔ bord du devant, endroit contre endroit, à 1,5 cm",
     ],
     [
-      "Fermez le côté droit, devant contre dos.",
+      "Prenez le second dos : assemblez l'entrejambe droit.",
       "Devant",
-      "Dos",
+      "Dos ·2",
       "rl",
-      "Côté droit : bord du devant ↔ bord du dos, à 1,5 cm",
+      "Entrejambe droit : bord du dos ↔ bord du devant, à 1,5 cm",
     ],
     [
-      "Assemblez les deux dos au milieu.",
-      "Dos",
-      "Dos",
-      "rr",
-      "Milieu dos : fourche ↔ fourche, endroit contre endroit",
-    ],
-    [
-      "Posez la ceinture avec élastique.",
+      "Ceinture : pliez le bandeau en deux endos contre endos, fermez le tube, glissez l'élastique et appliquez à la taille.",
       "Devant",
       "Ceinture",
-      "tt",
-      "Taille : haut du short ↔ ceinture, élastique tiré en répartissant",
+      "tc",
+      "Taille : ceinture tube ↔ haut du short, élastique réparti régulièrement",
     ],
     [
-      "Ourlez le bas de chaque jambe.",
+      "Ourlez le bas de chaque jambe à 3 cm.",
       "Devant",
       undefined,
       undefined,
@@ -826,76 +870,90 @@ export const ASM: Record<ModelKey, AsmStep[]> = {
   ],
   pantalon: [
     [
-      "Assemblez les deux devants au milieu, de la fourche à l'entrejambe.",
+      "Surfilez les pièces. Piquez les pinces du devant et des dos, en pli creux.",
       "Devant",
+      undefined,
+      undefined,
+      "Coutures de préparation : pinces de taille (devant et dos)",
+    ],
+    [
+      "Prenez un dos et le devant : assemblez l'entrejambe gauche, de la fourche à l'ourlet.",
       "Devant",
+      "Dos",
       "ll",
-      "Milieu devant : fourche ↔ fourche, endroit contre endroit",
+      "Entrejambe gauche : bord du dos ↔ bord du devant, endroit contre endroit, à 1,5 cm",
     ],
     [
-      "Fermez le côté droit, devant contre dos.",
+      "Prenez le second dos : assemblez l'entrejambe droit, exactement comme le premier.",
       "Devant",
-      "Dos",
+      "Dos ·2",
       "rl",
-      "Côté droit : bord du devant ↔ bord du dos, à 1,5 cm",
+      "Entrejambe droit : bord du dos ↔ bord du devant, à 1,5 cm",
     ],
     [
-      "Assemblez les deux dos au milieu, puis l'entrejambe entier.",
-      "Dos",
-      "Dos",
-      "rr",
-      "Milieu dos : fourche ↔ fourche, puis entrejambe d'un geste",
+      "Assemblez le milieu dos, de la fourche à la taille, puis montez la fermeture invisible.",
+      "Dos ·2",
+      undefined,
+      undefined,
+      "Milieu dos : couture à 1,5 cm + fermeture invisible dans le pli",
     ],
     [
-      "Posez la ceinture, montez la fermeture.",
+      "Ceinture montée : entoilez-la, pliez-la en deux endos contre endos, puis appliquez-la sur la taille.",
       "Devant",
       "Ceinture",
-      "tt",
-      "Taille : haut du pantalon ↔ ceinture, fermeture au milieu dos",
+      "tc",
+      "Taille : haut du pantalon ↔ ceinture, bords égaux, à 1 cm",
     ],
     [
-      "Ourlez chaque jambe à 3 cm.",
+      "Repliez le bord libre de la ceinture et surpiquez dans la gouttière, puis ourlez chaque jambe à 3 cm.",
       "Devant",
       undefined,
       undefined,
-      "Finitions : ourlets des deux jambes",
+      "Finitions : surpiqûre de ceinture dans la gouttière + ourlets des jambes",
     ],
   ],
   large: [
     [
-      "Assemblez les devants au milieu, endroit contre endroit.",
+      "Surfilez les pièces. Piquez les pinces du devant et des dos.",
       "Devant",
+      undefined,
+      undefined,
+      "Coutures de préparation : pinces de taille",
+    ],
+    [
+      "Prenez un dos et le devant : assemblez l'entrejambe gauche, de la fourche à l'ourlet.",
       "Devant",
+      "Dos",
       "ll",
-      "Milieu devant : fourche ↔ fourche",
+      "Entrejambe gauche : bord du dos ↔ bord du devant, à 1,5 cm",
     ],
     [
-      "Fermez le côté droit, devant contre dos, d'un seul geste.",
+      "Prenez le second dos : assemblez l'entrejambe droit, d'un seul geste.",
       "Devant",
-      "Dos",
+      "Dos ·2",
       "rl",
-      "Côté droit : bord du devant ↔ bord du dos, de la taille à l'ourlet",
+      "Entrejambe droit : bord du dos ↔ bord du devant, à 1,5 cm",
     ],
     [
-      "Assemblez les deux dos au milieu.",
-      "Dos",
-      "Dos",
-      "rr",
-      "Milieu dos : fourche ↔ fourche, puis entrejambe",
+      "Assemblez le milieu dos, puis montez la fermeture invisible.",
+      "Dos ·2",
+      undefined,
+      undefined,
+      "Milieu dos : couture à 1,5 cm + fermeture invisible",
     ],
     [
-      "Posez la ceinture.",
+      "Ceinture montée : entoilée et pliée en deux, appliquez-la endroit contre endroit sur la taille.",
       "Devant",
       "Ceinture",
-      "tt",
-      "Taille : haut du pantalon ↔ ceinture",
+      "tc",
+      "Taille : haut du pantalon ↔ ceinture, bords égaux, à 1 cm",
     ],
     [
-      "Ourlez à 4 cm : un ourlet profond accentue le tombé.",
+      "Surpiquez la ceinture dans la gouttière, puis ourlez à 4 cm : un ourlet profond donne le tombé.",
       "Devant",
       undefined,
       undefined,
-      "Finitions : ourlets profonds des deux jambes",
+      "Finitions : surpiqûre de ceinture + ourlets profonds des deux jambes",
     ],
   ],
   tshirt: [
