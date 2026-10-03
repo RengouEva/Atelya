@@ -236,3 +236,20 @@ Work Log:
 Stage Summary:
 - Le parcours pédagogique s'appuie désormais sur de VRAIES photos d'atelier générées par IA : plis de tissu → épingler → découper → réunir les petites pièces → coudre, chaque geste illustré, expliqué et ancré dans l'UI (badges Geste 3/4 sur la découpe, bandeau Geste 5 sur la couture).
 - Fichiers clés : public/ai/j-*.png (5 photos), scripts/fabric-journey-images.ts, src/components/atelier/fabric-journey.tsx (nouveau), src/components/studio/step-cutting.tsx, src/components/studio/step-assembly.tsx.
+
+---
+Task ID: 14
+Agent: Super Z (main)
+Task: « Le site ne s'affiche toujours pas » — diagnostic de l'accès au site et correction pour que l'ancien lien affiche la nouvelle app.
+
+Work Log:
+- Diagnostic : serveur dev opérationnel (GET / 200), HTML racine = app Atelya (titre correct), pas de service worker dans le code, GitHub Pages hors cause (404 sur rengoueva.github.io, aucune branche gh-pages — seul main existe sur origin).
+- Journal du serveur (dev.log) : la seule requête navigateur hors health-checks était GET /download/atelier-coupe.html → 404. Cause identifiée : l'utilisateur ouvre l'ANCIEN lien du fichier HTML supprimé, qui renvoyait une page vide (404). L'app elle-même fonctionne (capture check-home.png impeccable).
+- Correctif : next.config.ts — 4 redirections 301 permanentes vers « / » : /download/atelier-coupe.html, /download/atelier-coupe, /atelier-coupe.html, /download. Tout ancien lien/bookmark ouvre désormais l'app Next.js.
+- Redémarrage dev (PID killé + .zscripts/dev.sh), vérifié : / → 200 ; anciens chemins → 308 location: /.
+- QA navigateur : ouverture directe de l'ancien URL /download/atelier-coupe.html → atterrit sur / et affiche la landing Atelya complète (capture check-redirect.png).
+- Commit a7946d3 poussé sur origin/main (83a781e..a7946d3).
+
+Stage Summary:
+- Le site n'a jamais cessé de fonctionner : c'est l'ancien LIEN (fichier HTML supprimé) qui renvoyait 404. Désormais tout ancien lien redirige automatiquement vers l'app — le problème d'affichage est résolu à la source.
+- Si l'utilisateur voit encore une page en cache : faire un rechargement forcé (Ctrl+Shift+R) ou vider le cache du navigateur.
