@@ -6,6 +6,7 @@ import {
   ImagePlus,
   Loader2,
   MousePointerClick,
+  Puzzle,
   RotateCcw,
   Ruler,
   Scissors,
@@ -18,6 +19,7 @@ import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { FabricJourney } from "@/components/atelier/fabric-journey";
 import { FabricTable } from "@/components/atelier/fabric-table";
 import { ModelIcon, PieceMini, ProgressRing } from "@/components/atelier/pieces";
 import { GarmentPreview } from "@/components/atelier/garment-preview";
@@ -157,6 +159,9 @@ export function StepCutting({
         </div>
       </div>
 
+      {/* La méthode réelle en 5 gestes — vraies photos */}
+      <FabricJourney />
+
       {/* Plan de coupe */}
       <section
         aria-label="Plan de coupe"
@@ -167,6 +172,13 @@ export function StepCutting({
             <Scissors className="size-4 text-primary" />
             Plan de placement
           </div>
+          <Badge
+            variant="outline"
+            className="gap-1.5 rounded-full border-primary/40 bg-primary/10 font-normal text-primary"
+          >
+            <Scissors className="size-3.5" />
+            Geste 3 · Découper
+          </Badge>
           <Badge
             variant="outline"
             className="gap-1.5 rounded-full border-border/80 bg-background font-normal"
@@ -225,13 +237,22 @@ export function StepCutting({
           aria-label="Les pièces à couper"
           className="card-luxe rounded-2xl border border-border/70 bg-card"
         >
-          <header className="border-b border-border/60 px-5 py-4">
-            <h3 className="font-display text-[17px] font-bold">
-              Toutes les pièces nécessaires
-            </h3>
-            <p className="text-xs text-muted-foreground">
-              Nomenclature A, B, C… avec dimensions réelles
-            </p>
+          <header className="flex flex-wrap items-center gap-2.5 border-b border-border/60 px-5 py-4">
+            <div className="w-full">
+              <h3 className="font-display text-[17px] font-bold">
+                Toutes les pièces nécessaires
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                Nomenclature A, B, C… avec dimensions réelles
+              </p>
+            </div>
+            <Badge
+              variant="outline"
+              className="gap-1.5 rounded-full border-primary/40 bg-primary/10 font-normal text-primary"
+            >
+              <Puzzle className="size-3.5" />
+              Geste 4 · Réunir
+            </Badge>
           </header>
           <div className="grid grid-cols-2 gap-3 p-5 sm:grid-cols-3">
             {defs.map((p, i) => (

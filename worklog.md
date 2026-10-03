@@ -219,3 +219,20 @@ Work Log:
 Stage Summary:
 - L'assemblage est devenu un vrai flat-lay photographique : tissu texturé réel, ombres, étiquettes blanches type patron, surpiqûres or, tapis quadrillé — l'esprit exact des planches de référence fournies.
 - Fichiers clés : src/components/atelier/pieces.tsx (rendu tissu + PieceTag), src/components/atelier/sewing-studio.tsx (tapis, ombres, topstitch).
+
+---
+Task ID: 13
+Agent: Super Z (main)
+Task: « Oui vrai photo de tissu IA. Et les assemblages doivent être en étapes et les découpe de tissus aussi. Partant des plis de tissus puis découper, puis reunir les petits et coudre » — parcours photo réaliste en 5 gestes.
+
+Work Log:
+- Généré 5 photos IA réalistes cohérentes (1152×864, scripts/fabric-journey-images.ts, SDK z-ai) : même tissu bleu roi, même table bois sombre, même lumière de fenêtre — j-plis (tissu plié + mètre doré), j-epingle (patron papier épinglé), j-decoupe (ciseaux tailleur le long du patron), j-reunir (pièces coupées empilées + étiquette + fil doré), j-coudre (machine à coudre, mains, surpiqûre). Prompts en anglais (convention modèles d'image, non visibles dans l'UI).
+- Nouveau composant src/components/atelier/fabric-journey.tsx : carrousel pédagogique « La méthode en 5 gestes — du tissu plié au vêtement cousu » — grande photo (4/3 mobile, 16/9 desktop), badge Geste N/5, titre en overlay, flèches ‹ ›, description détaillée + 3 puces conseils par geste, pastilles cliquables des 5 gestes (active or/primary, faites en primaire doux), transition framer-motion (fade + léger zoom), préchargement des images, clavier ← →, cta contextuel au geste 5 renvoyant vers le plan de coupe et l'atelier.
+- step-cutting.tsx : section FabricJourney insérée entre le résumé et le plan de coupe ; badges « Geste 3 · Découper » (plan de placement) et « Geste 4 · Réunir » (nomenclature) pour ancrer chaque section dans le parcours.
+- step-assembly.tsx : bandeau photo j-coudre en tête de carte — badge « Geste 5/5 » + « Les petites pièces réunies, il ne reste qu'à coudre — une couture à la fois » — continuité visuelle entre découpe et couture.
+- QA : ESLint 0 erreur ; E2E mobile 390 px — parcours projet pantalon (exemple → variantes IA → patron 4 pièces → découpe : gestes 1/3/5 navigués, badges vérifiés, tout couper → assemblage : bandeau Geste 5/5, couture n°1 cousue, plan de montage Devant+Dos→A | A+Dos→B | B+Ceinture→C intact) ; mode sombre vérifié (journey + badges + bandeau) ; desktop 1440 px vérifié ; console 0 erreur.
+- Captures QA : scripts/t11-j1.png, t11-j3.png, t11-j5.png, t11-plan.png, t11-asm-banner.png, t11-sew1.png, t11-dark-journey.png, t11-dark-j2.png, t11-desktop-j.png, t11-desktop-plan.png.
+
+Stage Summary:
+- Le parcours pédagogique s'appuie désormais sur de VRAIES photos d'atelier générées par IA : plis de tissu → épingler → découper → réunir les petites pièces → coudre, chaque geste illustré, expliqué et ancré dans l'UI (badges Geste 3/4 sur la découpe, bandeau Geste 5 sur la couture).
+- Fichiers clés : public/ai/j-*.png (5 photos), scripts/fabric-journey-images.ts, src/components/atelier/fabric-journey.tsx (nouveau), src/components/studio/step-cutting.tsx, src/components/studio/step-assembly.tsx.
