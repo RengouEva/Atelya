@@ -203,3 +203,19 @@ Work Log:
 Stage Summary:
 - L'assemblage suit désormais la logique couture réelle : aucun modèle n'assemble deux pièces identiques de devant, l'ordre est séquentiel (préparation → assemblages → ceinture → finitions), la ceinture est une vraie ceinture montée centrée, et les scènes ne superposent plus les pièces.
 - Fichiers clés : src/lib/atelier/patterns.ts (pantsFrontFold + ASM), src/components/atelier/sewing-studio.tsx (jonction tc + seamType + fallback ancre), src/components/atelier/fabric-table.tsx (pli central).
+
+---
+Task ID: 12
+Agent: Super Z (main)
+Task: « Je vous ai donné des images. Inspirez-vous-en pour des assemblages pro. Cette application ne sert à rien sans assemblage visuel » — refonte du RENDU VISUEL de l'atelier de couture d'après les 10 captures de référence (patrons + pas-à-pas photo type « Pola & Jahit »).
+
+Work Log:
+- Analyse des 10 images upload/ : pièces en VRAI tissu posé à plat (texturé, ombres), étiquettes blanches numérotées, assemblage progressif photographié étape par étape, surpiqûres contrastées (or sur denim), tapis/papier quadrillé, vêtement fini sur mannequin.
+- pieces.tsx réécrit : rendu TOILE RÉALISTE — motif SVG tissage (trame croisée + sergé diagonal 45° + point jacquard) teinté par le coloris choisi, éclairage douc haut-gauche (dégradé), assombrissement du bord (bord coupé + pli de marge), surpiqûre en fil contrasté calculée par luminance (crème sur tissu foncé, navy sur tissu clair), ombre portée au sol (feDropShadow) + variante « pièce soulevée » pendant le drag ; utilitaires shade()/luminance() ; nouvelles étiquettes PieceTag (pastille blanche cerclée, façon patron pro) avec ombre.
+- sewing-studio.tsx : tapis de coupe quadrillé dessiné en coordonnées réelles (maille 5 cm + accent 10 cm, s'agrandit physiquement avec le zoom), pièces posées avec ombre, pièce mobile soulevée (ombre élargie) pendant le glisser, pièces en attente présentées à plat opacité 0,94 (fini le clignotement fantôme), coutures verrouillées restylées en surpiqûre or façon topstitch avec ombre de pli, conteneur scène avec profondeur (inset shadow).
+- QA : ESLint 0 erreur ; parcours E2E pantalon complet (exemple → variantes → sélection → patron → tout couper → assemblage 6/6 avec pédale) — sous-ensemble A or, pantalon plat complet avec ceinture C en haut + surpiqûres or visibles, habit final sur mannequin ; galerie de pièces en tissu cohérente ; mode sombre (tissu navy sur tapis navy, or ressort) ; desktop 1440 px avec plan de montage coché ; console 0 erreur.
+- Captures QA : scripts/v2-asm-*.png, v2-cut-*.png.
+
+Stage Summary:
+- L'assemblage est devenu un vrai flat-lay photographique : tissu texturé réel, ombres, étiquettes blanches type patron, surpiqûres or, tapis quadrillé — l'esprit exact des planches de référence fournies.
+- Fichiers clés : src/components/atelier/pieces.tsx (rendu tissu + PieceTag), src/components/atelier/sewing-studio.tsx (tapis, ombres, topstitch).

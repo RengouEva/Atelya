@@ -31,7 +31,7 @@ import {
   type ModelKey,
   type PieceDef,
 } from "@/lib/atelier/patterns";
-import { PiecePaths } from "@/components/atelier/pieces";
+import { PiecePaths, PieceTag } from "@/components/atelier/pieces";
 import { MannequinView } from "@/components/atelier/mannequin";
 import { cn } from "@/lib/utils";
 
@@ -364,27 +364,30 @@ function seamValue(s: AsmStep): string {
 /* ------------------------------------------------------------------ */
 
 function SeamLocked({ s, strong }: { s: SeamMark; strong?: boolean }) {
-  const len = Math.hypot(s.x2 - s.x1, s.y2 - s.y1);
-  const n = Math.max(3, Math.round(len / 2.4));
-  const dots = Array.from({ length: n - 1 }, (_, i) => {
-    const t = (i + 1) / n;
-    return [lerp(s.x1, s.x2, t), lerp(s.y1, s.y2, t)] as const;
-  });
   return (
-    <g opacity={strong ? 1 : 0.45}>
+    <g opacity={strong ? 1 : 0.5}>
+      {/* ombre du pli de couture */}
       <line
         x1={s.x1}
         y1={s.y1}
         x2={s.x2}
         y2={s.y2}
-        stroke="var(--primary)"
-        strokeWidth={strong ? 0.6 : 0.45}
-        strokeDasharray="1.2 0.9"
+        stroke="#0c1533"
+        strokeOpacity=".2"
+        strokeWidth=".9"
         strokeLinecap="round"
       />
-      {dots.map(([x, y], i) => (
-        <circle key={i} cx={x} cy={y} r={strong ? 0.34 : 0.26} fill="var(--primary)" />
-      ))}
+      {/* surpiqûre or façon topstitch */}
+      <line
+        x1={s.x1}
+        y1={s.y1}
+        x2={s.x2}
+        y2={s.y2}
+        stroke="var(--gold-deep)"
+        strokeWidth=".5"
+        strokeDasharray="1.05 .72"
+        strokeLinecap="round"
+      />
     </g>
   );
 }
@@ -1146,8 +1149,8 @@ export function SewingStudio({
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_270px]">
         <div className="flex flex-col gap-3">
-          {/* scène */}
-          <div className="overflow-hidden rounded-xl border border-border/60 bg-[var(--table)]">
+          {/* scène — table d'atelier */}
+          <div className="overflow-hidden rounded-xl border border-border/60 bg-[var(--table)] shadow-[inset_0_2px_16px_rgba(12,21,51,0.12)]">
             {isFinal ? (
               <div className="flex flex-col items-center gap-2 bg-gradient-to-b from-[var(--table)] to-background px-4 py-5">
                 <MannequinView
@@ -1187,32 +1190,49 @@ export function SewingStudio({
                 role="img"
                 aria-label={`Couture, étape ${idx + 1}`}
               >
+                {/* tapis de coupe quadrillé (maille 5 cm, accent 10 cm) */}
+                <defs>
+                  <pattern id="asm-mat5" width="5" height="5" patternUnits="userSpaceOnUse">
+                    <rect width="5" height="5" fill="var(--table)" />
+                    <path d="M5 0V5H0" fill="none" stroke="var(--foreground)" strokeOpacity=".06" strokeWidth=".12" />
+                  </pattern>
+                  <pattern id="asm-mat10" width="10" height="10" patternUnits="userSpaceOnUse">
+                    <path d="M10 0V10H0" fill="none" stroke="var(--foreground)" strokeOpacity=".08" strokeWidth=".18" />
+                  </pattern>
+                </defs>
+                <rect
+                  x={r1(box[0])}
+                  y={r1(box[1])}
+                  width={r1(box[2] - box[0])}
+                  height={r1(box[3] - box[1])}
+                  fill="url(#asm-mat5)"
+                />
+                <rect
+                  x={r1(box[0])}
+                  y={r1(box[1])}
+                  width={r1(box[2] - box[0])}
+                  height={r1(box[3] - box[1])}
+                  fill="url(#asm-mat10)"
+                />
+
                 {/* pièces déjà assemblées */}
                 {scene?.insts.map((inst, k) => (
                   <g key={`p${k}`}>
                     <g
                       transform={`translate(${r1(inst.tx)} ${r1(inst.ty)}) scale(${inst.sx} ${inst.sy})`}
                     >
-                      <PiecePaths p={inst.def} fc={fc} sa={sa} />
+                      <PiecePaths p={inst.def} fc={fc} sa={sa} shadow />
                     </g>
-                    <text
+                    <PieceTag
                       x={r1(inst.tx + (inst.sx * inst.def.w) / 2)}
-                      y={r1(inst.ty + (inst.sy * inst.def.h) / 2 + 1)}
-                      fontSize={Math.max(2.4, Math.min(inst.def.w, inst.def.h) / 8)}
-                      textAnchor="middle"
-                      fill="var(--foreground)"
-                      fillOpacity=".8"
-                      fontFamily="var(--font-sans)"
-                      fontWeight={700}
-                      stroke="var(--background)"
-                      strokeWidth=".4"
-                      style={{ paintOrder: "stroke" }}
-                    >
-                      {LETTERS[inst.di]}
-                      {scene.insts.filter((x) => x.di === inst.di).length > 1
-                        ? `·${inst.occ}`
-                        : ""}
-                    </text>
+                      y={r1(inst.ty + (inst.sy * inst.def.h) / 2)}
+                      label={
+                        LETTERS[inst.di] +
+                        (scene.insts.filter((x) => x.di === inst.di).length > 1
+                          ? `·${inst.occ}`
+                          : "")
+                      }
+                    />
                   </g>
                 ))}
 
@@ -1256,30 +1276,21 @@ export function SewingStudio({
                   </text>
                 )}
 
-                {/* pièces en attente */}
+                {/* pièces en attente — posées à plat sur la table */}
                 {pendingOthers.map((p, k) => (
-                  <motion.g
+                  <g
                     key={`w${k}`}
                     transform={`translate(${r1(p.px)} ${r1(p.py)})`}
-                    initial={{ opacity: 0.25 }}
-                    animate={{ opacity: [0.22, 0.42, 0.22] }}
-                    transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                    opacity=".94"
                   >
-                    <PiecePaths p={p.def} fc={fc} sa={sa} seam={false} />
-                    <text
+                    <PiecePaths p={p.def} fc={fc} sa={sa} shadow />
+                    <PieceTag
                       x={r1(p.def.w / 2)}
-                      y={r1(p.def.h / 2 + 1)}
-                      fontSize={Math.max(2.4, Math.min(p.def.w, p.def.h) / 8)}
-                      textAnchor="middle"
-                      fill="var(--foreground)"
-                      fillOpacity=".75"
-                      fontFamily="var(--font-sans)"
-                      fontWeight={600}
-                    >
-                      {LETTERS[p.di]}
-                      {p.occ > 1 ? `·${p.occ}` : ""}
-                    </text>
-                  </motion.g>
+                      y={r1(p.def.h / 2)}
+                      label={LETTERS[p.di] + (p.occ > 1 ? `·${p.occ}` : "")}
+                      muted
+                    />
+                  </g>
                 ))}
 
                 {/* pièce mobile à assembler */}
@@ -1295,7 +1306,7 @@ export function SewingStudio({
                       touchAction: "none",
                     }}
                   >
-                    <PiecePaths p={moverDef} fc={fc} sa={sa} opacity={0.95} />
+                    <PiecePaths p={moverDef} fc={fc} sa={sa} shadow lifted={dragging} />
                     {phase === "place" && help && (
                       <rect
                         x={-1}
@@ -1310,21 +1321,11 @@ export function SewingStudio({
                         className="asm-hl"
                       />
                     )}
-                    <text
+                    <PieceTag
                       x={r1(moverDef.w / 2)}
-                      y={r1(moverDef.h / 2 + 1)}
-                      fontSize={Math.max(2.4, Math.min(moverDef.w, moverDef.h) / 8)}
-                      textAnchor="middle"
-                      fill="var(--foreground)"
-                      fillOpacity=".8"
-                      fontFamily="var(--font-sans)"
-                      fontWeight={700}
-                      stroke="var(--background)"
-                      strokeWidth=".4"
-                      style={{ paintOrder: "stroke" }}
-                    >
-                      {LETTERS[defs.indexOf(moverDef)]}
-                    </text>
+                      y={r1(moverDef.h / 2)}
+                      label={LETTERS[defs.indexOf(moverDef)]}
+                    />
                   </g>
                 )}
 
