@@ -253,3 +253,22 @@ Work Log:
 Stage Summary:
 - Le site n'a jamais cessé de fonctionner : c'est l'ancien LIEN (fichier HTML supprimé) qui renvoyait 404. Désormais tout ancien lien redirige automatiquement vers l'app — le problème d'affichage est résolu à la source.
 - Si l'utilisateur voit encore une page en cache : faire un rechargement forcé (Ctrl+Shift+R) ou vider le cache du navigateur.
+
+---
+Task ID: 15
+Agent: Super Z (main)
+Task: « Voilà à peu près mon idée dans cette image » — référence affiche « De la pièce de tissu au produit fini » (veste) : transposer ce guide d'assemblage pédagogique dans l'atelier.
+
+Work Log:
+- Analysé la référence : pièces numérotées + légende avec quantités, cartes d'étapes numérotées (pièces + flèche → résultat), carte « Résultat final », bandeau « Récapitulatif de l'assemblage global », tagline rassurante.
+- Choix structurant : version 100 % dynamique (SVG des vraies pièces du patron + GarmentPreview) plutôt que photos IA figées — le guide s'adapte aux 17 modèles et aux couleurs de tissu choisies.
+- Nouveau composant src/components/atelier/assembly-guide.tsx : en-tête affiche + sticker or, zone « Les pièces du patronage » (minis numérotées 1..N + légende ×q · au pli), « Le résultat final » (GarmentPreview), « LE PAS-À-PAS — N étapes » (cartes : pastille numérotée colorée, titre court dérivé de l'étape ASM, ligne « Pièces X + Y · noms », visuel pièce + pièce → flèche → pastille sous-ensemble A/B/C… ou ciseaux pour préparations, consigne, badge type de couture + valeur cm), carte finale or « Résultat final » avec vêtement, récapitulatif horizontal scrollable [2+1→A] + [2+1→B]… → « Votre {modèle} ! », tagline.
+- Cohérence assurée : les lettres A–D des sous-ensembles du guide correspondent exactement au Plan de montage de l'atelier interactif (vérifié visuellement).
+- step-assembly.tsx : AssemblyGuide inséré entre le bandeau photo Geste 5/5 et l'atelier interactif (header déplacé après le guide, bordure haute).
+- Correctifs en cours de route : icône Needle inexistante dans lucide-react → Info ; accords de genre (« une blazer » → suppression de l'article, « bien assemblé » → « Vos pièces réunies avec soin ») ; coquille « prenez son temps » → « prenez votre temps ».
+- QA : ESLint 0 erreur ; E2E réel complet (photo exemple « Veste test » → 3 variantes IA générées → sélection → patron → découpe → assemblage) ; captures mobile (3 sections), récap, desktop 1440 (2 vues), mode sombre (2 vues) — tout est propre, aucun chevauchement, contraste OK.
+
+Stage Summary:
+- L'étape Assemblage affiche désormais un guide complet façon affiche pédagogique AVANT l'atelier interactif : pièces numérotées → pas-à-pas en cartes → récapitulatif global, exactement l'idée de la référence, en dynamique pour tous les modèles.
+- Fichiers : src/components/atelier/assembly-guide.tsx (nouveau, ~470 l.), src/components/studio/step-assembly.tsx. Commit 26aff4b poussé sur origin/main.
+- Captures QA : scripts/t14-guide-m1/m2/m3.png, t14-recap-m.png, t14-desktop-1/2.png, t14-dark-1/2.png.
