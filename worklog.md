@@ -184,3 +184,22 @@ Work Log:
 Stage Summary:
 - Retour à l'état « comme c'était » (Task 7) : héros navy avec la photo d'atelier en fond, logo transparent flottant sans carte ni encadré ; la carte claire #F1F4FC n'existe plus.
 - Fichiers clés : src/components/landing/landing.tsx, src/app/globals.css, src/components/studio/studio-app.tsx (restaurés du commit d835e38) ; assets carte supprimés.
+
+---
+Task ID: 11
+Agent: Super Z (main)
+Task: Refonte pédagogique de l'assemblage — « un néophyte doit pouvoir suivre : pièce 1 + 2 on assemble, puis 3, pas de superposition inutile, ne jamais assembler 2 devantures de pantalon ; même la ceinture » + recherche web de méthodes de qualité. 10 captures de référence fournies (patrons + pas-à-pas).
+
+Work Log:
+- Recherche web (4 requêtes) : ordre de montage pantalon (entrejambe d'abord puis côtés, préparation des pièces), ceinture montée (entoiler, plier en deux, appliquer endroit contre endroit, surpiquer dans la gouttière), montage jupe/haut.
+- patterns.ts : nouveau pantsFrontFold — devant de pantalon ENTIER coupé au pli (2 jambes d'une seule tenue, creux de fourche central, tracé normalisé 0..w, flag foldMid) ; pantalon/short/large = Devant au pli ×1 + Dos ×2 + ceinture (4 pièces, métrage 1,25 m en 140) ; FOLD mis à jour.
+- ASM réécrits pantalon/short/large (6 étapes) : pinces → entrejambe gauche (Devant+Dos ll) → entrejambe droit (Devant+Dos·2 rl) → milieu dos/fermeture (montage) → ceinture montée (tc) → surpiqûre gouttière + ourlets. Plus AUCUNE jonction devant+devant ou dos+dos ; ordre strictement séquentiel.
+- Ceintures des 6 jupes/short upgradeées : junction tc (nouvelle : au-dessus, CENTRÉE sur l'ancre) + texte méthode complète (entoilée, pliée endos contre endos, appliquée e.c.e., surpiquée dans la gouttière).
+- sewing-studio.tsx : placeJoin/seamFor/apartPos supportent tc ; fallback d'ancre placé à un emplacement libre (fini le (0,0) qui empilait les pièces en superposition) ; seamType réécrit (les étapes avec pièce mobile = Assemblage/Ceinture, priorité fermez/côtés/milieu dos → Montage, ourlet ensuite) — l'étape entrejambe n'est plus étiquetée « Ourlet ».
+- fabric-table.tsx : label « pli » positionné au milieu pour les pièces foldMid.
+- QA : test-assembly-plan.ts OK sur les 17 modèles (pantalon : Devant + Dos → A | A + Dos → B | B + Ceinture → C) ; ESLint 0 ; E2E navigateur complet sur projet pantalon (exemple → variantes IA 3/3 → sélection → patron 4 pièces 1,25 m → coupe → assemblage interactif 6/6 coutures via boutons) : devant entier à fourche centrale + 2 dos de part et d'autre, ceinture centrée à la taille, vêtement fini sur mannequin ; console 0 erreur. Captures vérifiées.
+- Commit 1de0eed + push GitHub (main 4e0e670..1de0eed).
+
+Stage Summary:
+- L'assemblage suit désormais la logique couture réelle : aucun modèle n'assemble deux pièces identiques de devant, l'ordre est séquentiel (préparation → assemblages → ceinture → finitions), la ceinture est une vraie ceinture montée centrée, et les scènes ne superposent plus les pièces.
+- Fichiers clés : src/lib/atelier/patterns.ts (pantsFrontFold + ASM), src/components/atelier/sewing-studio.tsx (jonction tc + seamType + fallback ancre), src/components/atelier/fabric-table.tsx (pli central).
