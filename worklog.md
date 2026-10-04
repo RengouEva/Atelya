@@ -272,3 +272,22 @@ Stage Summary:
 - L'étape Assemblage affiche désormais un guide complet façon affiche pédagogique AVANT l'atelier interactif : pièces numérotées → pas-à-pas en cartes → récapitulatif global, exactement l'idée de la référence, en dynamique pour tous les modèles.
 - Fichiers : src/components/atelier/assembly-guide.tsx (nouveau, ~470 l.), src/components/studio/step-assembly.tsx. Commit 26aff4b poussé sur origin/main.
 - Captures QA : scripts/t14-guide-m1/m2/m3.png, t14-recap-m.png, t14-desktop-1/2.png, t14-dark-1/2.png.
+
+---
+Task ID: 16
+Agent: Super Z (main)
+Task: « Il y a trop de détails inutiles. L'application doit être simple : modèle-patronage-méthode d'assemblage visuelle afin d'obtenir l'habit. C'est tout. » — simplification radicale du parcours.
+
+Work Log:
+- Restructuré studio-app.tsx : 4 étapes → 3 (Modèle / Patronage / Assemblage) ; la sous-vue variantes IA vit désormais dans l'étape Modèle (projectId déclenche l'affichage, plus de step dédié) ; stepper grid-cols-3, icônes Camera/Ruler/GitMerge.
+- Nouveau src/components/studio/step-patronage.tsx : en-tête cohérent avec le bandeau (X pièces à découper, Y numérotées), carte « Les pièces à découper » (minis numérotées 1..N + lettre + dims + ×q + au pli), carte « Placement sur le tissu » (FabricTable statique, métrage en badge, alerte laize), CTA unique « Voir la méthode d'assemblage ». Aucune interaction de coupe.
+- step-assembly.tsx réécrit (78 → ~70 l.) : AssemblyGuide seul (la méthode visuelle du poster) + bloc final « L'habit est prêt » (photo IA de la variante visée + texte + badge Prêt à porter). Supprimés : bandeau photo j-coudre, SewingStudio interactif (1485 l.), plan de montage interactif.
+- Supprimés du dépôt : src/components/atelier/fabric-journey.tsx, src/components/atelier/sewing-studio.tsx, src/components/studio/step-cutting.tsx (orphelins, -2000 lignes). NumPiece/NumBadge exportés depuis assembly-guide.tsx pour réutilisation.
+- landing.tsx : « Quatre gestes suffisent » → « Trois gestes suffisent » (3 cartes : Le modèle / Le patronage / L'assemblage), workflow mini du hero aligné (Modèle → Patronage → Assemblage), sous-titre « Variantes IA · patron sur mesures · assemblage guidé », imports nettoyés.
+- QA E2E réel complet : projet « Veste simple » → exemple → 3 variantes IA → sélection → validation → Patronage (capture) → CTA → Assemblage (guide + L'habit est prêt, captures) ; desktop 1440 et mode sombre vérifiés ; ESLint 0 erreur.
+- Note technique QA : inputs React contrôlés → passer par le setter natif HTMLInputElement.prototype.value avant dispatchEvent('input').
+
+Stage Summary:
+- L'app tient désormais en exactement la demande : Modèle (photo + 3 variantes IA) → Patronage (pièces numérotées + placement + métrage) → Méthode d'assemblage visuelle (guide poster) → L'habit. Plus aucune simulation, plus de badges gestes, plus de carrousel.
+- Commit aa10aa0 poussé (26aff4b..aa10aa0) : 8 fichiers, +231/−2167.
+- Captures : scripts/t15-patronage-m.png, t15-asm-m1/m2.png, t15-desktop-asm.png, t15-dark-end.png.
