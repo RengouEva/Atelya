@@ -326,3 +326,21 @@ Work Log:
 
 Stage Summary:
 - L'application fonctionne intégralement. Le « site ne s'ouvre pas » constaté côté utilisateur provient de l'URL utilisée (ancien lien de session précédente ou cache navigateur), pas de l'app. Conseil donné : ouvrir le lien de prévisualisation de la session en cours + rechargement forcé (Ctrl+Shift+R).
+
+---
+Task ID: 19
+Agent: Super Z (main)
+Task: « Le site ne s'affiche pas en local » — l'utilisateur lance le projet depuis son propre machine via le dépôt GitHub.
+
+Work Log:
+- Cause racine trouvée : le .env committé dans le dépôt (dès le commit initial) pointait vers un chemin ABSOLU de l'environnement de dev (file:/home/z/my-project/db/custom.db). Sur toute autre machine, Prisma ne trouve pas la base → le site ne s'affiche pas. Aucun README ni modèle d'env n'existait.
+- Correctifs : .env → DATABASE_URL=file:../db/custom.db (chemin relatif au dossier prisma/, portable toutes machines) ; testé CLI (db:push in sync) ET runtime (API /api/studio renvoie les données).
+- package.json : script dev simplifié en « next dev -p 3000 » (le pipe tee cassait npm run dev sous Windows cmd).
+- Ajouts : README.md (guide FR complet : prérequis Node 20+, clone, install npm/bun, db:push, dev, utilisation 3 gestes, notes IA/dépannage) ; .env.example ; exception !.env.example dans .gitignore.
+- Base committée nettoyée (34 AiVisual, 19 StudioProject, 1 Client supprimés via scripts/clean-db.ts) → le dépôt livre une base vierge.
+- Commit 8715f3f poussé (2fa1afb..8715f3f).
+- Validation en conditions réelles : clonage frais dans scripts/clone-test → bun install OK, git pull (correctifs), db:push « in sync », next dev port 3001 → GET / 200 + API {"projects":[]}. Serveur de test tué, clone supprimé.
+- Site principal re-vérifié après redémarrage : 200, page d'accueil rendue (capture scripts/t18-clone-fresh-ok.png).
+
+Stage Summary:
+- Le dépôt GitHub est désormais autoportant : un clone frais + install + db:push + dev fonctionne sur n'importe quelle machine (Windows/macOS/Linux). Le blocage « ne s'affiche pas en local » était le chemin de base absolu dans le .env committé — corrigé, testé, poussé.
