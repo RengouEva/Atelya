@@ -6,9 +6,8 @@ import {
   ArrowDown,
   Camera,
   ChevronRight,
-  Hand,
-  Images,
-  Scissors,
+  Ruler,
+  Shirt,
   Sparkles,
 } from "lucide-react";
 
@@ -106,7 +105,7 @@ function Splash({ onOpen }: { onOpen: () => void }) {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="mt-2.5 text-sm text-white/65 sm:text-[15px]"
         >
-          Variantes IA · patron sur mesures · découpe · assemblage
+          Variantes IA · patron sur mesures · assemblage guidé
         </motion.p>
 
         <motion.div
@@ -133,17 +132,16 @@ function Splash({ onOpen }: { onOpen: () => void }) {
           className="mt-10 flex max-w-full flex-wrap items-center justify-center gap-x-1.5 gap-y-1.5 text-[10.5px] font-semibold uppercase tracking-wider text-white/55 sm:gap-x-2.5 sm:text-xs"
         >
           {[
-            { icon: Camera, t: "Photo" },
-            { icon: Sparkles, t: "Variantes" },
-            { icon: Scissors, t: "Découpe" },
-            { icon: Hand, t: "Couture" },
+            { icon: Camera, t: "Modèle" },
+            { icon: Ruler, t: "Patronage" },
+            { icon: Shirt, t: "Assemblage" },
           ].map((s, i) => (
             <React.Fragment key={s.t}>
               <li className="flex items-center gap-1.5">
                 <s.icon className="size-3.5 text-[#F0C243]" />
                 {s.t}
               </li>
-              {i < 3 && <ChevronRight className="size-3 text-white/30" aria-hidden="true" />}
+              {i < 2 && <ChevronRight className="size-3 text-white/30" aria-hidden="true" />}
             </React.Fragment>
           ))}
         </motion.ol>
@@ -165,29 +163,24 @@ function Splash({ onOpen }: { onOpen: () => void }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Parcours — 4 gestes                                                 */
+/* Parcours — 3 gestes                                                 */
 /* ------------------------------------------------------------------ */
 
 const FLOW = [
   {
     icon: Camera,
-    t: "Une photo",
-    d: "Le modèle dépose la photo de sa création.",
+    t: "Le modèle",
+    d: "Une photo, trois propositions IA portées sur mannequin.",
   },
   {
-    icon: Sparkles,
-    t: "3 variantes",
-    d: "L'IA habille le mannequin de trois interprétations.",
+    icon: Ruler,
+    t: "Le patronage",
+    d: "Les pièces calculées sur vos mesures, placées sur le tissu.",
   },
   {
-    icon: Scissors,
-    t: "La découpe",
-    d: "Toutes les pièces du patron, placées sur le tissu.",
-  },
-  {
-    icon: Hand,
-    t: "La couture",
-    d: "Cousez chaque zone guidée : pièces, sous-ensembles, vêtement fini.",
+    icon: Shirt,
+    t: "L'assemblage",
+    d: "La méthode visuelle, étape par étape, jusqu'à l'habit.",
   },
 ];
 
@@ -200,11 +193,11 @@ function Parcours() {
             Le parcours
           </p>
           <h2 className="mt-1.5 font-display text-3xl font-bold sm:text-4xl">
-            Quatre gestes suffisent
+            Trois gestes suffisent
           </h2>
         </motion.div>
 
-        <ol className="snap-row mt-9 flex gap-3.5 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-4">
+        <ol className="snap-row mt-9 flex gap-3.5 overflow-x-auto pb-2 sm:grid sm:grid-cols-3 sm:overflow-visible">
           {FLOW.map((s, i) => (
             <motion.li
               key={s.t}

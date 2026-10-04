@@ -91,7 +91,7 @@ function seamValue(s: AsmStep): string {
 }
 
 /* Pastille numérotée d'une pièce */
-function NumBadge({
+export function NumBadge({
   n,
   className,
 }: {
@@ -113,7 +113,7 @@ function NumBadge({
 }
 
 /* Mini pièce avec pastille numérotée par-dessus */
-function NumPiece({
+export function NumPiece({
   def,
   num,
   fc,

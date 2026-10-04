@@ -9,7 +9,7 @@ import {
   Loader2,
   Plus,
   RotateCcw,
-  Scissors,
+  Ruler,
   Sparkles,
   GitMerge,
 } from "lucide-react";
@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { StepCreate } from "@/components/studio/step-create";
 import { StepVariants } from "@/components/studio/step-variants";
-import { StepCutting } from "@/components/studio/step-cutting";
+import { StepPatronage } from "@/components/studio/step-patronage";
 import { StepAssembly } from "@/components/studio/step-assembly";
 import { MODELS, buildLayout, meterage } from "@/lib/atelier/patterns";
 import {
@@ -31,18 +31,17 @@ import {
 } from "@/lib/studio/config";
 
 const STEP_LABELS = [
-  { icon: Camera, t: "Photo" },
-  { icon: Sparkles, t: "Variantes" },
-  { icon: Scissors, t: "Découpe" },
+  { icon: Camera, t: "Modèle" },
+  { icon: Ruler, t: "Patronage" },
   { icon: GitMerge, t: "Assemblage" },
 ];
 
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 
 /**
- * Studio Atelya — parcours mobile-first en 4 gestes :
- * ① photo ② 3 variantes IA ③ découpe ④ assemblage.
- * Une seule colonne, un stepper compact, droit au but.
+ * Studio Atelya — parcours mobile-first en 3 gestes :
+ * ① modèle (photo + variantes IA) ② patronage ③ méthode d'assemblage visuelle
+ * jusqu'à l'habit. Une seule colonne, un stepper compact, droit au but.
  */
 export function StudioApp({ onHome }: { onHome: () => void }) {
   const [step, setStep] = React.useState(0);
@@ -100,7 +99,6 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
       const j = (await r.json()) as { project?: { id: string }; error?: string };
       if (!r.ok || !j.project) throw new Error(j.error ?? "Création impossible.");
       setProjectId(j.project.id);
-      setStep(1);
       toast.success("Projet créé — l'IA compose vos 3 variantes.");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Création impossible.");
@@ -175,7 +173,7 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
         aria-label="Étapes du parcours"
         className="sticky top-14 z-30 border-b border-border/60 bg-background/90 backdrop-blur-md"
       >
-        <ol className="mx-auto grid w-full max-w-3xl grid-cols-4 px-3 py-2 sm:px-4">
+        <ol className="mx-auto grid w-full max-w-3xl grid-cols-3 px-3 py-2 sm:px-4">
           {STEP_LABELS.map((s, i) => {
             const Icon = s.icon;
             const active = i === step;
@@ -228,7 +226,7 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
       </nav>
 
       {/* Récapitulatif projet — bandeau fin */}
-      {photo && step > 0 && (
+      {photo && projectId && (
         <div className="mx-auto w-full max-w-3xl px-3 pt-3 sm:px-4">
           <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-card px-3.5 py-2.5 card-luxe">
             { }
@@ -260,7 +258,7 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
 
       {/* Contenu de l'étape — une colonne */}
       <main className="mx-auto w-full max-w-3xl flex-1 px-3 pb-[max(3.5rem,env(safe-area-inset-bottom))] pt-4 sm:px-4">
-        {step === 0 && (
+        {step === 0 && !projectId && (
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
@@ -280,7 +278,7 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
             />
           </motion.div>
         )}
-        {step === 1 && photo && (
+        {step === 0 && projectId && photo && (
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
@@ -294,26 +292,25 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
               selected={selected}
               onSelected={setSelected}
               projectId={projectId}
-              onContinue={() => goStep(2)}
+              onContinue={() => goStep(1)}
             />
           </motion.div>
         )}
-        {step === 2 && (
+        {step === 1 && (
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, ease: "easeOut" }}
           >
-            <StepCutting
+            <StepPatronage
               modelKey={modelKey}
               mm={mm}
               measures={measures}
-              variant={selectedVariant}
-              onContinue={() => goStep(3)}
+              onContinue={() => goStep(2)}
             />
           </motion.div>
         )}
-        {step === 3 && (
+        {step === 2 && (
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
@@ -325,10 +322,11 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
               defs={defs}
               fc={measures.C}
               sa={measures.S || 0}
+              variantUrl={selectedVariant?.url ?? null}
             />
           </motion.div>
         )}
-        {step === 1 && !photo && (
+        {step === 0 && projectId && !photo && (
           <div className="grid place-items-center rounded-2xl border border-dashed border-border p-12 text-sm text-muted-foreground">
             <Loader2 className="mb-2 size-5 animate-spin" />
             Chargement du projet…
@@ -336,7 +334,7 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
         )}
 
         {/* Nouveau projet — fin de parcours */}
-        {step === 3 && (
+        {step === 2 && (
           <div className="mt-6 flex justify-center">
             <Button
               variant="outline"
