@@ -311,3 +311,18 @@ Stage Summary:
 - Fichiers : src/components/atelier/assembly-diagram.tsx (nouveau), src/components/atelier/assembly-guide.tsx. Commit 2fa1afb poussé sur origin/main (aa10aa0..2fa1afb).
 - Captures : scripts/t17-asm-1/2/3-m.png, t17-ceinture-m.png, t17-recap-m.png, t17-asm-desktop1/2.png, t17-dark1/2.png, t17-blazer1/2.png, t17-robe1/1b.png.
 - Rappel persistant : le PAT GitHub reste exposé en clair — le régénérer.
+
+---
+Task ID: 18
+Agent: Super Z (main)
+Task: « Le site ne s'ouvre pas » — diagnostic d'accessibilité après les Tasks 16-17.
+
+Work Log:
+- curl localhost:3000 → 200 ; GET /download/atelier-coupe.html → 308 vers / (redirections Task 14 actives) ; GET /download → 308.
+- dev.log : aucune erreur (grep error/failed/ECONN vide) ; requêtes API studio récentes toutes 200/201.
+- Vérifié git : les deux directives sont bien commitées et poussées (aa10aa0 simplification 3 gestes, 2fa1afb schémas d'assemblage techniques).
+- QA navigateur réel (agent-browser, viewport 390×844) : page d'accueil rendue parfaitement (logo Atelya, « D'une photo, au vêtement fini. », CTA « Ouvrir l'atelier », workflow Modèle → Patronage → Assemblage) ; 0 erreur console. Capture : scripts/t18-home-check.png.
+- ss -tlnp : next-server écoute sur *:3000 (toutes interfaces) → le proxy de prévisualisation externe peut joindre l'app.
+
+Stage Summary:
+- L'application fonctionne intégralement. Le « site ne s'ouvre pas » constaté côté utilisateur provient de l'URL utilisée (ancien lien de session précédente ou cache navigateur), pas de l'app. Conseil donné : ouvrir le lien de prévisualisation de la session en cours + rechargement forcé (Ctrl+Shift+R).
