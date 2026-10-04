@@ -291,3 +291,23 @@ Stage Summary:
 - L'app tient désormais en exactement la demande : Modèle (photo + 3 variantes IA) → Patronage (pièces numérotées + placement + métrage) → Méthode d'assemblage visuelle (guide poster) → L'habit. Plus aucune simulation, plus de badges gestes, plus de carrousel.
 - Commit aa10aa0 poussé (26aff4b..aa10aa0) : 8 fichiers, +231/−2167.
 - Captures : scripts/t15-patronage-m.png, t15-asm-m1/m2.png, t15-desktop-asm.png, t15-dark-end.png.
+
+---
+Task ID: 17
+Agent: Super Z (main)
+Task: « Le problème réside sur l'assemblage : on doit voir comment l'assemblage se fait, comment on place ceinture par exemple… Inspire-toi sur https://fr.scribd.com/presentation/861185608/12B-LE-PATRONAGE » — rendre la méthode d'assemblage réellement visible et explicite.
+
+Work Log:
+- Scribd inaccessible en direct (403 sur open/JSONP/embed) ; page_reader a fourni la fiche du document : cours de patronage (rôle du modéliste, moulage, tracé à plat, VALEURS DE COUTURE, ajustements) → inspiration retenue : schémas techniques pédagogiques (pièces en position, épingles, ligne de couture à la bonne valeur).
+- Constat : la simplification (Task 16, commit aa10aa0) était déjà faite ; le guide affichait des miniatures abstraites (pièce + pièce → flèche) qui ne montrent PAS le montage.
+- Récupéré depuis git (26aff4b) la logique de placement de l'ancien atelier interactif (placeJoin/seamFor, sémantique des jonctions ll/rr/rl/tt/tc/bt/ct) et reconstruit un moteur de schéma statique propre.
+- Nouveau src/components/atelier/assembly-diagram.tsx (~380 l.) : AssemblyDiagram — SVG technique par étape composé des VRAIES pièces du patron (PiecePaths, texture tissu) : ancre à l'origine, pièce mobile placée selon le type de jonction (miroir gauche/droite, bord sans miroir, miroir au-dessus, centré au-dessus = CEINTURE, en dessous, centré dessus = ceinture nouée) ; vue éclatée avec écart de 3 cm ; épingles dorées en travers du bord de jonction (3 par couture) ; double pointillé rose = ligne de couture à la valeur (sa) à l'intérieur de chaque bord ; flèche de montage courbe (marker auto) de la pièce mobile vers l'ancre ; étiquette blanche de la couture (Côtés, Taille, Épaules, Emmanchure…) au milieu du bord ; pastilles numérotées à l'échelle. Glyphes de préparation : pince (V + pointe), ourlet (pliable + flèche), fermeture (tirette + trait, bord gauche si milieu dos), fronce (2 fils), plis, biais (courbe encolure).
+- assembly-guide.tsx : le visuel miniature de chaque carte du pas-à-pas est remplacé par le schéma technique (h-44/sm:h-52) ; ajout du détail de couture (s[4] après « : ») sous la consigne avec icône CornerDownRight ; badge « Endroit contre endroit » (détection e.c.e./bord contre bord) ; légende des symboles sous le titre du pas-à-pas ; Scissors retiré des imports.
+- QA E2E réelle × 3 modèles (3 parcours complets avec génération IA) : Pantalon (ll, rl, tc CEINTURE au-dessus de la taille avec flèche descendante + étiquette Taille, fermeture, ourlet), Blazer (ll/rr épaule+côté, manches ll/rr emmanchures, ourlet), Robe (tt épaules en sablier, biais encolure, ourlet) ; captures mobile 390 (guide, ceinture, récap), desktop 1440 (2 vues), mode sombre (2 vues). Ajustement post-capture : étiquette de couture agrandie (fontSize 3, h 4,6) pour la robe. Aucun chevauchement, lisible partout ; dev.log sans erreur ; ESLint 0 erreur.
+- Note : le kimono (jonction ct, ceinture nouée) n'est pas exposé par le studio (5 familles : robe/jupe/pantalon/haut/veste) mais le code le gère.
+
+Stage Summary:
+- L'étape Assemblage montre désormais COMMENT ça se monte : chaque carte est un schéma technique à l'échelle des vraies pièces — on VOIT la ceinture se poser sur la taille (flèche + épingles + ligne de couture + « Taille »), les côtés/épaules/manches se rejoindre, les pinces/ourlets/fermetures se dessiner. Esprit cours de patronage (12B) transposé en dynamique pour tous les modèles.
+- Fichiers : src/components/atelier/assembly-diagram.tsx (nouveau), src/components/atelier/assembly-guide.tsx. Commit 2fa1afb poussé sur origin/main (aa10aa0..2fa1afb).
+- Captures : scripts/t17-asm-1/2/3-m.png, t17-ceinture-m.png, t17-recap-m.png, t17-asm-desktop1/2.png, t17-dark1/2.png, t17-blazer1/2.png, t17-robe1/1b.png.
+- Rappel persistant : le PAT GitHub reste exposé en clair — le régénérer.
