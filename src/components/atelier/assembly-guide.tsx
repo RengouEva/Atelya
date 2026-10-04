@@ -1,15 +1,17 @@
 import {
   ArrowRight,
   BadgeCheck,
+  CornerDownRight,
   Info,
   ListOrdered,
   Plus,
-  Scissors,
   Sparkles,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { GarmentPreview } from "@/components/atelier/garment-preview";
+import { AssemblyDiagram } from "@/components/atelier/assembly-diagram";
+import type { PrepKind } from "@/components/atelier/assembly-diagram";
 import { PieceMini } from "@/components/atelier/pieces";
 import { ASM, MODELS } from "@/lib/atelier/patterns";
 import type {
@@ -90,6 +92,39 @@ function seamValue(s: AsmStep): string {
   return m ? `${m[1].replace(".", ",")} cm` : "1 cm";
 }
 
+/* Découpe du détail de couture « Label : consigne précise » */
+function seamSplit(s: AsmStep): { label: string | null; rest: string | null } {
+  const d = s[4];
+  if (!d) return { label: null, rest: null };
+  const i = d.indexOf(" : ");
+  return i > 0
+    ? { label: d.slice(0, i), rest: d.slice(i + 3) }
+    : { label: null, rest: d };
+}
+
+/* « Endroit contre endroit » à signaler sur la carte */
+const oceOf = (s: AsmStep) =>
+  /endroit contre endroit|e\. c\. e\.|bord contre bord/i.test(
+    `${s[0]} ${s[4] ?? ""}`,
+  );
+
+/* Glyphe de préparation adapté à l'étape (pince, ourlet…) */
+function prepKind(s: AsmStep): PrepKind | null {
+  if (s[2]) return null;
+  const t = `${s[0]} ${s[4] ?? ""}`.toLowerCase();
+  if (/pince/.test(t)) return "pince";
+  if (/fronce/.test(t)) return "fronce";
+  if (/fermeture|fente/.test(t)) return "fermeture";
+  if (/biais|encolure/.test(t)) return "biais";
+  if (/plis|pli plat|chaque pli/.test(t)) return "plis";
+  if (/ourlet|roulott/.test(t)) return "ourlet";
+  return null;
+}
+
+/* Fermeture au milieu (dos/ devant) : le trait va sur le bord gauche */
+const milieuOf = (s: AsmStep) =>
+  /milieu dos|milieu devant/.test(`${s[0]} ${s[4] ?? ""}`);
+
 /* Pastille numérotée d'une pièce */
 export function NumBadge({
   n,
@@ -165,19 +200,22 @@ export function AssemblyGuide({
   const model = MODELS[modelKey];
   const steps = ASM[modelKey];
 
-  /* Métadonnées par étape : type, pièces concernées, lettre de sous-ensemble */
+  /* Métadonnées par étape : type, pièces concernées, lettre, annotations */
   let joinCount = 0;
   const metas = steps.map((s) => {
     const isJoin = Boolean(s[2] && s[3]);
     const anchor = s[1] ? defFor(defs, parseRef(s[1]).base) : null;
     const mover = s[2] ? defFor(defs, parseRef(s[2]).base) : null;
-    const meta = {
+    const sp = seamSplit(s);
+    return {
       isJoin,
       letter: isJoin ? String.fromCharCode(65 + joinCount++) : null,
       anchor,
       mover,
+      label: sp.label,
+      rest: sp.rest,
+      oce: oceOf(s),
     };
-    return meta;
   });
 
   const numFor = (d: PieceDef | null) =>
@@ -269,10 +307,16 @@ export function AssemblyGuide({
 
       {/* Zone 2 : les étapes numérotées */}
       <section aria-label="Guide d'assemblage pas à pas">
-        <h3 className="mb-2.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-          <ListOrdered />
-          Le pas-à-pas — {steps.length + 1} étapes
-        </h3>
+        <div className="mb-2.5 flex flex-wrap items-center gap-x-3 gap-y-1">
+          <h3 className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+            <ListOrdered />
+            Le pas-à-pas — {steps.length + 1} étapes
+          </h3>
+          <p className="text-[10.5px] text-muted-foreground">
+            Dans chaque schéma : épingles dorées aux bords, pointillé rose =
+            ligne de couture, flèche = la pièce vient se placer.
+          </p>
+        </div>
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {steps.map((s, i) => {
             const meta = metas[i];
@@ -306,42 +350,48 @@ export function AssemblyGuide({
                   {meta.letter && <SubChip letter={meta.letter} />}
                 </div>
 
-                <div className="mt-3 flex min-h-[68px] items-center gap-2 rounded-lg bg-accent/25 px-3 py-2">
-                  {meta.anchor && (
-                    <NumPiece
-                      def={meta.anchor}
-                      num={numA}
+                {/* Schéma technique : on voit comment les pièces se placent */}
+                <div className="mt-3 overflow-hidden rounded-lg bg-accent/25 p-1.5">
+                  {meta.isJoin && meta.anchor && meta.mover ? (
+                    <AssemblyDiagram
+                      anchor={meta.anchor}
+                      mover={meta.mover}
+                      join={s[3] ?? null}
                       fc={fc}
                       sa={sa}
-                      size="h-12"
+                      numA={numA}
+                      numB={numB}
+                      seamLabel={meta.label ?? undefined}
+                      className="h-44 w-full sm:h-52"
                     />
-                  )}
-                  {meta.mover && (
-                    <>
-                      <Plus className="size-3.5 shrink-0 text-muted-foreground" />
-                      <NumPiece
-                        def={meta.mover}
-                        num={numB}
+                  ) : (
+                    meta.anchor && (
+                      <AssemblyDiagram
+                        anchor={meta.anchor}
+                        mover={null}
+                        join={null}
                         fc={fc}
                         sa={sa}
-                        size="h-12"
+                        numA={numA}
+                        numB={0}
+                        prep={prepKind(s)}
+                        milieu={milieuOf(s)}
+                        className="h-40 w-full sm:h-44"
                       />
-                    </>
-                  )}
-                  <ArrowRight className="size-4 shrink-0 text-primary" />
-                  {meta.letter ? (
-                    <SubChip letter={meta.letter} />
-                  ) : (
-                    <span className="grid size-6 shrink-0 place-items-center rounded-md bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300">
-                      <Scissors className="size-3.5" />
-                    </span>
+                    )
                   )}
                 </div>
 
                 <p className="mt-2.5 text-xs leading-relaxed text-muted-foreground">
                   {s[0]}
                 </p>
-                <div className="mt-auto flex items-center gap-2 pt-2.5">
+                {meta.rest && (
+                  <p className="mt-1 flex items-start gap-1 text-[11px] leading-snug text-muted-foreground/90">
+                    <CornerDownRight className="mt-0.5 size-3 shrink-0 text-primary/70" />
+                    <span>{meta.rest}</span>
+                  </p>
+                )}
+                <div className="mt-auto flex flex-wrap items-center gap-2 pt-2.5">
                   <Badge
                     variant="outline"
                     className="rounded-full border-border/80 bg-card px-2 py-0.5 text-[10px] font-normal"
@@ -351,6 +401,11 @@ export function AssemblyGuide({
                   <span className="text-[10.5px] tabular-nums text-muted-foreground">
                     {seamValue(s)}
                   </span>
+                  {meta.oce && (
+                    <Badge className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold text-primary">
+                      Endroit contre endroit
+                    </Badge>
+                  )}
                 </div>
               </div>
             );
