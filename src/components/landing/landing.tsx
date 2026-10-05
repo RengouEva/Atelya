@@ -340,6 +340,12 @@ function Footer({ onOpen }: { onOpen: () => void }) {
         </p>
         <p className="text-[11px] text-muted-foreground">
           © {new Date().getFullYear()} Atelya — atelier IA
+          <a
+            href="/admin"
+            className="ml-3 underline decoration-border underline-offset-4 transition hover:text-foreground"
+          >
+            Espace atelier
+          </a>
         </p>
       </div>
     </footer>

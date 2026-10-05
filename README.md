@@ -58,6 +58,12 @@ Puis ouvrez **http://localhost:3000** dans votre navigateur.
 2. **Le patronage** — l'application calcule les pièces du patron sur vos mesures : chaque pièce est dessinée à l'échelle, numérotée, avec les quantités, le placement sur la laize du tissu et le métrage total.
 3. **L'assemblage** — suivez la méthode visuelle pas à pas : chaque étape montre les pièces réelles en position, les épingles, la ligne de couture à la bonne valeur, et les préparations (pinces, ourlets, fermetures, fronces). À la fin : votre vêtement.
 
+## Espace atelier (exemples validés)
+
+L'encadrement dispose d'un espace dédié : **http://localhost:3000/admin** (lien discret « Espace atelier » en bas de l'accueil). Un code d'accès y est demandé — par défaut `atelya-atelier`, modifiable dans le fichier `.env` (`ADMIN_CODE=…`).
+
+Depuis cet espace, l'encadrement publie des **exemples de référence** : photo du vêtement fini, famille, mesures de référence, coloris et une note pédagogique facultative. Ces exemples apparaissent dans l'atelier des apprentis sous la mention « Validés par l'encadrement » : en un appui, la photo et les mesures sont reprises telles quelles et le parcours va droit au patronage puis à la méthode d'assemblage — sans interprétation IA, pour garantir la qualité pédagogique. Deux exemples de démonstration sont pré-chargés.
+
 ## Notes
 
 - **Variantes IA** : la génération d'images utilise le SDK `z-ai-web-dev-sdk`, disponible dans l'environnement d'exécution z.ai. En local, tout le parcours fonctionne, mais la génération des variantes IA nécessite cet environnement (les images déjà générées restent consultables depuis la base).

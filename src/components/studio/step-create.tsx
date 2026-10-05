@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ImagePlus, Loader2, Ruler, Shirt, Sparkles, Upload, X } from "lucide-react";
+import { BadgeCheck, ImagePlus, Loader2, Ruler, Shirt, Sparkles, Upload, X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,9 @@ import {
   DEFAULT_MEASURES,
   FABRIC_PRESETS,
   FAMILIES,
+  familyByKey,
   type FamilyKey,
+  type StudioExample,
   type StudioMeasures,
 } from "@/lib/studio/config";
 
@@ -26,7 +28,8 @@ const MEASURE_FIELDS: { key: keyof StudioMeasures; label: string; hint: string }
 
 /**
  * Étape 01 — le styliste dépose la photo du modèle, choisit la famille
- * du vêtement et saisit les mesures de la cliente.
+ * du vêtement et saisit les mesures de la cliente — ou part d'un exemple
+ * validé par l'atelier (galerie publiée par l'encadrement).
  */
 export function StepCreate({
   name,
@@ -39,6 +42,8 @@ export function StepCreate({
   onMeasures,
   busy,
   onSubmit,
+  examples = [],
+  onUseExample,
 }: {
   name: string;
   onName: (v: string) => void;
@@ -50,6 +55,10 @@ export function StepCreate({
   onMeasures: (m: StudioMeasures) => void;
   busy: boolean;
   onSubmit: () => void;
+  /** Exemples publiés par l'atelier (galerie « validé par l'encadrement »). */
+  examples?: StudioExample[];
+  /** Utilise un exemple tel quel : photo + mesures de l'atelier. */
+  onUseExample?: (ex: StudioExample) => void;
 }) {
   const [dropping, setDropping] = React.useState(false);
   const [loadingPhoto, setLoadingPhoto] = React.useState(false);
@@ -79,6 +88,7 @@ export function StepCreate({
   };
 
   return (
+    <div className="flex flex-col gap-5">
     <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
       {/* Colonne photo */}
       <div className="flex flex-col gap-5">
@@ -311,6 +321,53 @@ export function StepCreate({
           ensuite conservées avec le projet.
         </p>
       </div>
+    </div>
+
+    {/* Galerie des exemples validés par l'atelier — partez d'une base sûre */}
+    {examples.length > 0 && onUseExample && (
+      <section aria-label="Exemples de l'atelier" className="card-luxe rounded-2xl border border-primary/25 bg-card p-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <BadgeCheck className="size-4 text-primary" />
+          <h2 className="font-display text-[15px] font-bold">Exemples de l&apos;atelier</h2>
+          <Badge variant="secondary" className="rounded-full bg-accent text-accent-foreground">
+            Validés par l&apos;encadrement
+          </Badge>
+          <span className="ml-auto text-[11px] text-muted-foreground">
+            Touchez un exemple : photo et mesures sont reprises telles quelles
+          </span>
+        </div>
+        <ul className="mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1">
+          {examples.map((ex) => (
+            <li key={ex.id} className="w-[150px] shrink-0 snap-start">
+              <button
+                onClick={() => onUseExample(ex)}
+                disabled={busy}
+                className="group block w-full overflow-hidden rounded-xl border border-border/70 bg-accent/30 text-left outline-none ring-primary/50 transition focus-visible:ring-2 hover:-translate-y-0.5 hover:border-primary/50 disabled:opacity-50"
+              >
+                <span className="relative block aspect-[3/4] overflow-hidden">
+                  {/* exemple validé par l'atelier */}
+                  <img
+                    src={ex.photo}
+                    alt={`Exemple atelier : ${ex.name}`}
+                    className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                  />
+                  <span className="absolute left-1.5 top-1.5 grid size-5 place-items-center rounded-full bg-primary text-primary-foreground shadow-sm">
+                    <BadgeCheck className="size-3" />
+                  </span>
+                </span>
+                <span className="block px-2 py-1.5">
+                  <span className="block truncate text-[12px] font-bold">{ex.name}</span>
+                  <span className="block truncate text-[10px] text-muted-foreground">
+                    {familyByKey(ex.family).label}
+                    {ex.note ? ` · ${ex.note}` : ""}
+                  </span>
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
     </div>
   );
 }

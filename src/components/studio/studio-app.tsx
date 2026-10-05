@@ -26,6 +26,7 @@ import {
   DEFAULT_MEASURES,
   familyByKey,
   type FamilyKey,
+  type StudioExample,
   type StudioMeasures,
   type StudioVariant,
 } from "@/lib/studio/config";
@@ -61,6 +62,15 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
     null,
   ]);
   const [selected, setSelected] = React.useState(-1);
+
+  /* exemples validés par l'atelier (publiés via /admin) */
+  const [examples, setExamples] = React.useState<StudioExample[]>([]);
+  React.useEffect(() => {
+    fetch("/api/examples")
+      .then((r) => (r.ok ? r.json() : { examples: [] }))
+      .then((j: { examples?: StudioExample[] }) => setExamples(j.examples ?? []))
+      .catch(() => setExamples([]));
+  }, []);
 
   /* dérivés du patron (étapes 3 & 4) */
   const modelKey = familyByKey(family).model;
@@ -100,6 +110,38 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
       if (!r.ok || !j.project) throw new Error(j.error ?? "Création impossible.");
       setProjectId(j.project.id);
       toast.success("Projet créé — l'IA compose vos 3 variantes.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Création impossible.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  /* Exemple de l'atelier : photo et mesures de référence reprises telles
+     quelles — pas d'interprétation IA, on va droit au patronage. */
+  const applyExample = async (ex: StudioExample) => {
+    if (busy) return;
+    setBusy(true);
+    try {
+      const r = await fetch("/api/studio", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: ex.name,
+          photo: ex.photo,
+          family: ex.family,
+          measures: ex.measures,
+        }),
+      });
+      const j = (await r.json()) as { project?: { id: string }; error?: string };
+      if (!r.ok || !j.project) throw new Error(j.error ?? "Création impossible.");
+      setName(ex.name);
+      setPhoto(ex.photo);
+      setFamily(ex.family as FamilyKey);
+      setMeasures(ex.measures);
+      setProjectId(j.project.id);
+      setStep(1);
+      toast.success("Exemple de l'atelier chargé — patronage établi sur ses mesures.");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Création impossible.");
     } finally {
@@ -275,6 +317,8 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
               onMeasures={setMeasures}
               busy={busy}
               onSubmit={() => void createProject()}
+              examples={examples}
+              onUseExample={(ex) => void applyExample(ex)}
             />
           </motion.div>
         )}
@@ -322,7 +366,7 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
               defs={defs}
               fc={measures.C}
               sa={measures.S || 0}
-              variantUrl={selectedVariant?.url ?? null}
+              variantUrl={selectedVariant?.url ?? photo}
             />
           </motion.div>
         )}
@@ -352,6 +396,12 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
         <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
           Créez&nbsp;&nbsp;•&nbsp;&nbsp;Mesurez&nbsp;&nbsp;•&nbsp;&nbsp;Réalisez
         </p>
+        <a
+          href="/admin"
+          className="mt-1.5 inline-block text-[11px] text-muted-foreground underline decoration-border underline-offset-4 transition hover:text-foreground"
+        >
+          Espace atelier
+        </a>
       </footer>
     </div>
   );

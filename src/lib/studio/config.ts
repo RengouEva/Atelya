@@ -119,6 +119,16 @@ export interface StudioMeasures {
   C: string;
 }
 
+/** Un exemple validé par l'atelier (publié par l'encadrement via /admin). */
+export interface StudioExample {
+  id: string;
+  name: string;
+  photo: string;
+  family: string;
+  measures: StudioMeasures;
+  note: string | null;
+}
+
 export const DEFAULT_MEASURES: StudioMeasures = {
   P: 90,
   T: 70,

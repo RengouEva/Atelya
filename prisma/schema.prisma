@@ -56,3 +56,20 @@ model StudioProject {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+/// Exemple validé par l'atelier : l'encadrement dépose la photo du
+/// vêtement, la famille et les mesures de référence. Les apprentis
+/// partent de ces modèles garantis au lieu d'une photo quelconque.
+model Example {
+  id        String   @id @default(cuid())
+  name      String
+  /// Photo de référence du vêtement (JPEG réduite, base64)
+  photo     String
+  /// Famille de vêtement (robe | jupe | pantalon | haut | veste)
+  family    String
+  /// Mesures JSON {P,T,H,L,W,S,C}
+  measures  String
+  /// Note pédagogique de l'atelier (facultative)
+  note      String?
+  createdAt DateTime @default(now())
+}
