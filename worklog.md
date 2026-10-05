@@ -366,3 +366,19 @@ Work Log:
 
 Stage Summary:
 - L'app a désormais une boucle pédagogique complète : l'encadrement capitalise son savoir-faire en exemples validés (/admin), les apprentis s'exercent sur des références sûres en un appui, et gardent le parcours IA pour leurs propres photos. Code atelier par défaut : atelya-atelier (modifiable dans .env).
+
+---
+Task ID: 21
+Agent: Super Z (principal)
+Task: Audit complet de l'application Atelya (code, sécurité, build, BDD, QA runtime)
+
+Work Log:
+- Inventaire : arborescence complète, git propre sur main (HEAD b2bed69), .env + db/custom.db + worklog.md suivis par git.
+- Analyse statique : ESLint src/ = 0 erreur ; tsc --noEmit = 11 erreurs (4 dans src/ : onVariants mal typée x2 step-variants.tsx L64/L163 — runtime OK car setVariants passé, generate.ts L47 size: string au lieu de l'union ; 7 dans artefacts de dev scripts/examples/skills inclus par tsconfig **/*.ts).
+- Build production : succès exit 0, 12 routes ; MAIS next.config.ts ignoreBuildErrors:true masque les erreurs TS.
+- Sécurité : ADMIN_CODE=atelya-atelier public dans .env commité ; fallback code en dur dans lib/admin/auth.ts ; cookie admin httpOnly+sameSite lax mais sans secure ; routes /api/studio et /api/clients publiques (lecture/écriture sans auth) ; npm audit = 35 vulnérabilités (2 critiques sharp/libvips+libheif, 22 high, uuid moderate) ; package-lock généré pour l'audit puis supprimé.
+- BDD : prisma validate OK, db push in sync ; contenu = 0 clients, 1 projet test, 2 exemples démo, 0 aiVisuals ; 6,1 Mo.
+- QA runtime (agent-browser) : toutes routes 200 ; parcours mobile complet exemple atelier → patronage (2 pièces, 1,97 m) → assemblage, 0 erreur console ; galerie « Exemples de l'atelier » présente avec badge validé ; admin : mauvais code rejeté (toast), bon code accepté, formulaire publication + suppression listés ; mode sombre et desktop 1440 vérifiés. Captures scripts/audit-*.png.
+
+Stage Summary:
+- App globalement saine et fonctionnelle ; aucun blocage. Action prioritaire n°1 : retirer .env du git et changer le code admin ; n°2 : npm audit fix + maj sharp ; n°3 : corriger les 4 erreurs TS src/ et activer le typage au build (ignoreBuildErrors:false) en excluant scripts/examples/skills du tsconfig ; n°4 : ajouter secure:true au cookie en prod ; protéger /api/clients si déploiement multi-utilisateurs.
