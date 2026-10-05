@@ -1,7 +1,7 @@
 /**
- * Studio — configuration du parcours styliste :
- * familles de vêtements (→ modèle paramétrique) et directions
- * des 3 variantes proposées par l'IA (image-edit).
+ * Studio — configuration partagée du parcours :
+ * familles de vêtements (→ modèles paramétriques du patronage),
+ * mesures du projet et presets de coloris.
  */
 
 import type { ModelKey } from "@/lib/atelier/patterns";
@@ -15,98 +15,22 @@ export interface FamilyDef {
   model: ModelKey;
   /** longueur par défaut (cm) */
   L: number;
-  /** description anglaise pour les prompts IA */
-  en: string;
 }
 
 export const FAMILIES: FamilyDef[] = [
-  {
-    key: "robe",
-    label: "Robe",
-    model: "robe",
-    L: 90,
-    en: "a dress",
-  },
-  {
-    key: "jupe",
-    label: "Jupe",
-    model: "evasee",
-    L: 60,
-    en: "a skirt",
-  },
-  {
-    key: "pantalon",
-    label: "Pantalon",
-    model: "pantalon",
-    L: 100,
-    en: "a pair of trousers",
-  },
-  {
-    key: "haut",
-    label: "Haut / Blouse",
-    model: "tunique",
-    L: 70,
-    en: "a top / blouse",
-  },
-  {
-    key: "veste",
-    label: "Veste",
-    model: "blazer",
-    L: 65,
-    en: "a jacket",
-  },
+  { key: "robe", label: "Robe", model: "robe", L: 90 },
+  { key: "jupe", label: "Jupe", model: "evasee", L: 60 },
+  { key: "pantalon", label: "Pantalon", model: "pantalon", L: 100 },
+  { key: "haut", label: "Haut / Blouse", model: "tunique", L: 70 },
+  { key: "veste", label: "Veste", model: "blazer", L: 65 },
 ];
 
 export const familyByKey = (k: string): FamilyDef =>
   FAMILIES.find((f) => f.key === k) ?? FAMILIES[0];
 
-export interface DirectionDef {
-  /** libellé affiché */
-  label: string;
-  /** description affichée */
-  desc: string;
-  /** consigne envoyée à l'IA d'édition d'image (anglais) */
-  prompt: string;
-}
-
-/** Les 3 directions de variation proposées à partir de la photo. */
-export const DIRECTIONS: DirectionDef[] = [
-  {
-    label: "Longue & fluide",
-    desc: "La pièce s'allonge : ligne élégante, tombé souple, allure de soirée.",
-    prompt:
-      "redesign it as a LONGER, flowing, elegant version with a soft drape and refined evening allure, keeping the same fabric, colors and style identity",
-  },
-  {
-    label: "Courte & moderne",
-    desc: "Version raccourcie : lignes nettes, esprit contemporain, facile à porter.",
-    prompt:
-      "redesign it as a SHORTER, cleaner, contemporary version with crisp minimalist lines and a modern everyday look, keeping the same fabric, colors and style identity",
-  },
-  {
-    label: "Détailée & raffinée",
-    desc: "Version travaillée : poches, ceinture contrastée et surpiqûres décoratives.",
-    prompt:
-      "redesign it as a MORE DETAILED, refined couture version with patch pockets, a contrasting waistband or belt and decorative topstitching, keeping the same fabric, colors and style identity",
-  },
-];
-
-/** Prompt de mise en scène commun : le vêtement porté sur mannequin. */
-export const MANNEQUIN_SCENE =
-  "Show this exact garment as a finished, well-tailored piece displayed on a vintage tailor's dress-form mannequin, standing in a bright haute-couture atelier with soft daylight from large windows, wooden work table blurred in the background. Professional studio photography, photorealistic, high quality, detailed, full garment visible";
-
 /* ------------------------------------------------------------------ */
 /* Types partagés client / serveur                                     */
 /* ------------------------------------------------------------------ */
-
-/** Une variante IA proposée à partir de la photo. */
-export interface StudioVariant {
-  sig: string;
-  url: string;
-  label: string;
-  desc: string;
-  direction: number;
-}
 
 /** Mesures du projet (cm) + laize, marge, coloris. */
 export interface StudioMeasures {
@@ -119,16 +43,6 @@ export interface StudioMeasures {
   C: string;
 }
 
-/** Un exemple validé par l'atelier (publié par l'encadrement via /admin). */
-export interface StudioExample {
-  id: string;
-  name: string;
-  photo: string;
-  family: string;
-  measures: StudioMeasures;
-  note: string | null;
-}
-
 export const DEFAULT_MEASURES: StudioMeasures = {
   P: 90,
   T: 70,
@@ -139,7 +53,7 @@ export const DEFAULT_MEASURES: StudioMeasures = {
   C: "#2A9DB5",
 };
 
-/** Presets de coloris pour le tissu du plan de coupe. */
+/** Presets de coloris pour le tissu. */
 export const FABRIC_PRESETS = [
   "#2A9DB5",
   "#C96F4A",

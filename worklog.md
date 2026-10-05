@@ -382,3 +382,25 @@ Work Log:
 
 Stage Summary:
 - App globalement saine et fonctionnelle ; aucun blocage. Action prioritaire n°1 : retirer .env du git et changer le code admin ; n°2 : npm audit fix + maj sharp ; n°3 : corriger les 4 erreurs TS src/ et activer le typage au build (ignoreBuildErrors:false) en excluant scripts/examples/skills du tsconfig ; n°4 : ajouter secure:true au cookie en prod ; protéger /api/clients si déploiement multi-utilisateurs.
+
+---
+Task ID: 22
+Agent: Super Z (principal)
+Task: Nouveau workflow — catalogue admin par catégorie + confection 3D, suppression des variantes IA
+
+Work Log:
+- Schéma Prisma refondu : GarmentModel (photo, catégorie, mesures de base, forme 3D, pièces admin, assemblage admin, accessoires, published) + StudioProject repensé (modelId, mesures, accessoires) ; tables AiVisual et Example supprimées ; photos des 2 exemples extraits vers public/models/ avant migration.
+- lib/atelier/garments.ts créé : 6 catégories (robe, jupe, pantalon, tshirt, chemise, veste), catalogue accessoires (bouton, fermeture, rivet, ceinture, poche, nœud), AdminPiece→PieceDef (tracés SVG : trapeze/rect/sleeve/pant/band), mise à l'échelle des pièces aux mesures (ws/hs bornés), gabarits pièces+assemblage par catégorie.
+- API : /api/models (GET public, ?all=1 admin ; POST admin) + /api/models/[id] (GET/PUT/DELETE admin) ; /api/studio réécrit (POST {name, modelId, measures, accessories}) ; routes IA supprimées (variant, pieces, image/[sig], examples) + lib/ai, generate.ts, step-variants, step-create ; config.ts nettoyé (DIRECTIONS, StudioVariant, MANNEQUIN_SCENE retirés).
+- Confection 3D (garment-3d.tsx, r3f v9 + three 0.186) : vêtement paramétrique par catégorie (lathe profiles, manches cylindres, cols round/v/shirt/lapel), mannequin de couturier (buste lin + pilier + embase bois), accessoires positionnés (boutons cylindres, zip segments+curseur, rivets sphères, ceinture torus+boucle, poches, nœud), MeshPhysicalMaterial sheen DoubleSide, ContactShadows, OrbitControls autoRotate ; cadrage corrigé (recentrage -centerY) après 2 itérations de QA.
+- Studio réécrit en 4 gestes : StepCatalog (chips catégories + cartes photo + nom + mesures) → StepPatronage (pièces admin mises à l'échelle + placement + métrage) → Step3D (canvas dynamique ssr:false + chips accessoires + coloris, persistance PUT) → StepAssembly (AssemblyGuide alimenté par model.assembly via nouveaux props steps/modelName) ; bandeau récap avec pastille coloris.
+- Admin réécrit : gestionnaire de modèles (création/édition pré-remplie, gabarit par catégorie, éditeur de pièces répétable, éditeur d'étapes avec jonctions, chips accessoires, forme 3D avec selects + slider évasement, switch publication, brouillons ?all=1, Modifier/Retirer/Supprimer).
+- Landing mise au nouveau concept : « D'un modèle atelier, au vêtement fini. », 4 gestes, section Confection 3D avec démo live interactive, chips finitions.
+- Seed scripts/seed-models.ts : 7 modèles publiés (2 robes photos extraites des exemples + jupe/pantalon/tshirt/chemise/veste photos générées via z-ai image, compressées sharp 800px JPEG).
+- tsconfig : exclusion scripts/examples/skills/tests/download/tool-results/upload ; next.config : ignoreBuildErrors supprimé (typage actif au build).
+- Correctifs en route : DELETE models _req→req ; concat P2[] → array typé ; hooks conditionnels JSX → bodyGeom memo unique ; Rivets hook-in-map extrait ; badge AssemblyGuide truncate ; aria-pressed/role listitem ; syntaxe metalness.
+- QA : tsc 0 erreur, eslint 0 erreur, build OK avec TypeScript actif ; API 7 modèles classés ; navigateur mobile : catalogue → robe → patronage (3 pièces, 1,03 m) → 3D (boutons + ceinture visibles sur le mannequin) → assemblage (schémas admin) ; sombre + desktop vérifiés ; admin : login, liste 7 modèles, édition pré-remplie.
+- Incident : rm -rf .next pendant dev actif → cache Turbopack corrompu (SST), serveur muet/boucle 1,3 Go → pkill + purge + relance via .zscripts/dev.sh (détaché, sain).
+
+Stage Summary:
+- L'app ne dépend plus de l'IA : le catalogue (modèles, pièces, assemblage, accessoires) est entièrement composé par l'encadrement via /admin, les apprentis choisissent un modèle par catégorie, voient le patronage à leurs mesures et essayent le vêtement en 3D avec accessoires avant la production physique. Code admin inchangé (atelya-atelier). Captures : scripts/t21-*.png.

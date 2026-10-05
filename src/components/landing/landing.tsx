@@ -4,14 +4,25 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import {
   ArrowDown,
-  Camera,
+  Box,
   ChevronRight,
   Ruler,
   Shirt,
-  Sparkles,
+  GitMerge,
 } from "lucide-react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
+import dynamic from "next/dynamic";
+
+/* Démo 3D live — canvas WebGL chargé uniquement côté client */
+const Garment3D = dynamic(() => import("@/components/atelier/garment-3d"), {
+  ssr: false,
+  loading: () => (
+    <div className="grid h-full w-full place-items-center text-muted-foreground">
+      <span className="size-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+    </div>
+  ),
+});
 
 const pop = {
   initial: { opacity: 0, y: 16 },
@@ -45,7 +56,7 @@ function Splash({ onOpen }: { onOpen: () => void }) {
       {/* Barre haute */}
       <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-4 pt-[max(0.9rem,env(safe-area-inset-top))] sm:px-6">
         <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-white/55">
-          Atelier IA
+          Atelier de couture
         </span>
         <ThemeToggle tone="navy" />
       </header>
@@ -95,7 +106,7 @@ function Splash({ onOpen }: { onOpen: () => void }) {
           transition={{ duration: 0.55, delay: 0.25, ease: "easeOut" }}
           className="mt-6 font-display text-2xl font-bold leading-tight sm:text-4xl"
         >
-          D&apos;une photo,{" "}
+          D&apos;un modèle atelier,{" "}
           <span className="text-gold-shine font-editorial italic">au vêtement fini.</span>
         </motion.p>
 
@@ -105,7 +116,7 @@ function Splash({ onOpen }: { onOpen: () => void }) {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="mt-2.5 text-sm text-white/65 sm:text-[15px]"
         >
-          Variantes IA · patron sur mesures · assemblage guidé
+          Catalogue validé · patron sur mesures · confection 3D
         </motion.p>
 
         <motion.div
@@ -118,7 +129,7 @@ function Splash({ onOpen }: { onOpen: () => void }) {
             onClick={onOpen}
             className="group inline-flex h-[52px] w-full max-w-[300px] items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#F0C243] to-[#E09A12] text-[16px] font-bold text-[#12224e] shadow-[0_12px_34px_-8px_rgba(240,194,67,0.55)] outline-none ring-[#F0C243]/60 transition-all duration-200 hover:scale-[1.03] hover:shadow-[0_16px_40px_-8px_rgba(240,194,67,0.7)] focus-visible:ring-2 active:scale-95"
           >
-            <Camera className="size-[18px]" />
+            <Shirt className="size-[18px]" />
             Ouvrir l&apos;atelier
             <ChevronRight className="size-[18px] transition-transform duration-200 group-hover:translate-x-0.5" />
           </button>
@@ -132,16 +143,17 @@ function Splash({ onOpen }: { onOpen: () => void }) {
           className="mt-10 flex max-w-full flex-wrap items-center justify-center gap-x-1.5 gap-y-1.5 text-[10.5px] font-semibold uppercase tracking-wider text-white/55 sm:gap-x-2.5 sm:text-xs"
         >
           {[
-            { icon: Camera, t: "Modèle" },
+            { icon: Shirt, t: "Modèle" },
             { icon: Ruler, t: "Patronage" },
-            { icon: Shirt, t: "Assemblage" },
+            { icon: Box, t: "3D" },
+            { icon: GitMerge, t: "Assemblage" },
           ].map((s, i) => (
             <React.Fragment key={s.t}>
               <li className="flex items-center gap-1.5">
                 <s.icon className="size-3.5 text-[#F0C243]" />
                 {s.t}
               </li>
-              {i < 2 && <ChevronRight className="size-3 text-white/30" aria-hidden="true" />}
+              {i < 3 && <ChevronRight className="size-3 text-white/30" aria-hidden="true" />}
             </React.Fragment>
           ))}
         </motion.ol>
@@ -163,24 +175,29 @@ function Splash({ onOpen }: { onOpen: () => void }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Parcours — 3 gestes                                                 */
+/* Parcours — 4 gestes                                                 */
 /* ------------------------------------------------------------------ */
 
 const FLOW = [
   {
-    icon: Camera,
+    icon: Shirt,
     t: "Le modèle",
-    d: "Une photo, trois propositions IA portées sur mannequin.",
+    d: "Un catalogue validé par l'encadrement, classé par catégorie.",
   },
   {
     icon: Ruler,
     t: "Le patronage",
-    d: "Les pièces calculées sur vos mesures, placées sur le tissu.",
+    d: "Les pièces de l'atelier, ajustées à vos mesures.",
   },
   {
-    icon: Shirt,
+    icon: Box,
+    t: "La confection 3D",
+    d: "Essayage virtuel : boutons, fermeture, ceinture… avant la première coupe.",
+  },
+  {
+    icon: GitMerge,
     t: "L'assemblage",
-    d: "La méthode visuelle, étape par étape, jusqu'à l'habit.",
+    d: "La méthode visuelle de l'atelier, étape par étape, jusqu'à l'habit.",
   },
 ];
 
@@ -193,11 +210,11 @@ function Parcours() {
             Le parcours
           </p>
           <h2 className="mt-1.5 font-display text-3xl font-bold sm:text-4xl">
-            Trois gestes suffisent
+            Quatre gestes suffisent
           </h2>
         </motion.div>
 
-        <ol className="snap-row mt-9 flex gap-3.5 overflow-x-auto pb-2 sm:grid sm:grid-cols-3 sm:overflow-visible">
+        <ol className="snap-row mt-9 flex gap-3.5 overflow-x-auto pb-2 sm:grid sm:grid-cols-4 sm:overflow-visible">
           {FLOW.map((s, i) => (
             <motion.li
               key={s.t}
@@ -224,59 +241,71 @@ function Parcours() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Exemples — visuels IA                                               */
+/* Confection 3D — démonstration live                                  */
 /* ------------------------------------------------------------------ */
 
-const EXAMPLES = [
-  { src: "/ai/ex-longue.png", t: "Longue & fluide" },
-  { src: "/ai/ex-courte.png", t: "Courte & moderne" },
-  { src: "/ai/ex-raffinee.png", t: "Raffinée" },
+const FINITIONS = [
+  "Boutons",
+  "Fermeture éclair",
+  "Rivets",
+  "Ceinture",
+  "Poches plaquées",
+  "Nœud",
 ];
 
-function Exemples() {
+function Confection3D() {
   return (
     <section className="border-y border-border/60 bg-secondary/40">
       <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-        <motion.div {...pop} className="flex items-end justify-between gap-4">
-          <div>
-            <p className="font-editorial text-lg italic text-gold-deep dark:text-gold">
-              Exemples réels
-            </p>
-            <h2 className="mt-1.5 font-display text-3xl font-bold sm:text-4xl">
-              Trois variantes, une photo
-            </h2>
-          </div>
-          <span className="hidden items-center gap-1.5 rounded-full bg-accent px-3 py-1.5 text-[11px] font-bold text-accent-foreground sm:flex">
-            <Sparkles className="size-3.5 text-gold-deep dark:text-gold" />
-            Généré par IA
-          </span>
+        <motion.div {...pop} className="text-center">
+          <p className="font-editorial text-lg italic text-gold-deep dark:text-gold">
+            Confection 3D
+          </p>
+          <h2 className="mt-1.5 font-display text-3xl font-bold sm:text-4xl">
+            Voyez le vêtement avant de le coudre
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-[14.5px] leading-relaxed text-muted-foreground">
+            Le modèle de l&apos;atelier prend vie sur le mannequin, dans votre
+            tissu. Ajoutez boutons, fermeture, ceinture et accessoires — et
+            validez le look avant la première coupe.
+          </p>
         </motion.div>
 
-        <div className="snap-row mt-8 flex gap-3.5 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:overflow-visible">
-          {EXAMPLES.map((s, i) => (
-            <motion.figure
-              key={s.t}
-              {...pop}
-              transition={{ duration: 0.45, delay: i * 0.07, ease: "easeOut" }}
-              className="group relative min-w-[82%] overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm md:min-w-0"
+        <motion.div
+          {...pop}
+          className="card-luxe mx-auto mt-8 max-w-2xl overflow-hidden rounded-3xl border border-border/70 bg-card"
+        >
+          <div className="h-[400px] bg-gradient-to-b from-accent/40 to-background sm:h-[460px]">
+            <Garment3D
+              category="robe"
+              shape={{
+                length: 90,
+                flare: 0.55,
+                sleeves: "short",
+                collar: "v",
+                fit: "straight",
+                waistband: false,
+              }}
+              fabricColor="#2A9DB5"
+              accessories={[
+                { type: "bouton", color: "#d4af37" },
+                { type: "ceinture", color: "#5b3a29" },
+              ]}
+            />
+          </div>
+          <p className="border-t border-border/60 px-4 py-2.5 text-center text-[11px] text-muted-foreground">
+            Démo interactive — faites tourner le mannequin du bout des doigts
+          </p>
+        </motion.div>
+
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+          {FINITIONS.map((f) => (
+            <span
+              key={f}
+              className="rounded-full border border-border/80 bg-card px-3.5 py-1.5 text-[12px] font-semibold text-muted-foreground"
             >
-              <div className="relative aspect-[4/5] overflow-hidden">
-                { }
-                <img
-                  src={s.src}
-                  alt={`${s.t} — variante générée par IA sur mannequin`}
-                  className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                  loading="lazy"
-                />
-                <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent px-4 pb-3.5 pt-10">
-                  <span className="font-display text-[15px] font-bold text-white">{s.t}</span>
-                  <span className="mt-0.5 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-white/75">
-                    <Sparkles className="size-3 text-[#F0C243]" />
-                    Variante IA
-                  </span>
-                </figcaption>
-              </div>
-            </motion.figure>
+              {f}
+            </span>
           ))}
         </div>
       </div>
@@ -312,13 +341,13 @@ function FinalCta({ onOpen }: { onOpen: () => void }) {
         />
         <h2 className="relative z-10 mt-5 font-display text-2xl font-bold leading-tight sm:text-4xl">
           Votre prochaine pièce commence{" "}
-          <span className="text-gold-shine font-editorial italic">par une photo.</span>
+          <span className="text-gold-shine font-editorial italic">par un modèle.</span>
         </h2>
         <button
           onClick={onOpen}
           className="relative z-10 mt-7 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#F0C243] to-[#E09A12] px-8 text-[15px] font-bold text-[#12224e] shadow-[0_12px_34px_-8px_rgba(240,194,67,0.55)] outline-none ring-[#F0C243]/60 transition hover:scale-[1.03] focus-visible:ring-2 active:scale-95"
         >
-          <Camera className="size-4" />
+          <Shirt className="size-4" />
           Ouvrir l&apos;atelier
         </button>
       </motion.div>
@@ -339,7 +368,7 @@ function Footer({ onOpen }: { onOpen: () => void }) {
           Créez&nbsp;&nbsp;•&nbsp;&nbsp;Mesurez&nbsp;&nbsp;•&nbsp;&nbsp;Réalisez
         </p>
         <p className="text-[11px] text-muted-foreground">
-          © {new Date().getFullYear()} Atelya — atelier IA
+          © {new Date().getFullYear()} Atelya — atelier de couture
           <a
             href="/admin"
             className="ml-3 underline decoration-border underline-offset-4 transition hover:text-foreground"
@@ -362,7 +391,7 @@ export function Landing({ onOpen }: { onOpen: () => void }) {
       <main className="flex-1">
         <Splash onOpen={onOpen} />
         <Parcours />
-        <Exemples />
+        <Confection3D />
         <FinalCta onOpen={onOpen} />
       </main>
       <Footer onOpen={onOpen} />

@@ -8,48 +8,53 @@ import { Badge } from "@/components/ui/badge";
 import { NumPiece } from "@/components/atelier/assembly-guide";
 import { FabricTable } from "@/components/atelier/fabric-table";
 import { ModelIcon } from "@/components/atelier/pieces";
-import { MODELS, buildLayout, meterage, LETTERS } from "@/lib/atelier/patterns";
-import type { Measures, ModelKey } from "@/lib/atelier/patterns";
+import { buildLayout, meterage, LETTERS } from "@/lib/atelier/patterns";
+import {
+  categoryByKey,
+  scaledPieces,
+  type CatalogModel,
+} from "@/lib/atelier/garments";
 import type { StudioMeasures } from "@/lib/studio/config";
 
 /**
- * Étape 02 — le patronage : les pièces calculées sur les mesures,
- * leur plan de placement sur le tissu et le métrage. Simple, visuel,
- * sans simulation — le guide d'assemblage prend ensuite le relais.
+ * Étape 02 — le patronage : les pièces définies par l'encadrement pour ce
+ * modèle, mises à l'échelle des mesures de la cliente, leur plan de
+ * placement sur le tissu et le métrage.
  */
 export function StepPatronage({
-  modelKey,
-  mm,
+  model,
   measures,
   onContinue,
 }: {
-  modelKey: ModelKey;
-  mm: Measures;
+  model: CatalogModel;
   measures: StudioMeasures;
   onContinue: () => void;
 }) {
-  const model = MODELS[modelKey];
   const sa = measures.S || 0;
   const fw = measures.W || 140;
 
-  const defs = React.useMemo(() => model.g(mm), [model, mm]);
+  const defs = React.useMemo(
+    () => scaledPieces(model.pieces, model.baseMeasures, measures),
+    [model, measures]
+  );
   const layout = React.useMemo(() => buildLayout(defs, sa, fw), [defs, sa, fw]);
   const meters = meterage(layout);
   const tooNarrow = layout.mx > layout.raw;
+  const cat = categoryByKey(model.category);
 
   return (
     <div className="flex flex-col gap-6">
       {/* En-tête */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="grid size-10 place-items-center rounded-xl bg-accent text-primary">
-          <ModelIcon kind={modelKey} className="size-5" />
+          <ModelIcon kind={cat.icon} className="size-5" />
         </div>
         <div>
           <h2 className="font-display text-xl font-bold leading-tight">
             Le patronage — vos pièces
           </h2>
           <p className="text-xs text-muted-foreground">
-            {model.n} · {layout.pieces.length} pièces à découper ({defs.length}{" "}
+            {model.name} · {layout.pieces.length} pièces à découper ({defs.length}{" "}
             numérotées) · {meters} m en {fw} cm de laize
           </p>
         </div>
@@ -66,7 +71,7 @@ export function StepPatronage({
               Les pièces à découper
             </h3>
             <p className="text-xs text-muted-foreground">
-              Numérotées, avec leurs dimensions réelles
+              Définies par l&apos;atelier, ajustées à vos mesures
             </p>
           </header>
           <div className="grid grid-cols-2 gap-3 p-5 sm:grid-cols-3">
@@ -84,6 +89,11 @@ export function StepPatronage({
                   {p.q}
                   {p.fold ? " · au pli" : ""}
                 </p>
+                {model.pieces[i]?.note && (
+                  <p className="mt-1 line-clamp-2 text-[10.5px] italic leading-snug text-muted-foreground/80">
+                    {model.pieces[i].note}
+                  </p>
+                )}
               </div>
             ))}
           </div>
@@ -139,7 +149,7 @@ export function StepPatronage({
         size="lg"
         className="sticky bottom-[max(1rem,env(safe-area-inset-bottom))] z-20 h-13 w-full rounded-full text-[15px] font-bold shadow-lg"
       >
-        Voir la méthode d&apos;assemblage
+        Essayer en 3D
         <ArrowRight className="size-4" />
       </Button>
     </div>

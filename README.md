@@ -1,8 +1,8 @@
 # Atelya — Créez • Mesurez • Réalisez
 
-Application web de couture : à partir d'une photo, obtenez des variantes de vêtements générées par IA, le patronage sur vos mesures, et la méthode d'assemblage visuelle pas à pas pour réaliser l'habit.
+Application web de couture : choisissez un modèle dans le catalogue validé par l'encadrement, obtenez le patronage ajusté à vos mesures, essayez le vêtement en 3D avec boutons, fermeture, ceinture et autres accessoires — puis suivez la méthode d'assemblage visuelle pas à pas pour réaliser l'habit.
 
-**Parcours en trois gestes :** Le modèle (photo + variantes IA) → Le patronage (pièces numérotées, placement sur le tissu, métrage) → L'assemblage (schémas techniques : position des pièces, épingles, lignes de couture, pose de la ceinture…).
+**Parcours en quatre gestes :** Le modèle (catalogue par catégorie) → Le patronage (pièces numérotées, placement sur le tissu, métrage) → La confection 3D (essayage virtuel, accessoires, coloris du tissu) → L'assemblage (schémas techniques : position des pièces, épingles, lignes de couture…).
 
 ## Installation en local
 
@@ -54,30 +54,43 @@ Puis ouvrez **http://localhost:3000** dans votre navigateur.
 
 ## Utilisation
 
-1. **Le modèle** — ouvrez l'atelier, prenez une photo ou choisissez l'exemple, saisissez les mesures (poitrine, taille, hanches…), générez 3 variantes IA du vêtement et sélectionnez celle que vous préférez.
-2. **Le patronage** — l'application calcule les pièces du patron sur vos mesures : chaque pièce est dessinée à l'échelle, numérotée, avec les quantités, le placement sur la laize du tissu et le métrage total.
-3. **L'assemblage** — suivez la méthode visuelle pas à pas : chaque étape montre les pièces réelles en position, les épingles, la ligne de couture à la bonne valeur, et les préparations (pinces, ourlets, fermetures, fronces). À la fin : votre vêtement.
+1. **Le modèle** — ouvrez l'atelier et choisissez un modèle dans le catalogue de l'encadrement, classé par catégorie (robe, jupe, pantalon, t-shirt, chemise, veste). Nommez votre projet et saisissez les mesures (poitrine, taille, hanches…).
+2. **Le patronage** — les pièces définies par l'atelier pour ce modèle sont ajustées à vos mesures : chaque pièce est dessinée à l'échelle, numérotée, avec les quantités, le placement sur la laize du tissu et le métrage total.
+3. **La confection 3D** — le vêtement prend vie sur un mannequin de couturier, dans le coloris de tissu choisi. Essayez les accessoires proposés (boutons, fermeture éclair, rivets, ceinture, poches, nœud) et faites tourner le mannequin : vous voyez le résultat avant la première coupe.
+4. **L'assemblage** — suivez la méthode visuelle pas à pas définie par l'atelier : chaque étape montre les pièces réelles en position, les épingles, la ligne de couture à la bonne valeur, et les préparations (pinces, ourlets, fermetures, fronces). À la fin : votre vêtement.
 
-## Espace atelier (exemples validés)
+## Espace atelier (catalogue validé par l'encadrement)
 
 L'encadrement dispose d'un espace dédié : **http://localhost:3000/admin** (lien discret « Espace atelier » en bas de l'accueil). Un code d'accès y est demandé — par défaut `atelya-atelier`, modifiable dans le fichier `.env` (`ADMIN_CODE=…`).
 
-Depuis cet espace, l'encadrement publie des **exemples de référence** : photo du vêtement fini, famille, mesures de référence, coloris et une note pédagogique facultative. Ces exemples apparaissent dans l'atelier des apprentis sous la mention « Validés par l'encadrement » : en un appui, la photo et les mesures sont reprises telles quelles et le parcours va droit au patronage puis à la méthode d'assemblage — sans interprétation IA, pour garantir la qualité pédagogique. Deux exemples de démonstration sont pré-chargés.
+Depuis cet espace, l'encadrement compose le **catalogue de modèles** :
+
+- **Photo de référence** du vêtement (facultative — une illustration remplace la photo quand il n'y en a pas) ;
+- **Catégorie** (robe, jupe, pantalon, t-shirt, chemise, veste) — changer de catégorie pré-remplit le formulaire avec le gabarit de l'atelier ;
+- **Mesures de référence** du patronage et **forme 3D** (longueur, manches, col, coupe, évasement, ceinture) ;
+- **Pièces du patronage** ajoutées manuellement : nom, silhouette du tracé, dimensions, quantité, au pli, note ;
+- **Méthode d'assemblage** pas à pas : consigne, pièces en présence, type de jonction, détail de couture ;
+- **Accessoires** proposés dans la confection 3D ;
+- **Publication** : publié (visible des apprentis) ou brouillon.
+
+Sept modèles de démonstration sont pré-chargés (un par catégorie, deux robes).
 
 ## Notes
 
-- **Variantes IA** : la génération d'images utilise le SDK `z-ai-web-dev-sdk`, disponible dans l'environnement d'exécution z.ai. En local, tout le parcours fonctionne, mais la génération des variantes IA nécessite cet environnement (les images déjà générées restent consultables depuis la base).
 - **Base de données** : SQLite, fichier `db/custom.db` (aucun serveur de base de données à installer). Pour repartir de zéro : `npm run db:push`.
+- **Rendu 3D** : Three.js / react-three-fiber, entièrement côté navigateur — aucune clé API ni service externe requis.
 - **Port occupé ?** arrêtez le processus qui écoute le port 3000 ou lancez `npx next dev -p 3001` puis ouvrez http://localhost:3001.
 - **Lint** : `npm run lint` pour vérifier la qualité du code.
 
 ## Structure du projet
 
 ```
-prisma/schema.prisma          Modèle de données (clients, projets, visuels IA)
+prisma/schema.prisma          Modèle de données (clients, modèles du catalogue, projets)
 db/custom.db                  Base SQLite
 src/app                       Pages et routes API (Next.js App Router)
-src/components/atelier        Guide d'assemblage, schémas techniques, pièces
-src/components/studio         Parcours de l'atelier (modèle, patronage, assemblage)
-src/lib/atelier/patterns.ts   Moteur de patronage et données d'assemblage
+src/app/admin                 Espace atelier : gestion du catalogue de modèles
+src/components/atelier        Rendu 3D, guide d'assemblage, schémas techniques, pièces
+src/components/studio         Parcours de l'atelier (catalogue, patronage, 3D, assemblage)
+src/lib/atelier/patterns.ts   Moteur de patronage (tracés SVG, placement, métrage)
+src/lib/atelier/garments.ts   Catalogue : catégories, accessoires, gabarits, mise à l'échelle
 ```

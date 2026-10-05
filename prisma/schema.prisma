@@ -24,52 +24,51 @@ model Client {
   updatedAt DateTime @updatedAt
 }
 
-/// Visuel généré par IA (produit fini, texture de tissu, pièces en situation).
-/// `sig` = empreinte déterministe des paramètres → sert de cache ; les
-/// variations ajoutent un nonce au sig pour forcer une nouvelle image.
-model AiVisual {
-  id        String   @id @default(cuid())
-  kind      String
-  sig       String   @unique
-  prompt    String
-  mime      String   @default("image/png")
-  data      String
-  createdAt DateTime @default(now())
+/// Modèle de vêtement validé par l'encadrement : photo de référence,
+/// catégorie, mesures de référence, pièces de patronage (ajoutées
+/// manuellement), méthode d'assemblage pas à pas et accessoires
+/// proposables dans la confection 3D. Les apprentis choisissent leur
+/// modèle dans ce catalogue — la qualité est garantie par l'atelier.
+model GarmentModel {
+  id          String   @id @default(cuid())
+  name        String
+  /// Catégorie (robe | jupe | pantalon | tshirt | chemise | veste)
+  category    String
+  /// Photo de référence du vêtement (data URL ou chemin public) — facultative
+  photo       String   @default("")
+  /// Description courte affichée dans le catalogue
+  description String?
+  /// Mesures de référence du patronage — JSON {P,T,H,L,W,S,C}
+  baseMeasures String
+  /// Paramètres de rendu 3D — JSON {length, flare, sleeves, collar, fit, waistband...}
+  shape       String   @default("{}")
+  /// Pièces du patronage ajoutées manuellement — JSON [{n,w,h,q,fold,shape,note}]
+  pieces      String   @default("[]")
+  /// Méthode d'assemblage pas à pas — JSON [[consigne, pièce1, pièce2, jonction, détail]]
+  assembly    String   @default("[]")
+  /// Accessoires proposables dans la confection 3D — JSON ["bouton","fermeture",...]
+  accessories String   @default("[]")
+  /// Visible dans le catalogue des apprentis
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  projects StudioProject[]
 }
 
-/// Projet du styliste-modéliste : photo d'origine, famille choisie,
-/// mesures, les 3 variantes IA (empreintes des images en cache) et
-/// la variante sélectionnée qui sert de base au patron.
+/// Projet de l'apprenti : modèle choisi dans le catalogue atelier,
+/// mesures de la cliente, coloris du tissu et accessoires retenus
+/// dans la confection 3D.
 model StudioProject {
-  id        String   @id @default(cuid())
-  name      String
-  /// Photo d'origine (JPEG réduite, base64)
-  photo     String
-  /// Famille de vêtement (robe | jupe | pantalon | haut | veste)
-  family    String
+  id          String       @id @default(cuid())
+  name        String
+  model       GarmentModel? @relation(fields: [modelId], references: [id])
+  /// Modèle du catalogue atelier
+  modelId     String?
   /// Mesures JSON {P,T,H,L,W,S,C}
-  measures  String
-  /// Variantes IA JSON [{sig,label,desc,direction}]
-  variants  String  @default("[]")
-  /// Index de la variante retenue (-1 = aucune)
-  selected  Int      @default(-1)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-/// Exemple validé par l'atelier : l'encadrement dépose la photo du
-/// vêtement, la famille et les mesures de référence. Les apprentis
-/// partent de ces modèles garantis au lieu d'une photo quelconque.
-model Example {
-  id        String   @id @default(cuid())
-  name      String
-  /// Photo de référence du vêtement (JPEG réduite, base64)
-  photo     String
-  /// Famille de vêtement (robe | jupe | pantalon | haut | veste)
-  family    String
-  /// Mesures JSON {P,T,H,L,W,S,C}
-  measures  String
-  /// Note pédagogique de l'atelier (facultative)
-  note      String?
-  createdAt DateTime @default(now())
+  measures    String
+  /// Accessoires choisis — JSON [{type,color}]
+  accessories String       @default("[]")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }

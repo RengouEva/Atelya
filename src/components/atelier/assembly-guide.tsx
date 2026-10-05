@@ -190,15 +190,22 @@ export function AssemblyGuide({
   defs,
   fc,
   sa,
+  steps: customSteps,
+  modelName,
 }: {
   modelKey: ModelKey;
   mm: Measures;
   defs: PieceDef[];
   fc: string;
   sa: number;
+  /** étapes définies par l'atelier (prioritaires sur ASM) */
+  steps?: AsmStep[];
+  /** nom du modèle à afficher (modèles du catalogue) */
+  modelName?: string;
 }) {
   const model = MODELS[modelKey];
-  const steps = ASM[modelKey];
+  const steps = customSteps && customSteps.length > 0 ? customSteps : ASM[modelKey];
+  const shownName = modelName ?? model.n;
 
   /* Métadonnées par étape : type, pièces concernées, lettre, annotations */
   let joinCount = 0;
@@ -235,14 +242,16 @@ export function AssemblyGuide({
             </h2>
             <p className="text-xs text-muted-foreground">
               Guide d&apos;assemblage des pièces du patronage —{' '}
-              {model.n.toLowerCase()}, étape par étape. Même sans expérience en
+              {shownName.toLowerCase()}, étape par étape. Même sans expérience en
               couture !
             </p>
           </div>
         </div>
-        <Badge className="gap-1 rounded-full bg-accent px-3 py-1.5 text-[11px] font-bold text-primary">
-          <Plus className="size-3" />
-          Des pièces bien ordonnées = votre {model.n.toLowerCase()} !
+        <Badge className="max-w-full gap-1 rounded-full bg-accent px-3 py-1.5 text-[11px] font-bold text-primary">
+          <Plus className="size-3 shrink-0" />
+          <span className="truncate">
+            Des pièces bien ordonnées = votre {shownName.toLowerCase()} !
+          </span>
         </Badge>
       </div>
 

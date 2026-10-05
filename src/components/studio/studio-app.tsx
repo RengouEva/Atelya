@@ -4,144 +4,111 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
-  Camera,
+  Box,
   Check,
-  Loader2,
+  GitMerge,
   Plus,
   RotateCcw,
   Ruler,
-  Sparkles,
-  GitMerge,
+  Shirt,
 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { StepCreate } from "@/components/studio/step-create";
-import { StepVariants } from "@/components/studio/step-variants";
+import { StepCatalog } from "@/components/studio/step-catalog";
 import { StepPatronage } from "@/components/studio/step-patronage";
+import { Step3D } from "@/components/studio/step-3d";
 import { StepAssembly } from "@/components/studio/step-assembly";
-import { MODELS, buildLayout, meterage } from "@/lib/atelier/patterns";
+import { buildLayout, meterage } from "@/lib/atelier/patterns";
+import {
+  categoryByKey,
+  scaledPieces,
+  type CatalogModel,
+  type ChosenAccessory,
+} from "@/lib/atelier/garments";
 import {
   DEFAULT_MEASURES,
-  familyByKey,
-  type FamilyKey,
-  type StudioExample,
   type StudioMeasures,
-  type StudioVariant,
 } from "@/lib/studio/config";
 
 const STEP_LABELS = [
-  { icon: Camera, t: "Modèle" },
+  { icon: Shirt, t: "Modèle" },
   { icon: Ruler, t: "Patronage" },
+  { icon: Box, t: "3D" },
   { icon: GitMerge, t: "Assemblage" },
 ];
 
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 
 /**
- * Studio Atelya — parcours mobile-first en 3 gestes :
- * ① modèle (photo + variantes IA) ② patronage ③ méthode d'assemblage visuelle
- * jusqu'à l'habit. Une seule colonne, un stepper compact, droit au but.
+ * Studio Atelya — parcours mobile-first en 4 gestes :
+ * ① modèle (catalogue validé par l'encadrement) ② patronage ajusté aux
+ * mesures ③ confection 3D avec accessoires ④ méthode d'assemblage visuelle.
+ * On voit le vêtement avant de le produire physiquement.
  */
 export function StudioApp({ onHome }: { onHome: () => void }) {
   const [step, setStep] = React.useState(0);
 
+  /* catalogue atelier */
+  const [models, setModels] = React.useState<CatalogModel[]>([]);
+  const [model, setModel] = React.useState<CatalogModel | null>(null);
+
   /* projet */
   const [name, setName] = React.useState("");
-  const [photo, setPhoto] = React.useState<string | null>(null);
-  const [family, setFamily] = React.useState<FamilyKey>("robe");
   const [measures, setMeasures] = React.useState<StudioMeasures>(DEFAULT_MEASURES);
+  const [accessories, setAccessories] = React.useState<ChosenAccessory[]>([]);
   const [projectId, setProjectId] = React.useState<string | null>(null);
   const [busy, setBusy] = React.useState(false);
 
-  /* variantes */
-  const [variants, setVariants] = React.useState<(StudioVariant | null)[]>([
-    null,
-    null,
-    null,
-  ]);
-  const [selected, setSelected] = React.useState(-1);
-
-  /* exemples validés par l'atelier (publiés via /admin) */
-  const [examples, setExamples] = React.useState<StudioExample[]>([]);
   React.useEffect(() => {
-    fetch("/api/examples")
-      .then((r) => (r.ok ? r.json() : { examples: [] }))
-      .then((j: { examples?: StudioExample[] }) => setExamples(j.examples ?? []))
-      .catch(() => setExamples([]));
+    fetch("/api/models")
+      .then((r) => (r.ok ? r.json() : { models: [] }))
+      .then((j: { models?: CatalogModel[] }) => setModels(j.models ?? []))
+      .catch(() => setModels([]));
   }, []);
 
-  /* dérivés du patron (étapes 3 & 4) */
-  const modelKey = familyByKey(family).model;
+  /* dérivés du patronage (récapitulatif + étapes 2 & 4) */
   const mm = React.useMemo(
     () => ({
       P: clamp(measures.P || 90, 60, 160),
       T: clamp(measures.T || 70, 40, 160),
       H: clamp(measures.H || 98, 60, 180),
-      L: clamp(measures.L || familyByKey(family).L, 15, 200),
+      L: clamp(measures.L || 60, 15, 200),
     }),
-    [measures.P, measures.T, measures.H, measures.L, family]
+    [measures.P, measures.T, measures.H, measures.L]
   );
-  const defs = React.useMemo(() => MODELS[modelKey].g(mm), [modelKey, mm]);
+  const defs = React.useMemo(
+    () => (model ? scaledPieces(model.pieces, model.baseMeasures, measures) : []),
+    [model, measures]
+  );
   const layout = React.useMemo(
     () => buildLayout(defs, measures.S || 0, measures.W || 140),
     [defs, measures.S, measures.W]
   );
   const meters = meterage(layout);
-  const selectedVariant = selected >= 0 ? variants[selected] : null;
 
-  const changeFamily = (f: FamilyKey) => {
-    setFamily(f);
-    setMeasures((m) => ({ ...m, L: familyByKey(f).L }));
+  const selectModel = (m: CatalogModel) => {
+    setModel(m);
+    setMeasures((mm2) => ({ ...mm2, L: m.shape.length || m.baseMeasures.L }));
+    setAccessories([]);
   };
 
   /* Étape 1 → 2 : création du projet en base */
   const createProject = async () => {
-    if (!photo || !name.trim()) return;
+    if (!model || !name.trim()) return;
     setBusy(true);
     try {
       const r = await fetch("/api/studio", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), photo, family, measures }),
+        body: JSON.stringify({ name: name.trim(), modelId: model.id, measures }),
       });
       const j = (await r.json()) as { project?: { id: string }; error?: string };
       if (!r.ok || !j.project) throw new Error(j.error ?? "Création impossible.");
-      setProjectId(j.project.id);
-      toast.success("Projet créé — l'IA compose vos 3 variantes.");
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Création impossible.");
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  /* Exemple de l'atelier : photo et mesures de référence reprises telles
-     quelles — pas d'interprétation IA, on va droit au patronage. */
-  const applyExample = async (ex: StudioExample) => {
-    if (busy) return;
-    setBusy(true);
-    try {
-      const r = await fetch("/api/studio", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: ex.name,
-          photo: ex.photo,
-          family: ex.family,
-          measures: ex.measures,
-        }),
-      });
-      const j = (await r.json()) as { project?: { id: string }; error?: string };
-      if (!r.ok || !j.project) throw new Error(j.error ?? "Création impossible.");
-      setName(ex.name);
-      setPhoto(ex.photo);
-      setFamily(ex.family as FamilyKey);
-      setMeasures(ex.measures);
       setProjectId(j.project.id);
       setStep(1);
-      toast.success("Exemple de l'atelier chargé — patronage établi sur ses mesures.");
+      toast.success("Projet créé — patronage établi sur vos mesures.");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Création impossible.");
     } finally {
@@ -152,12 +119,10 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
   const newProject = () => {
     setStep(0);
     setName("");
-    setPhoto(null);
-    setFamily("robe");
+    setModel(null);
     setMeasures(DEFAULT_MEASURES);
+    setAccessories([]);
     setProjectId(null);
-    setVariants([null, null, null]);
-    setSelected(-1);
     window.scrollTo({ top: 0 });
   };
 
@@ -186,7 +151,6 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
             className="flex items-center gap-2 rounded-xl outline-none ring-primary/50 transition hover:opacity-85 focus-visible:ring-2"
             aria-label="Atelya"
           >
-            { }
             <img src="/atelya-mark.webp" alt="" className="h-8 w-auto" />
             <span className="font-display text-[17px] font-bold tracking-tight">
               Atelya
@@ -194,7 +158,7 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
           </button>
 
           <div className="flex items-center gap-1.5">
-            {photo && (
+            {model && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -215,7 +179,7 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
         aria-label="Étapes du parcours"
         className="sticky top-14 z-30 border-b border-border/60 bg-background/90 backdrop-blur-md"
       >
-        <ol className="mx-auto grid w-full max-w-3xl grid-cols-3 px-3 py-2 sm:px-4">
+        <ol className="mx-auto grid w-full max-w-3xl grid-cols-4 px-3 py-2 sm:px-4">
           {STEP_LABELS.map((s, i) => {
             const Icon = s.icon;
             const active = i === step;
@@ -268,117 +232,102 @@ export function StudioApp({ onHome }: { onHome: () => void }) {
       </nav>
 
       {/* Récapitulatif projet — bandeau fin */}
-      {photo && projectId && (
+      {model && projectId && (
         <div className="mx-auto w-full max-w-3xl px-3 pt-3 sm:px-4">
           <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-card px-3.5 py-2.5 card-luxe">
-            { }
-            <img
-              src={photo}
-              alt="Photo d'origine du projet"
-              className="size-10 rounded-lg border border-border/60 object-cover"
-            />
+            {model.photo ? (
+              <img
+                src={model.photo}
+                alt=""
+                className="size-10 rounded-lg border border-border/60 object-cover"
+              />
+            ) : (
+              <span className="grid size-10 place-items-center rounded-lg bg-accent text-primary">
+                <Shirt className="size-5" />
+              </span>
+            )}
             <div className="min-w-0 flex-1">
               <p className="truncate text-[13px] font-bold leading-tight">
                 {name || "Sans nom"}
               </p>
               <p className="truncate text-[11px] text-muted-foreground">
-                {familyByKey(family).label} · {layout.pieces.length} pièces · {meters} m
-                {selected >= 0 && selectedVariant ? ` · ${selectedVariant.label}` : ""}
+                {categoryByKey(model.category).label} · {layout.pieces.length} pièces ·{" "}
+                {meters} m
+                {accessories.length > 0 ? ` · ${accessories.length} accessoire(s)` : ""}
               </p>
             </div>
-            {selected >= 0 && selectedVariant && (
-               
-              <img
-                src={selectedVariant.url}
-                alt={`Variante retenue : ${selectedVariant.label}`}
-                className="size-10 rounded-lg border-2 border-primary object-cover"
-              />
-            )}
+            <span
+              className="size-6 shrink-0 rounded-full border-2 border-background shadow-sm"
+              style={{ backgroundColor: measures.C }}
+              aria-label="Coloris du tissu"
+            />
           </div>
         </div>
       )}
 
       {/* Contenu de l'étape — une colonne */}
       <main className="mx-auto w-full max-w-3xl flex-1 px-3 pb-[max(3.5rem,env(safe-area-inset-bottom))] pt-4 sm:px-4">
-        {step === 0 && !projectId && (
+        {step === 0 && (
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, ease: "easeOut" }}
           >
-            <StepCreate
+            <StepCatalog
+              models={models}
+              selected={model}
+              onSelect={selectModel}
               name={name}
               onName={setName}
-              photo={photo}
-              onPhoto={setPhoto}
-              family={family}
-              onFamily={changeFamily}
               measures={measures}
               onMeasures={setMeasures}
               busy={busy}
               onSubmit={() => void createProject()}
-              examples={examples}
-              onUseExample={(ex) => void applyExample(ex)}
             />
           </motion.div>
         )}
-        {step === 0 && projectId && photo && (
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
-          >
-            <StepVariants
-              photo={photo}
-              family={family}
-              variants={variants}
-              onVariants={setVariants}
-              selected={selected}
-              onSelected={setSelected}
-              projectId={projectId}
-              onContinue={() => goStep(1)}
-            />
-          </motion.div>
-        )}
-        {step === 1 && (
+        {step === 1 && model && (
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, ease: "easeOut" }}
           >
             <StepPatronage
-              modelKey={modelKey}
-              mm={mm}
+              model={model}
               measures={measures}
               onContinue={() => goStep(2)}
             />
           </motion.div>
         )}
-        {step === 2 && (
+        {step === 2 && model && (
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, ease: "easeOut" }}
           >
-            <StepAssembly
-              modelKey={modelKey}
-              mm={mm}
-              defs={defs}
-              fc={measures.C}
-              sa={measures.S || 0}
-              variantUrl={selectedVariant?.url ?? photo}
+            <Step3D
+              model={model}
+              measures={measures}
+              accessories={accessories}
+              onAccessories={setAccessories}
+              onFabric={(c) => setMeasures((m) => ({ ...m, C: c }))}
+              projectId={projectId}
+              onContinue={() => goStep(3)}
             />
           </motion.div>
         )}
-        {step === 0 && projectId && !photo && (
-          <div className="grid place-items-center rounded-2xl border border-dashed border-border p-12 text-sm text-muted-foreground">
-            <Loader2 className="mb-2 size-5 animate-spin" />
-            Chargement du projet…
-          </div>
+        {step === 3 && model && (
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+          >
+            <StepAssembly model={model} mm={mm} defs={defs} fc={measures.C} sa={measures.S || 0} />
+          </motion.div>
         )}
 
         {/* Nouveau projet — fin de parcours */}
-        {step === 2 && (
+        {step === 3 && (
           <div className="mt-6 flex justify-center">
             <Button
               variant="outline"
