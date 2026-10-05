@@ -344,3 +344,25 @@ Work Log:
 
 Stage Summary:
 - Le dépôt GitHub est désormais autoportant : un clone frais + install + db:push + dev fonctionne sur n'importe quelle machine (Windows/macOS/Linux). Le blocage « ne s'affiche pas en local » était le chemin de base absolu dans le .env committé — corrigé, testé, poussé.
+
+---
+Task ID: 20
+Agent: Super Z (main)
+Task: « Est-ce qu'il est possible d'avoir plusieurs exemples ? Du genre c'est admin qui met photo du vêtement, patronage, pour être sûr de la qualité. » — espace atelier + galerie d'exemples validés.
+
+Work Log:
+- Conception : l'encadrement publie des exemples de référence (photo + famille + mesures + note) ; les apprentis partent de ces références SANS interprétation IA → qualité garantie ; saut direct au patronage.
+- Prisma : modèle Example (name, photo, family, measures JSON, note) + db:push.
+- Auth simple : /api/admin/login (POST code → cookie httpOnly signé sha256 7 j, GET session, DELETE logout) ; code dans ADMIN_CODE (.env, défaut atelya-atelier) ; lib/admin/auth.ts.
+- API /api/examples : GET public (24 derniers), POST/DELETE réservés admin (zod, mêmes bornes que les projets).
+- Page /admin (mobile-first, navy/or) : carte de connexion, intro pédagogique, formulaire de publication (photo drag'n'drop compressée, nom, famille 5 pills avec L par défaut, P/T/H/L, laize, marge, coloris, note 280 car.), liste des exemples publiés avec suppression.
+- Studio : StepCreate reçoit examples + onUseExample → galerie horizontale snap « Exemples de l'atelier — Validés par l'encadrement » sous le formulaire (bouton exemple statique conservé si galerie vide) ; StudioApp fetch /api/examples, applyExample : pré-remplit nom/photo/famille/mesures, POST /api/studio, setStep(1) direct + toast ; StepAssembly variantUrl retombe sur la photo d'origine (bloc « L'habit est prêt »).
+- Liens discrets « Espace atelier » : footers landing + studio → /admin.
+- Seed scripts/seed-examples.ts (sharp → JPEG 800px) : 2 robes de démonstration avec notes.
+- Correctifs en route : refresh déclarée avant useEffect ; useExample → applyExample ( ESLint le prenait pour un hook) ; structure JSX de StepCreate réorganisée (galerie sortie de la grille 2 colonnes) ; sharp quality entier.
+- Incident serveur : next dev planté (processus vivant mais muet, GET / en timeout) → kill -9 + relance setsid détachée (le nohup simple se faisait tuer par le timeout du shell) ; serveur prêt en 8 s.
+- QA : curl API (401 sans cookie, 201/200 admin, DELETE ok) ; ESLint 0 erreur ; E2E navigateur : connexion admin (mauvais code refusé non testé UI, API 401 vérifié), publication complète d'une jupe avec photo (toast + liste + formulaire réinitialisé), galerie studio 3 exemples, clic jupe → patronage direct (Devant/Dos/Ceinture, 0.85 m) → assemblage → bloc final avec la photo de l'exemple ; mode sombre + desktop 1280 vérifiés ; exemple test supprimé.
+- Commit d554b4f poussé (8715f3f..d554b4f). Captures : scripts/t20-*.png.
+
+Stage Summary:
+- L'app a désormais une boucle pédagogique complète : l'encadrement capitalise son savoir-faire en exemples validés (/admin), les apprentis s'exercent sur des références sûres en un appui, et gardent le parcours IA pour leurs propres photos. Code atelier par défaut : atelya-atelier (modifiable dans .env).
